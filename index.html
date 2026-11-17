@@ -8,6 +8,11 @@
   <meta property="og:title" content="Omid Mansourihanis | Computational Urban Scientist">
   <meta property="og:description" content="Geospatial machine learning, urban analytics, spatial justice, transportation, and environmental equity.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://omid-mansourihanis.github.io/">
+  <link rel="canonical" href="https://omid-mansourihanis.github.io/">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0c2438">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23143d59'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='800' fill='white' text-anchor='middle'%3EOM%3C/text%3E%3C/svg%3E">
   <title>Omid Mansourihanis | Computational Urban Scientist</title>
 
   <style>
@@ -682,6 +687,7 @@
         <a href="#publications">Publications</a>
         <a href="#experience">Experience</a>
         <a href="#education">Education</a>
+        <a href="#presentations">Presentations</a>
         <a href="#skills">Skills</a>
         <a href="#contact">Contact</a>
       </div>
@@ -833,10 +839,10 @@
       </p>
 
       <div class="pub-toolbar" role="group" aria-label="Publication filters">
-        <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="published">Published</button>
-        <button class="filter-btn" data-filter="accepted">Accepted</button>
-        <button class="filter-btn" data-filter="review">Under Review</button>
+        <button type="button" class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" class="filter-btn" data-filter="published" aria-pressed="false">Published</button>
+        <button type="button" class="filter-btn" data-filter="accepted" aria-pressed="false">Accepted</button>
+        <button type="button" class="filter-btn" data-filter="review" aria-pressed="false">Under Review</button>
       </div>
 
       <div class="pub-list">
@@ -922,12 +928,12 @@
 
         <article class="publication" data-type="review">
           <h3>Beyond Euclidean zoning: Machine learning reveals empirical patterns of land-use compatibility <span class="status review">Under Review</span></h3>
-          <p><strong>Mansourihanis, O.</strong> & Wang, X.</p>
+          <p><strong>Mansourihanis, O.</strong> & Wang, X. <a href="https://doi.org/10.21203/rs.3.rs-9043733/v1" target="_blank" rel="noopener">Preprint</a></p>
         </article>
 
         <article class="publication" data-type="review">
           <h3>What really drives urban traffic congestion? A causal feature-importance analysis across four major U.S. metropolitan areas <span class="status review">Under Review</span></h3>
-          <p><strong>Mansourihanis, O.</strong> & Wang, X.</p>
+          <p><strong>Mansourihanis, O.</strong> & Wang, X. <a href="https://doi.org/10.17632/tbdn8yhs83.2" target="_blank" rel="noopener">Dataset &amp; code</a></p>
         </article>
       </div>
     </section>
@@ -1129,8 +1135,12 @@
 
     buttons.forEach(button => {
       button.addEventListener("click", () => {
-        buttons.forEach(item => item.classList.remove("active"));
+        buttons.forEach(item => {
+          item.classList.remove("active");
+          item.setAttribute("aria-pressed", "false");
+        });
         button.classList.add("active");
+        button.setAttribute("aria-pressed", "true");
         const filter = button.dataset.filter;
 
         publications.forEach(publication => {
