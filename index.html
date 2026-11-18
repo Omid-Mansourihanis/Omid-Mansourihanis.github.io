@@ -378,6 +378,22 @@
       font-weight: 700;
     }
 
+    .card .data-rel {
+      margin-top: 12px;
+      font-size: .9rem;
+    }
+
+    .card .data-link {
+      margin-top: 14px;
+      font-size: .9rem;
+      font-weight: 750;
+    }
+
+    .card .data-link a {
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+
     .pub-toolbar {
       margin: 34px 0 18px;
       display: flex;
@@ -685,6 +701,7 @@
         <a href="#about">About</a>
         <a href="#research">Research</a>
         <a href="#publications">Publications</a>
+        <a href="#data">Data</a>
         <a href="#experience">Experience</a>
         <a href="#education">Education</a>
         <a href="#presentations">Presentations</a>
@@ -927,7 +944,7 @@
 
         <article class="publication" data-type="review">
           <h3>What predicts urban traffic congestion? An interpretable machine learning analysis of structural and behavioral correlates across four major U.S. cities <span class="status review">In Revision</span></h3>
-          <p><strong>Mansourihanis, O.</strong>, &amp; Wang, X. <a href="https://doi.org/10.17632/tbdn8yhs83.2" target="_blank" rel="noopener">Dataset &amp; code</a></p>
+          <p><strong>Mansourihanis, O.</strong>, &amp; Wang, X. <a href="https://doi.org/10.17632/4ghf42bs96" target="_blank" rel="noopener">Dataset &amp; code</a></p>
         </article>
 
         <article class="publication" data-type="review">
@@ -943,6 +960,74 @@
         <article class="publication" data-type="review">
           <h3>Cross-scale fractal coherence: Hierarchical multifractal analysis of urban form and environmental stress in four U.S. megacities <span class="status preprint">Preprint</span></h3>
           <p><strong>Mansourihanis, O.</strong>, &amp; Wang, X. OSF (2026). <a href="https://doi.org/10.31235/osf.io/85zr7_v1" target="_blank" rel="noopener">Preprint</a></p>
+        </article>
+      </div>
+    </section>
+
+    <section id="data">
+      <p class="section-kicker">Open Science</p>
+      <h2 class="section-title">Data and code</h2>
+      <p class="section-lead">
+        Datasets and reproducibility packages published on Mendeley Data under a CC BY 4.0 license.
+        Each link resolves to the latest version.
+      </p>
+
+      <div class="grid">
+        <article class="card">
+          <span class="label">Transportation</span>
+          <h3>Block-level traffic Level of Service and urban form predictors for four U.S. cities</h3>
+          <p>Congestion index and three-class Level of Service for the 2024 weekday morning peak across 131,507 census blocks in Chicago, Houston, Los Angeles, and New York City, with 46 predictors, per-city files, a data dictionary, a reproduction notebook, and checksums. Proprietary probe data are excluded.</p>
+          <p class="data-rel">Supports <em>What predicts urban traffic congestion?</em> (in revision)</p>
+          <div class="tags"><span class="tag">131,507 blocks</span><span class="tag">Reproduction notebook</span></div>
+          <p class="data-link"><a href="https://doi.org/10.17632/4ghf42bs96" target="_blank" rel="noopener">Mendeley Data · doi:10.17632/4ghf42bs96</a></p>
+        </article>
+
+        <article class="card">
+          <span class="label">Transportation</span>
+          <h3>Causal feature importance dataset for urban traffic Level of Service</h3>
+          <p>Earlier analysis matrix for the same four-city congestion study: 134,530 census blocks with 46 upstream predictors in six categories and congestion outcomes, built from probe, Census/ACS, city open data, OpenStreetMap, EPA, and state DOT sources. Includes model analysis code.</p>
+          <div class="tags"><span class="tag">134,530 blocks</span><span class="tag">Model code</span></div>
+          <p class="data-link"><a href="https://doi.org/10.17632/tbdn8yhs83" target="_blank" rel="noopener">Mendeley Data · doi:10.17632/tbdn8yhs83</a></p>
+        </article>
+
+        <article class="card">
+          <span class="label">Housing</span>
+          <h3>GeoAI-driven housing affordability: predicting rent burden across New York City</h3>
+          <p>Replication package for a block-level rent-burden analysis using 2020 ACS five-year estimates: 37,816 blocks with 394 cleaned attributes, Random Forest and XGBoost predictions, LISA clusters, K-means affordability typologies, model artifacts, and maps.</p>
+          <div class="tags"><span class="tag">37,816 blocks</span><span class="tag">XGBoost</span><span class="tag">LISA</span></div>
+          <p class="data-link"><a href="https://doi.org/10.17632/hspnm9pycj" target="_blank" rel="noopener">Mendeley Data · doi:10.17632/hspnm9pycj</a></p>
+        </article>
+
+        <article class="card">
+          <span class="label">Transit Equity</span>
+          <h3>Cincinnati Metro transit network vulnerability analysis</h3>
+          <p>Graph-theoretic vulnerability analysis of the SORTA weekday bus network built from GTFS: 3,532 stops and 4,048 directed edges, PCA-based vulnerability scores from four centrality metrics, four disruption scenarios, Census equity overlays, shapefiles, and a Colab notebook.</p>
+          <div class="tags"><span class="tag">GTFS</span><span class="tag">Network analysis</span><span class="tag">Colab</span></div>
+          <p class="data-link"><a href="https://doi.org/10.17632/knxmkcsg9m" target="_blank" rel="noopener">Mendeley Data · doi:10.17632/knxmkcsg9m</a></p>
+        </article>
+
+        <article class="card">
+          <span class="label">Urban Networks</span>
+          <h3>Graph-theoretic urban planning: Fairfax and Alexandria, Virginia</h3>
+          <p>Multi-layer network comparison of transport, points of interest, and green infrastructure: cleaned walk and drive networks, minimum spanning trees, Chinese Postman routes, POI layers, node tables, figures, and a reproducibility manifest.</p>
+          <div class="tags"><span class="tag">Shapefiles</span><span class="tag">Graph algorithms</span></div>
+          <p class="data-link"><a href="https://doi.org/10.17632/dprvtz5c4p" target="_blank" rel="noopener">Mendeley Data · doi:10.17632/dprvtz5c4p</a></p>
+        </article>
+
+        <article class="card">
+          <span class="label">Routing Algorithms</span>
+          <h3>The geometric directed Chinese Postman Problem</h3>
+          <p>Code and data for a directed Chinese Postman Problem with angle-dependent turn costs: a two-stage algorithm, integer-programming reference solvers, synthetic instance generators, baselines, and an OpenStreetMap pipeline. Results regenerate on a free CPU runtime in about 10–25 minutes.</p>
+          <div class="tags"><span class="tag">Python</span><span class="tag">Integer programming</span><span class="tag">OSM</span></div>
+          <p class="data-link"><a href="https://doi.org/10.17632/vsdt2wpspw" target="_blank" rel="noopener">Mendeley Data · doi:10.17632/vsdt2wpspw</a></p>
+        </article>
+
+        <article class="card">
+          <span class="label">Routing Algorithms</span>
+          <h3>The geometric directed Chinese Postman Problem under angle-monotone turn costs</h3>
+          <p>Reproducibility package for a two-stage approximation algorithm: Python source, tests including more than 500 perturbation tests, synthetic instance generators, raw logs, an OpenStreetMap pipeline, and a single script that reproduces the results.</p>
+          <div class="tags"><span class="tag">Python</span><span class="tag">Approximation</span><span class="tag">Tests</span></div>
+          <p class="data-link"><a href="https://doi.org/10.17632/z9vv2zywyr" target="_blank" rel="noopener">Mendeley Data · doi:10.17632/z9vv2zywyr</a></p>
         </article>
       </div>
     </section>
