@@ -29,6 +29,14 @@
   .home:hover{text-decoration:underline}
   label,select,button,input,.badge,.hint,.warn{font-family:var(--font-ui)}
   input.bad{border-color:#c0392b}
+  .about h2{font-size:21px;margin:22px 0 8px;color:var(--accent)}
+  .about h2:first-child{margin-top:0}
+  .about p,.about li{font-size:16px}
+  .about ul{padding-left:20px;margin:6px 0}
+  .about li{margin:4px 0}
+  .about table{width:100%;border-collapse:collapse;font-size:14.5px;margin:8px 0}
+  .about th,.about td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  .about th{font-family:var(--font-ui);font-size:13px;color:var(--muted);font-weight:700}
   .foot{font-family:var(--font-ui);font-size:13px;color:var(--muted);text-align:center}
   .wrap{max-width:760px;margin:0 auto}
   h1{font-size:28px;margin:0 0 4px}
@@ -102,6 +110,52 @@
       <div class="warn">Whole-county builds download several GB (GHSL + building footprints) and take
         10–30 min on Colab. A single-tract build is a good first test.</div>
     </div>
+  </div>
+
+  <div class="card about">
+    <h2>What you get</h2>
+    <p>One table for the county you choose, with <strong>one row per 2020 census block</strong> and several
+      hundred columns from different sources, already joined on the block GeoID. Downloading, cleaning and
+      merging these sources by hand usually takes days; here it takes a few clicks and one Colab run, and
+      anyone who picks the same county gets the same table.</p>
+
+    <table>
+      <tr><th>Group</th><th>What is in it</th><th>Source &middot; native level</th></tr>
+      <tr><td>Population &amp; housing</td><td>Population, race, Hispanic origin, occupied and vacant units</td><td>Census 2020 PL &middot; block</td></tr>
+      <tr><td>Age, tenure, households</td><td>Age by sex, owner/renter, urban/rural, vacant for rent, household size</td><td>Census 2020 DHC &middot; block group</td></tr>
+      <tr><td>Socio-economic</td><td>Income, poverty, rent burden, structure type, year built, employment, education</td><td>ACS 2023 5-year &middot; block group</td></tr>
+      <tr><td>Commuting &amp; work</td><td>Mode to work, travel time, occupation, industry</td><td>ACS 2023 5-year &middot; tract</td></tr>
+      <tr><td>Block shape</td><td>Area, perimeter, compactness, elongation, water blocks</td><td>TIGER/Line 2020 &middot; block</td></tr>
+      <tr><td>Streets &amp; services</td><td>Street length and density by road type, intersections, dead ends, signals, sidewalks, bike lanes; distance to the nearest hospital, school, grocery store and park, and counts within 800&nbsp;m</td><td>OpenStreetMap &middot; block</td></tr>
+      <tr><td>Buildings</td><td>Count, footprint area, coverage ratio, density</td><td>Microsoft Building Footprints &middot; block</td></tr>
+      <tr><td>Urban form</td><td>Average building height, built volume, settlement class (urban centre to rural)</td><td>GHSL R2023A &middot; 100&nbsp;m / 1&nbsp;km grid</td></tr>
+    </table>
+    <p>Cook County, Illinois also gets traffic volume (AADT) and CTA / Metra transit stops.</p>
+
+    <h2>Files</h2>
+    <ul>
+      <li><strong>GeoPackage</strong>: block polygons with every column; opens in ArcGIS Pro, QGIS or GeoPandas.</li>
+      <li><strong>CSV</strong>: the same table without geometry, for Excel, R or machine-learning models.</li>
+      <li><strong>Metadata CSV</strong>: the source and native geography of each column, for methods sections and reproducibility.</li>
+    </ul>
+
+    <h2>Useful for</h2>
+    <ul>
+      <li>Urban planning research: walkability, access to services, spatial equity, site selection.</li>
+      <li>Transportation and safety: road-network features next to population characteristics.</li>
+      <li>Machine learning: a ready feature table keyed on GeoID, easy to join to crashes, crime or housing prices.</li>
+      <li>Comparing cities with identical definitions, e.g. Lubbock and Houston.</li>
+      <li>Teaching: students start analysing instead of wrestling with APIs and file formats.</li>
+    </ul>
+
+    <h2>Keep in mind</h2>
+    <ul>
+      <li>ACS and DHC values are published for block groups or tracts and are <em>repeated</em> on every block inside them; they do not show differences between neighbouring blocks.</li>
+      <li>ACS margins of error are not included; in small areas they can be large.</li>
+      <li>OpenStreetMap completeness varies by city (sidewalks are often missing).</li>
+      <li>GHSL is a 100&nbsp;m–1&nbsp;km grid sampled at each block's centroid, so it is approximate for small blocks.</li>
+      <li>A whole-county build downloads several GB and takes 10–30 minutes; a single-tract build is fast but Census-only.</li>
+    </ul>
   </div>
 
   <p class="foot">
