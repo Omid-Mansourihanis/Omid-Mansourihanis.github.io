@@ -957,6 +957,153 @@
         flex-direction: column;
       }
     }
+    .recognition {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 30px;
+      align-items: start;
+      margin-top: 30px;
+    }
+
+    .recognition .lead-in {
+      margin-top: 0;
+      color: var(--muted);
+    }
+
+    .fellowships {
+      margin: 0 0 22px;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .fellowships li {
+      padding: 14px 16px;
+      background: white;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--teal);
+      border-radius: 10px;
+      color: var(--navy-2);
+    }
+
+    .fellowships li span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .press-card {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 16px;
+      align-items: center;
+      padding: 12px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none;
+      box-shadow: 0 12px 30px rgba(12,36,56,.05);
+      transition: box-shadow .15s ease, transform .15s ease;
+    }
+
+    .press-card:hover,
+    .press-card:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(12,36,56,.12);
+    }
+
+    .press-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .press-text {
+      display: grid;
+      gap: 4px;
+    }
+
+    .press-source {
+      color: var(--teal);
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .press-title {
+      color: var(--navy-2);
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .press-cta {
+      color: var(--muted);
+      font-size: .88rem;
+      font-weight: 700;
+    }
+
+    .press-card-social {
+      margin-top: 18px;
+    }
+
+    .social-label {
+      margin: 22px 0 10px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .social-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .social-links a {
+      padding: 7px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: white;
+      color: var(--navy-2);
+      font-size: .88rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .social-links a:hover,
+    .social-links a:focus-visible {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    .recognition-photos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 0;
+    }
+
+    .recognition-photos img {
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+    }
+
+    @media (max-width: 900px) {
+      .recognition {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .press-card {
+        grid-template-columns: 1fr;
+      }
+      .recognition-photos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
   </style>
 </head>
 
@@ -973,6 +1120,7 @@
         <a href="#data">Data</a>
         <a href="#experience">Experience</a>
         <a href="#education">Education</a>
+        <a href="#recognition">Recognition</a>
         <a href="#presentations">Presentations</a>
         <a href="#animations">Animations</a>
         <a href="#skills">Skills</a>
@@ -1386,6 +1534,77 @@
           <h3>BS in Urban Planning and Design</h3>
           <p>University of Mazandaran · GPA 3.65</p>
         </article>
+      </div>
+    </section>
+
+    <section id="recognition">
+      <p class="section-kicker">Media Appearances and Recognition</p>
+      <h2 class="section-title">PhD fellowships</h2>
+
+      <div class="recognition">
+        <div class="recognition-body">
+          <p class="lead-in">
+            In 2024 I received two fellowships at Texas Tech University for my PhD research on sustainable and equitable
+            city development using geospatial analytics:
+          </p>
+          <ul class="fellowships">
+            <li><strong>Elo and Olga Urbanovsky Fellowship</strong> <span>2024&ndash;2027</span></li>
+            <li><strong>Covenant Health and Social Services Graduate Fellowship</strong></li>
+          </ul>
+
+          <a class="press-card" href="https://www.depts.ttu.edu/artsandsciences/CurrentStudents/news_briefs/TTU_Doctoral_Student_Earns_Fellowships_for_Urban_Planning_Research.php" target="_blank" rel="noopener">
+            <img src="assets/images/recognition/press-ttu-article.jpg" alt="Screenshot of the Texas Tech College of Arts &amp; Sciences news article" loading="lazy">
+            <span class="press-text">
+              <span class="press-source">Texas Tech University · College of Arts &amp; Sciences · July 2024</span>
+              <span class="press-title">TTU Doctoral Student Earns Fellowships for Urban Planning Research</span>
+              <span class="press-cta">Read the article &rarr;</span>
+            </span>
+          </a>
+
+          <p class="social-label">Featured on Texas Tech Arts &amp; Sciences social media</p>
+          <div class="social-links">
+            <a href="https://www.instagram.com/p/C87G9EQsQT0/" target="_blank" rel="noopener">Instagram</a>
+            <a href="https://www.facebook.com/TTUArtsSciences" target="_blank" rel="noopener">Facebook</a>
+            <a href="https://www.linkedin.com/feed/update/urn:li:activity:7213910544863440896" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://x.com/TTUArtsSciences/status/1808144857388429454" target="_blank" rel="noopener">X (Twitter)</a>
+          </div>
+
+          <a class="press-card press-card-social" href="https://www.instagram.com/p/C87G9EQsQT0/" target="_blank" rel="noopener">
+            <img src="assets/images/recognition/press-instagram.jpg" alt="Screenshot of the Texas Tech Arts &amp; Sciences Instagram post" loading="lazy">
+            <span class="press-text">
+              <span class="press-source">Instagram · @ttuartssciences · July 2024</span>
+              <span class="press-title">Featured post on the two fellowships</span>
+              <span class="press-cta">View the post &rarr;</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="recognition-photos gallery-grid">
+          <figure>
+            <a href="assets/images/recognition/portrait.jpg" class="lightbox-link" target="_blank" rel="noopener">
+              <img src="assets/images/recognition/portrait-thumb.jpg" alt="Omid Mansourihanis: Portrait at Texas Tech University" loading="lazy">
+            </a>
+            <figcaption><strong>Featured portrait.</strong></figcaption>
+          </figure>
+          <figure>
+            <a href="assets/images/recognition/geosciences.jpg" class="lightbox-link" target="_blank" rel="noopener">
+              <img src="assets/images/recognition/geosciences-thumb.jpg" alt="Omid Mansourihanis: In front of the Geosciences building, Texas Tech University" loading="lazy">
+            </a>
+            <figcaption><strong>Geosciences building.</strong></figcaption>
+          </figure>
+          <figure>
+            <a href="assets/images/recognition/ttu-seal.jpg" class="lightbox-link" target="_blank" rel="noopener">
+              <img src="assets/images/recognition/ttu-seal-thumb.jpg" alt="Omid Mansourihanis: At the Texas Tech University seal, Lubbock" loading="lazy">
+            </a>
+            <figcaption><strong>Texas Tech seal.</strong></figcaption>
+          </figure>
+          <figure>
+            <a href="assets/images/recognition/office.jpg" class="lightbox-link" target="_blank" rel="noopener">
+              <img src="assets/images/recognition/office-thumb.jpg" alt="Omid Mansourihanis: At the Center for Geospatial Technology" loading="lazy">
+            </a>
+            <figcaption><strong>Center for Geospatial Technology.</strong></figcaption>
+          </figure>
+        </div>
       </div>
     </section>
 
