@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>US Census Block Dataset Builder · Omid Mansourihanis</title>
+<meta name="description" content="Pick a US state, county and tract, then build a block-level urban-analysis dataset (Census 2020, ACS 2023, OpenStreetMap, building footprints, GHSL) in Google Colab.">
+<meta name="author" content="Omid Mansourihanis">
+<link rel="canonical" href="https://omid-mansourihanis.github.io/us-census-block-builder/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23143d59'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='800' fill='white' text-anchor='middle'%3EOM%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#f6f8fb; --card:#ffffff; --ink:#1f2a37; --muted:#657789;
+    --accent:#0c2438; --accent2:#147d84; --line:#dfe7ee; --ok:#147d84;
+    --font-serif:"Times New Roman",Times,"Liberation Serif",Tinos,serif;
+    --font-ui:Calibri,Carlito,"Segoe UI",Candara,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0f1621; --card:#17202c; --ink:#e7edf5; --muted:#9bacc2;
+      --accent:#7fb0e6; --accent2:#4f93d6; --line:#26323f; --ok:#4cc38a;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:var(--font-serif);font-size:17px;
+    line-height:1.5;padding:24px 16px}
+  .home{display:inline-block;font-family:var(--font-ui);font-size:14px;text-decoration:none;margin-bottom:14px}
+  .home:hover{text-decoration:underline}
+  label,select,button,.badge,.hint,.warn{font-family:var(--font-ui)}
+  .foot{font-family:var(--font-ui);font-size:13px;color:var(--muted);text-align:center}
+  .wrap{max-width:760px;margin:0 auto}
+  h1{font-size:28px;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:16px;margin:0 0 24px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:20px;margin-bottom:18px}
+  label{display:block;font-weight:600;font-size:13px;margin:14px 0 6px}
+  select,button{width:100%;padding:11px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:15px;background:var(--card);color:var(--ink)}
+  select:disabled{opacity:.5}
+  .hint{font-size:12px;color:var(--muted);margin-top:4px}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .row>div{flex:1;min-width:220px}
+  button.go{background:var(--accent);color:#fff;border:none;font-weight:700;
+    margin-top:20px;cursor:pointer;padding:14px}
+  button.go:disabled{opacity:.4;cursor:not-allowed}
+  button.go:hover:not(:disabled){background:var(--accent2)}
+  .out{margin-top:16px;display:none}
+  .out.show{display:block}
+  code,.token{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .token{display:block;background:var(--bg);border:1px dashed var(--line);
+    border-radius:8px;padding:12px;font-size:13px;word-break:break-all;margin:8px 0}
+  .copybtn{background:var(--ok);color:#fff;border:none;border-radius:8px;
+    padding:10px 14px;font-weight:600;cursor:pointer;width:auto;display:inline-block}
+  .steps{font-size:14px;padding-left:18px}
+  .steps li{margin:6px 0}
+  a{color:var(--accent2)}
+  .badge{display:inline-block;background:var(--bg);border:1px solid var(--line);
+    border-radius:20px;padding:2px 10px;font-size:12px;color:var(--muted)}
+  .warn{font-size:13px;color:var(--muted);border-left:3px solid var(--accent2);
+    padding:6px 12px;margin-top:12px;background:var(--bg);border-radius:0 8px 8px 0}
+  .spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line);
+    border-top-color:var(--accent2);border-radius:50%;animation:s .7s linear infinite;
+    vertical-align:-2px;margin-right:6px}
+  @keyframes s{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home" href="/">&larr; Omid Mansourihanis</a>
+  <h1>US Census Block Dataset Builder</h1>
+  <p class="sub">Pick a state &rarr; county &rarr; (optional) tract. The builder generates a
+    reproducible, block-level urban-analysis dataset (Census + OSM + buildings + GHSL) in Google Colab.</p>
+
+  <div class="card">
+    <label for="state">1 &nbsp;State</label>
+    <select id="state"><option value="">Loading states…</option></select>
+
+    <label for="county">2 &nbsp;County</label>
+    <select id="county" disabled><option value="">Select a state first</option></select>
+
+    <label for="tract">3 &nbsp;Tract <span class="badge">optional</span></label>
+    <select id="tract" disabled><option value="">(all tracts in county)</option></select>
+    <div class="hint">Leave on “all tracts” to build the whole county. Choosing one tract makes a
+      small, fast test dataset.</div>
+
+    <button class="go" id="go" disabled>Build configuration →</button>
+
+    <div class="out" id="out">
+      <p style="font-weight:600;margin:18px 0 4px">Your configuration token</p>
+      <span class="token" id="token"></span>
+      <button class="copybtn" id="copy">Copy token</button>
+      <p style="font-weight:600;margin:22px 0 4px">Then:</p>
+      <ol class="steps">
+        <li><a id="colablink" href="#" target="_blank" rel="noopener">Open the builder notebook in Google Colab ↗</a></li>
+        <li>Paste the token into the first cell where it says <code>CONFIG_TOKEN = "..."</code></li>
+        <li>Add your free <a href="https://api.census.gov/data/key_signup.html" target="_blank" rel="noopener">Census API key</a>, then run all cells.</li>
+        <li>The dataset (GeoPackage + CSV) downloads automatically when finished.</li>
+      </ol>
+      <div class="warn">Whole-county builds download several GB (GHSL + building footprints) and take
+        10–30 min on Colab. A single-tract build is a good first test.</div>
+    </div>
+  </div>
+
+  <p class="foot">
+    Geography lists come live from the US Census Bureau API, so they stay current.
+    50 states and DC are supported.<br>
+    <a href="https://github.com/Omid-Mansourihanis/Omid-Mansourihanis.github.io/tree/main/us-census-block-builder" target="_blank" rel="noopener">Source code &amp; README</a>
+    · <a href="census_pipeline_modular.py">census_pipeline_modular.py</a>
+    · <a href="run_pipeline.ipynb" download>run_pipeline.ipynb</a>
+  </p>
+</div>
+
+<script>
+// Colab opens the notebook straight from this GitHub repository
+const COLAB_NOTEBOOK_URL =
+  "https://colab.research.google.com/github/Omid-Mansourihanis/Omid-Mansourihanis.github.io/blob/main/us-census-block-builder/run_pipeline.ipynb";
+
+const CENSUS = "https://api.census.gov/data/2020/dec/pl"; // no key needed for geo lookups
+const $ = id => document.getElementById(id);
+// FIPS codes with a Microsoft Building Footprints state file (50 states + DC)
+const STATE_OK = new Set(["01","02","04","05","06","08","09","10","11","12","13","15","16",
+  "17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34",
+  "35","36","37","38","39","40","41","42","44","45","46","47","48","49","50","51","53","54",
+  "55","56"]);
+// UTF-8 safe, URL-safe base64 (county names such as "Doña Ana" are not ASCII)
+function encodeToken(obj){
+  const bytes = new TextEncoder().encode(JSON.stringify(obj));
+  let bin = ""; bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+const esc = t => String(t).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+// 1) Load states from the Census API (FIPS + name), sorted by name
+async function loadStates(){
+  try{
+    const r = await fetch(`${CENSUS}?get=NAME&for=state:*`);
+    const j = await r.json();
+    const rows = j.slice(1)                       // drop header
+      .map(([name, fips]) => ({name, fips}))
+      .filter(s => STATE_OK.has(s.fips))           // pipeline covers 50 states + DC
+      .sort((a,b)=>a.name.localeCompare(b.name));
+    const sel = $("state");
+    sel.innerHTML = '<option value="">Select a state…</option>' +
+      rows.map(s=>`<option value="${s.fips}" data-name="${esc(s.name)}">${esc(s.name)}</option>`).join("");
+  }catch(e){
+    $("state").innerHTML = '<option value="">Failed to load (check connection)</option>';
+  }
+}
+
+// 2) Load counties for a state
+async function loadCounties(stateFips){
+  const sel = $("county");
+  sel.disabled = true; sel.innerHTML = '<option>Loading counties…</option>';
+  $("tract").disabled = true; $("tract").innerHTML = '<option value="">(all tracts in county)</option>';
+  try{
+    const r = await fetch(`${CENSUS}?get=NAME&for=county:*&in=state:${stateFips}`);
+    const j = await r.json();
+    const rows = j.slice(1)
+      .map(([name, st, cty]) => ({name, fips:cty}))
+      .sort((a,b)=>a.name.localeCompare(b.name));
+    sel.innerHTML = '<option value="">Select a county…</option>' +
+      rows.map(c=>`<option value="${c.fips}" data-name="${esc(c.name)}">${esc(c.name.split(",")[0])}</option>`).join("");
+    sel.disabled = false;
+  }catch(e){
+    sel.innerHTML = '<option value="">Failed to load counties</option>';
+  }
+}
+
+// 3) Load tracts for a county (optional)
+async function loadTracts(stateFips, countyFips){
+  const sel = $("tract");
+  sel.disabled = true; sel.innerHTML = '<option value="">Loading tracts…</option>';
+  try{
+    const r = await fetch(`${CENSUS}?get=NAME&for=tract:*&in=state:${stateFips}%20county:${countyFips}`);
+    const j = await r.json();
+    const rows = j.slice(1)
+      .map(row => ({name:row[0], fips:row[row.length-1]}))
+      .sort((a,b)=>a.fips.localeCompare(b.fips));
+    sel.innerHTML = '<option value="">(all tracts in county)</option>' +
+      rows.map(t=>`<option value="${t.fips}">${t.fips} — ${esc(t.name.split(/[,;]/)[0])}</option>`).join("");
+    sel.disabled = false;
+  }catch(e){
+    sel.innerHTML = '<option value="">(all tracts — tract list unavailable)</option>';
+    sel.disabled = false;
+  }
+}
+
+function refreshGo(){
+  $("go").disabled = !($("state").value && $("county").value);
+}
+
+$("state").addEventListener("change", e=>{
+  $("out").classList.remove("show");
+  if(e.target.value){ loadCounties(e.target.value); }
+  refreshGo();
+});
+$("county").addEventListener("change", e=>{
+  $("out").classList.remove("show");
+  const st = $("state").value;
+  if(e.target.value){ loadTracts(st, e.target.value); }
+  refreshGo();
+});
+$("tract").addEventListener("change", ()=> $("out").classList.remove("show"));
+
+$("go").addEventListener("click", ()=>{
+  const stateOpt  = $("state").selectedOptions[0];
+  const countyOpt = $("county").selectedOptions[0];
+  const cfg = {
+    state_fips:  $("state").value,
+    county_fips: $("county").value,
+    tract_fips:  $("tract").value || null,      // null = whole county
+    state_name:  stateOpt ? stateOpt.dataset.name : "",
+    county_name: countyOpt ? countyOpt.dataset.name.split(",")[0].replace(/ County$/,"").trim() : "",
+  };
+  const token = encodeToken(cfg);
+  $("token").textContent = token;
+  $("colablink").href = COLAB_NOTEBOOK_URL;
+  $("out").classList.add("show");
+});
+
+$("copy").addEventListener("click", ()=>{
+  navigator.clipboard.writeText($("token").textContent).then(()=>{
+    $("copy").textContent = "Copied ✓";
+    setTimeout(()=> $("copy").textContent="Copy token", 1600);
+  });
+});
+
+loadStates();
+</script>
+</body>
+</html>
