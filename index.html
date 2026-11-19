@@ -1168,6 +1168,63 @@
         width: min(100%, 280px);
       }
     }
+
+    .pf-tiles {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .pf-tile {
+      display: block;
+      overflow: hidden;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      text-decoration: none;
+      box-shadow: 0 12px 30px rgba(12,36,56,.05);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+
+    .pf-tile:hover,
+    .pf-tile:focus-visible {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 34px rgba(12,36,56,.13);
+    }
+
+    .pf-tile img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      object-position: center;
+      background: white;
+    }
+
+    .pf-tile span {
+      display: block;
+      padding: 12px 14px;
+      color: var(--navy-2);
+      font-weight: 700;
+    }
+
+    .pf-cta {
+      margin: 26px 0 0;
+    }
+
+    .button.pf-button {
+      background: var(--navy-2);
+      color: white;
+    }
+
+    @media (max-width: 900px) {
+      .pf-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 520px) {
+      .pf-tiles { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 
@@ -1180,6 +1237,7 @@
       <div class="nav-links">
         <a href="#about">About</a>
         <a href="#research">Research</a>
+        <a href="#portfolio">Portfolio</a>
         <a href="#publications">Publications</a>
         <a href="#data">Data</a>
         <a href="#experience">Experience</a>
@@ -1331,6 +1389,43 @@
           <div class="tags"><span class="tag">Remote Sensing</span><span class="tag">GEE</span><span class="tag">Urban Sustainability</span></div>
         </article>
       </div>
+    </section>
+
+    <section id="portfolio">
+      <p class="section-kicker">Mapping and Research Portfolio</p>
+      <h2 class="section-title">Maps, models and practice</h2>
+      <p class="section-lead">
+        22 research projects and a decade of planning practice in seven themes: hazard exposure and environmental justice,
+        emergency access and resilience, inequality and GeoAI, remote sensing, urban form and heat, land use and zoning,
+        and municipal practice.
+      </p>
+      <div class="pf-tiles">
+          <a class="pf-tile" href="portfolio/#nyc">
+            <img src="portfolio/img/nyc-1-thumb.jpg" alt="Emergency access, NYC" loading="lazy">
+            <span>Emergency access, NYC</span>
+          </a>
+          <a class="pf-tile" href="portfolio/#fractal">
+            <img src="portfolio/img/fractal-1-thumb.jpg" alt="Fractal coherence, 4 megacities" loading="lazy">
+            <span>Fractal coherence, 4 megacities</span>
+          </a>
+          <a class="pf-tile" href="portfolio/#hurricane">
+            <img src="portfolio/img/hurricane-1-thumb.jpg" alt="Hurricane risk and EJ, Texas" loading="lazy">
+            <span>Hurricane risk and EJ, Texas</span>
+          </a>
+          <a class="pf-tile" href="portfolio/#walking">
+            <img src="portfolio/img/walking-1-thumb.jpg" alt="Walking equilibria, Chicago" loading="lazy">
+            <span>Walking equilibria, Chicago</span>
+          </a>
+          <a class="pf-tile" href="portfolio/#zoning">
+            <img src="portfolio/img/zoning-1-thumb.jpg" alt="Evidence-based zoning" loading="lazy">
+            <span>Evidence-based zoning</span>
+          </a>
+          <a class="pf-tile" href="portfolio/#earthquake">
+            <img src="portfolio/img/earthquake-1-thumb.jpg" alt="Post-earthquake network, Sari" loading="lazy">
+            <span>Post-earthquake network, Sari</span>
+          </a>
+      </div>
+      <p class="pf-cta"><a class="button primary pf-button" href="portfolio/">Open the full portfolio &rarr;</a></p>
     </section>
 
     <section id="publications">
