@@ -453,6 +453,48 @@
       text-decoration: none;
     }
 
+    .animation-pair {
+      grid-template-columns: 1fr;
+    }
+
+    .animation-pair .animation-body p {
+      max-width: 860px;
+    }
+
+    .video-pair {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .video-version {
+      margin: 0;
+    }
+
+    .video-version video {
+      display: block;
+      width: 100%;
+      border-radius: 10px;
+      background: var(--navy);
+    }
+
+    .video-version figcaption {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: .9rem;
+      line-height: 1.5;
+    }
+
+    .video-version figcaption strong {
+      color: var(--navy-2);
+    }
+
+    @media (max-width: 760px) {
+      .video-pair {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .animation + .animation {
       margin-top: 26px;
     }
@@ -1483,6 +1525,46 @@
               <figcaption><strong>Final criteria overlay.</strong> All criteria combined into block-level high-rise development capacity, from minimum to maximum potential.</figcaption>
             </figure>
           </div>
+        </div>
+      </article>
+
+      <article class="animation animation-pair">
+        <div class="animation-body">
+          <div class="animation-meta">
+            <span class="no-ai">Made without AI</span>
+            <span class="tag">2021</span>
+            <span class="tag">ArcGIS ArcScene</span>
+            <span class="tag">2 versions</span>
+            <span class="tag">44M+ spatiotemporal records</span>
+          </div>
+          <h3>Traffic flow simulation of Sari, Iran</h3>
+          <p id="anim-sari-desc">
+            A 3D simulation of vehicles moving through the street network of Sari, built from more than 44 million
+            spatiotemporal records that were generated and processed for the model. Each vehicle is a 3D symbol moving
+            along its route over time. I built and animated it
+            myself in ArcGIS ArcScene in 2021. No AI tools were used.
+          </p>
+        </div>
+
+        <div class="video-pair">
+          <figure class="video-version">
+            <video controls preload="metadata" playsinline style="aspect-ratio: 960 / 704"
+                   poster="assets/images/sari-traffic-flow-v1-poster.jpg" aria-label="City traffic flow">
+              <source src="assets/videos/sari-traffic-flow-simulation-v1.mp4" type="video/mp4">
+              Your browser cannot play this video.
+              <a href="assets/videos/sari-traffic-flow-simulation-v1.mp4">Download the MP4</a> instead.
+            </video>
+            <figcaption><strong>Version 1: City traffic flow.</strong> Vehicles across the whole city on a dark basemap, shown in different colors, from a city-wide view down to street level.</figcaption>
+          </figure>
+          <figure class="video-version">
+            <video controls preload="metadata" playsinline style="aspect-ratio: 960 / 704"
+                   poster="assets/images/sari-public-transport-v2-poster.jpg" aria-label="Public transportation">
+              <source src="assets/videos/sari-public-transport-simulation-v2.mp4" type="video/mp4">
+              Your browser cannot play this video.
+              <a href="assets/videos/sari-public-transport-simulation-v2.mp4">Download the MP4</a> instead.
+            </video>
+            <figcaption><strong>Version 2: Public transportation.</strong> Buses (larger cubes) and taxis (smaller cubes) moving along their routes on a light basemap.</figcaption>
+          </figure>
         </div>
       </article>
     </section>
