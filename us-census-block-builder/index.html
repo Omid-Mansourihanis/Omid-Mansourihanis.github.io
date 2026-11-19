@@ -27,7 +27,8 @@
     line-height:1.5;padding:24px 16px}
   .home{display:inline-block;font-family:var(--font-ui);font-size:14px;text-decoration:none;margin-bottom:14px}
   .home:hover{text-decoration:underline}
-  label,select,button,.badge,.hint,.warn{font-family:var(--font-ui)}
+  label,select,button,input,.badge,.hint,.warn{font-family:var(--font-ui)}
+  input.bad{border-color:#c0392b}
   .foot{font-family:var(--font-ui);font-size:13px;color:var(--muted);text-align:center}
   .wrap{max-width:760px;margin:0 auto}
   h1{font-size:28px;margin:0 0 4px}
@@ -35,7 +36,7 @@
   .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
     padding:20px;margin-bottom:18px}
   label{display:block;font-weight:600;font-size:13px;margin:14px 0 6px}
-  select,button{width:100%;padding:11px 12px;border:1px solid var(--line);
+  select,button,input[type=text]{width:100%;padding:11px 12px;border:1px solid var(--line);
     border-radius:8px;font-size:15px;background:var(--card);color:var(--ink)}
   select:disabled{opacity:.5}
   .hint{font-size:12px;color:var(--muted);margin-top:4px}
@@ -81,7 +82,8 @@
 
     <label for="tract">3 &nbsp;Tract <span class="badge">optional</span></label>
     <select id="tract" disabled><option value="">(all tracts in county)</option></select>
-    <div class="hint">Leave on “all tracts” to build the whole county. Choosing one tract makes a
+    <input id="tractcode" type="text" inputmode="numeric" maxlength="6" placeholder="Leave empty for the whole county, or type a 6-digit tract code, e.g. 000102" hidden>
+    <div class="hint" id="tracthint">Leave on “all tracts” to build the whole county. Choosing one tract makes a
       small, fast test dataset.</div>
 
     <button class="go" id="go" disabled>Build configuration →</button>
@@ -103,8 +105,8 @@
   </div>
 
   <p class="foot">
-    Geography lists come live from the US Census Bureau API, so they stay current.
-    50 states and DC are supported.<br>
+    States and counties: the 3,143 county equivalents of the 2020 Census (bundled with this page).
+    Tracts are listed live from the US Census Bureau API when it is reachable. 50 states and DC are supported.<br>
     <a href="https://github.com/Omid-Mansourihanis/Omid-Mansourihanis.github.io/tree/main/us-census-block-builder" target="_blank" rel="noopener">Source code &amp; README</a>
     · <a href="census_pipeline_modular.py">census_pipeline_modular.py</a>
     · <a href="run_pipeline.ipynb" download>run_pipeline.ipynb</a>
@@ -131,77 +133,97 @@ function encodeToken(obj){
 }
 const esc = t => String(t).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
-// 1) Load states from the Census API (FIPS + name), sorted by name
+// 1) States and counties come from a bundled 2020 list, so the page works even
+//    when api.census.gov is blocked or unreachable from the visitor's network.
+let GEO = null;
 async function loadStates(){
   try{
-    const r = await fetch(`${CENSUS}?get=NAME&for=state:*`);
-    const j = await r.json();
-    const rows = j.slice(1)                       // drop header
-      .map(([name, fips]) => ({name, fips}))
-      .filter(s => STATE_OK.has(s.fips))           // pipeline covers 50 states + DC
+    const r = await fetch("data/states_counties.json");
+    GEO = (await r.json()).states;
+    const rows = Object.entries(GEO)
+      .filter(([fips]) => STATE_OK.has(fips))
+      .map(([fips, v]) => ({fips, name: v.name}))
       .sort((a,b)=>a.name.localeCompare(b.name));
-    const sel = $("state");
-    sel.innerHTML = '<option value="">Select a state…</option>' +
+    $("state").innerHTML = '<option value="">Select a state…</option>' +
       rows.map(s=>`<option value="${s.fips}" data-name="${esc(s.name)}">${esc(s.name)}</option>`).join("");
   }catch(e){
-    $("state").innerHTML = '<option value="">Failed to load (check connection)</option>';
+    $("state").innerHTML = '<option value="">Failed to load the state list — please reload</option>';
   }
 }
 
-// 2) Load counties for a state
-async function loadCounties(stateFips){
+// 2) Counties for a state (from the bundled list)
+function loadCounties(stateFips){
   const sel = $("county");
-  sel.disabled = true; sel.innerHTML = '<option>Loading counties…</option>';
-  $("tract").disabled = true; $("tract").innerHTML = '<option value="">(all tracts in county)</option>';
-  try{
-    const r = await fetch(`${CENSUS}?get=NAME&for=county:*&in=state:${stateFips}`);
-    const j = await r.json();
-    const rows = j.slice(1)
-      .map(([name, st, cty]) => ({name, fips:cty}))
-      .sort((a,b)=>a.name.localeCompare(b.name));
-    sel.innerHTML = '<option value="">Select a county…</option>' +
-      rows.map(c=>`<option value="${c.fips}" data-name="${esc(c.name)}">${esc(c.name.split(",")[0])}</option>`).join("");
-    sel.disabled = false;
-  }catch(e){
-    sel.innerHTML = '<option value="">Failed to load counties</option>';
-  }
+  resetTract();
+  const st = GEO[stateFips];
+  sel.innerHTML = '<option value="">Select a county…</option>' +
+    st.counties.map(([fips, name]) =>
+      `<option value="${fips}" data-name="${esc(name + ", " + st.name)}">${esc(name)}</option>`).join("");
+  sel.disabled = false;
 }
 
-// 3) Load tracts for a county (optional)
+// 3) Tracts (optional): live from the Census API; if that fails, type a code
+function resetTract(){
+  $("tract").hidden = false; $("tract").disabled = true;
+  $("tract").innerHTML = '<option value="">(all tracts in county)</option>';
+  $("tractcode").hidden = true; $("tractcode").value = ""; $("tractcode").classList.remove("bad");
+  $("tracthint").innerHTML = 'Leave on “all tracts” to build the whole county. Choosing one tract makes a small, fast test dataset.';
+}
 async function loadTracts(stateFips, countyFips){
+  resetTract();
   const sel = $("tract");
-  sel.disabled = true; sel.innerHTML = '<option value="">Loading tracts…</option>';
+  sel.innerHTML = '<option value="">Loading tracts…</option>';
   try{
-    const r = await fetch(`${CENSUS}?get=NAME&for=tract:*&in=state:${stateFips}%20county:${countyFips}`);
+    const ctl = new AbortController(); const t = setTimeout(()=>ctl.abort(), 8000);
+    const r = await fetch(`${CENSUS}?get=NAME&for=tract:*&in=state:${stateFips}%20county:${countyFips}`,
+                          {signal: ctl.signal});
+    clearTimeout(t);
     const j = await r.json();
     const rows = j.slice(1)
       .map(row => ({name:row[0], fips:row[row.length-1]}))
       .sort((a,b)=>a.fips.localeCompare(b.fips));
+    if(!rows.length) throw new Error("empty");
     sel.innerHTML = '<option value="">(all tracts in county)</option>' +
       rows.map(t=>`<option value="${t.fips}">${t.fips} — ${esc(t.name.split(/[,;]/)[0])}</option>`).join("");
     sel.disabled = false;
   }catch(e){
-    sel.innerHTML = '<option value="">(all tracts — tract list unavailable)</option>';
-    sel.disabled = false;
+    // Census API unreachable (network, firewall or rate limit): manual entry
+    sel.hidden = true;
+    $("tractcode").hidden = false;
+    $("tracthint").innerHTML = 'The tract list could not be loaded from the Census API from your network. ' +
+      'Leave this empty to build the whole county, or type a 6-digit tract code (find one with the ' +
+      '<a href="https://geocoding.geo.census.gov/geocoder/geographies/address?form" target="_blank" rel="noopener">Census Geocoder</a>, ' +
+      'e.g. tract 1.02 → <code>000102</code>).';
   }
+}
+function tractValue(){
+  if(!$("tractcode").hidden){
+    const v = $("tractcode").value.trim();
+    return /^\d{6}$/.test(v) ? v : (v ? undefined : "");
+  }
+  return $("tract").value;
 }
 
 function refreshGo(){
-  $("go").disabled = !($("state").value && $("county").value);
+  const tv = tractValue();
+  $("tractcode").classList.toggle("bad", tv === undefined);
+  $("go").disabled = !($("state").value && $("county").value) || tv === undefined;
 }
 
 $("state").addEventListener("change", e=>{
   $("out").classList.remove("show");
   if(e.target.value){ loadCounties(e.target.value); }
+  else { $("county").disabled = true; $("county").innerHTML = '<option value="">Select a state first</option>'; resetTract(); }
   refreshGo();
 });
 $("county").addEventListener("change", e=>{
   $("out").classList.remove("show");
   const st = $("state").value;
-  if(e.target.value){ loadTracts(st, e.target.value); }
+  if(e.target.value){ loadTracts(st, e.target.value); } else { resetTract(); }
   refreshGo();
 });
 $("tract").addEventListener("change", ()=> $("out").classList.remove("show"));
+$("tractcode").addEventListener("input", ()=>{ $("out").classList.remove("show"); refreshGo(); });
 
 $("go").addEventListener("click", ()=>{
   const stateOpt  = $("state").selectedOptions[0];
@@ -209,7 +231,7 @@ $("go").addEventListener("click", ()=>{
   const cfg = {
     state_fips:  $("state").value,
     county_fips: $("county").value,
-    tract_fips:  $("tract").value || null,      // null = whole county
+    tract_fips:  tractValue() || null,          // null = whole county
     state_name:  stateOpt ? stateOpt.dataset.name : "",
     county_name: countyOpt ? countyOpt.dataset.name.split(",")[0].replace(/ County$/,"").trim() : "",
   };
