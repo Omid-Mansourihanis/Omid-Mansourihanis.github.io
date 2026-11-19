@@ -502,6 +502,24 @@
       font-weight: 400;
     }
 
+    .param-list {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: 8px 16px;
+      margin: 16px 0 0;
+      font-size: .9rem;
+    }
+
+    .param-list dt {
+      color: var(--navy-2);
+      font-weight: 800;
+    }
+
+    .param-list dd {
+      margin: 0;
+      color: var(--muted);
+    }
+
     .video-stack {
       display: grid;
       gap: 20px;
@@ -1644,6 +1662,46 @@
             <a href="simulations/covid-nowruz-sari/">Run the interactive simulation yourself &rarr;</a>
             <span class="animation-link-sub">Play it day by day, zoom into a neighbourhood, and test what happens when some families skip the visit.</span>
           </p>
+        </div>
+      </article>
+
+      <article class="animation">
+        <div class="animation-media">
+          <video controls preload="metadata" playsinline style="aspect-ratio: 960 / 526"
+                 poster="assets/images/walkability-poster.jpg"
+                 aria-describedby="anim-walk-desc">
+            <source src="assets/videos/walkability-optimal-routes.mp4" type="video/mp4">
+            Your browser cannot play this video.
+            <a href="assets/videos/walkability-optimal-routes.mp4">Download the MP4</a> instead.
+          </video>
+        </div>
+
+        <div class="animation-body">
+          <div class="animation-meta">
+            <span class="tag">3D GIS</span>
+            <span class="tag">MCDM</span>
+            <span class="tag">Network analysis</span>
+            <span class="tag">2 min 40 s</span>
+          </div>
+          <h3>Optimal walking routes for elderly health</h3>
+          <p id="anim-walk-desc">
+            A parametric GIS model that finds the most comfortable walking routes, not just the shortest, with priority for
+            elderly and disabled pedestrians. It was tested on a hypothetical city of ten zones (A&ndash;J) and transfers to
+            any city with the input data.
+          </p>
+          <dl class="param-list">
+            <dt>Criteria</dt>
+            <dd>15: path width, sunlight and shade, night lighting, temperature, noise, odor, slope, runoff drainage,
+              pavement quality, view, parks, enclosure, transit stops, retail, land-use compatibility</dd>
+            <dt>Scale</dt>
+            <dd>Each criterion reclassified on the street network from 1 to 5</dd>
+            <dt>Weighting</dt>
+            <dd>Pairwise comparison (AHP/ANP), combined in an MCDM overlay</dd>
+            <dt>Routing</dt>
+            <dd>Network analysis with the Dijkstra algorithm</dd>
+            <dt>Result</dt>
+            <dd>Optimal walking routes differed from the shortest routes by about 40&ndash;50%</dd>
+          </dl>
         </div>
       </article>
     </section>
