@@ -12,9 +12,6 @@
 <meta property="og:url" content="https://omid-mansourihanis.github.io/simulations/covid-nowruz-sari/">
 <link rel="canonical" href="https://omid-mansourihanis.github.io/simulations/covid-nowruz-sari/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23143d59'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='800' fill='white' text-anchor='middle'%3EOM%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --paper:#eef0ec; --surface:#f8f9f6; --ink:#1c2430; --muted:#5a6571; --line:#d4d9d5;
@@ -47,9 +44,9 @@
 }
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:border-box}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Times New Roman",Times,"Liberation Serif",Tinos,serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 .wrap{max-width:1240px;margin:0 auto;padding:40px 28px 56px}
-h1,h2,.daynum,.big{font-family:"Fraunces",Georgia,"Times New Roman",serif;font-variation-settings:"opsz" 96}
+h1,h2,.daynum,.big{font-family:"Times New Roman",Times,"Liberation Serif",Tinos,serif;font-variation-settings:"opsz" 96}
 h1{font-size:clamp(2.4rem,5vw,4rem);line-height:1.02;font-weight:600;margin:0 0 14px;letter-spacing:-.015em}
 .lede{font-size:1.125rem;max-width:62ch;color:var(--muted);margin:0 0 34px}
 .lede strong{color:var(--ink);font-weight:600}
@@ -84,7 +81,7 @@ h1{font-size:clamp(2.4rem,5vw,4rem);line-height:1.02;font-weight:600;margin:0 0 
 .phase.after{background:color-mix(in srgb,var(--line) 60%,transparent);color:var(--muted)}
 .headline{padding:18px 20px;background:var(--surface);border-radius:10px;border:1px solid var(--line)}
 .big{font-size:2.6rem;line-height:1.05;font-weight:600;font-variant-numeric:tabular-nums lining-nums}
-.big small{font-family:"Instrument Sans",sans-serif;font-size:1rem;font-weight:400;color:var(--muted);margin-left:6px}
+.big small{font-family:Calibri,Carlito,"Segoe UI",Arial,sans-serif;font-size:1rem;font-weight:400;color:var(--muted);margin-left:6px}
 .bar{height:8px;border-radius:5px;background:color-mix(in srgb,var(--line) 70%,transparent);margin:12px 0 4px;overflow:hidden}
 .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--map-exp),var(--map-inf));border-radius:5px}
 .minis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
@@ -123,12 +120,12 @@ input[type=range]{accent-color:var(--accent)}
 .method p,.method li{max-width:62ch}
 .facts{list-style:none;padding:0;margin:0;display:grid;gap:10px}
 .facts li{display:grid;grid-template-columns:7.5rem 1fr;gap:14px;padding-bottom:10px;border-bottom:1px solid var(--line)}
-.facts li b{font-family:"Fraunces",Georgia,serif;font-size:1.15rem;font-weight:600;font-variant-numeric:lining-nums}
+.facts li b{font-family:"Times New Roman",Times,"Liberation Serif",Tinos,serif;font-size:1.15rem;font-weight:600;font-variant-numeric:lining-nums}
 .rules{counter-reset:r;list-style:none;padding:0;margin:18px 0 0;display:grid;gap:12px}
 .rules li{counter-increment:r;display:grid;grid-template-columns:2rem 1fr;gap:8px}
-.rules li::before{content:counter(r);font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.3rem;line-height:1.2;color:var(--accent)}
+.rules li::before{content:counter(r);font-family:"Times New Roman",Times,"Liberation Serif",Tinos,serif;font-weight:600;font-size:1.3rem;line-height:1.2;color:var(--accent)}
 .kin{width:100%;max-width:440px;height:auto;display:block;margin:4px 0 6px}
-.kin text{font-family:"Instrument Sans",sans-serif;font-size:12px;fill:var(--muted)}
+.kin text{font-family:Calibri,Carlito,"Segoe UI",Arial,sans-serif;font-size:12px;fill:var(--muted)}
 .limits{margin-top:56px;border-top:1px solid var(--line);padding-top:32px}
 .limits h2{font-size:1.5rem;margin:0 0 10px;font-weight:600}
 .limits p{max-width:76ch;color:var(--muted);margin:0 0 12px}
@@ -139,6 +136,7 @@ footer{margin-top:40px;font-size:.82rem;color:var(--muted)}
 .topnav a:hover{text-decoration:underline}
 footer a{color:var(--accent)}
 @media (max-width:560px){.wrap{padding:28px 18px 44px}.daynum{font-size:2.6rem}.big{font-size:2.1rem}.facts li{grid-template-columns:6rem 1fr}}
+.btn,.seg button,.legend,.toggles,.maptag,.hint,.caption,.mini,.phase,.tip,.topnav,.field,footer{font-family:Calibri,Carlito,"Segoe UI",Arial,sans-serif}
 @media (prefers-reduced-motion: reduce){.tip{transition:none}}
 </style>
 </head>
@@ -459,9 +457,9 @@ function drawChart(){
   chartGeo={l,pw,bw};
   // band
   c.fillStyle=pal.band;c.fillRect(xs(0),tp,xs(NOWRUZ)-xs(0),ph);
-  c.fillStyle=pal.bandInk;c.font="500 11px 'Instrument Sans',sans-serif";c.textAlign="left";c.fillText("Nowruz holidays",xs(0)+6,tp+13);
+  c.fillStyle=pal.bandInk;c.font="500 11px Calibri,Carlito,Arial,sans-serif";c.textAlign="left";c.fillText("Nowruz holidays",xs(0)+6,tp+13);
   // grid
-  c.strokeStyle=pal.grid;c.lineWidth=1;c.fillStyle=pal.muted;c.font="11px 'Instrument Sans',sans-serif";
+  c.strokeStyle=pal.grid;c.lineWidth=1;c.fillStyle=pal.muted;c.font="11px Calibri,Carlito,Arial,sans-serif";
   for(let i=0;i<=4;i++){const v=mx*i/4,y=Math.round(ys(v))+.5;c.beginPath();c.moveTo(l,y);c.lineTo(l+pw,y);c.stroke();c.textAlign="right";c.fillText(v>=1000?(v/1000)+"k":fmt(v),l-6,y+4);c.textAlign="left";c.fillText(i*25+"%",l+pw+6,y+4);}
   c.textAlign="center";for(let d=0;d<=DAYS;d+=10)c.fillText(dateShort(d),xs(d),h-6);
   // bars
@@ -471,13 +469,13 @@ function drawChart(){
   // baseline
   if(baseline&&params.skip>0){c.setLineDash([4,4]);c.strokeStyle=pal.baseLine;c.lineWidth=1.6;c.beginPath();
     for(let d=0;d<DAYS;d++){const x=xs(d+1),y=yp(baseline.cum[d]/60000);d?c.lineTo(x,y):c.moveTo(x,y);}c.stroke();c.setLineDash([]);
-    c.fillStyle=pal.baseLine;c.textAlign="right";c.font="500 11px 'Instrument Sans',sans-serif";c.fillText("If every family visits",l+pw-4,yp(baseline.cum[DAYS-1]/60000)-6);}
+    c.fillStyle=pal.baseLine;c.textAlign="right";c.font="500 11px Calibri,Carlito,Arial,sans-serif";c.fillText("If every family visits",l+pw-4,yp(baseline.cum[DAYS-1]/60000)-6);}
   // cumulative line
   c.strokeStyle=pal.line;c.lineWidth=2;c.beginPath();c.moveTo(xs(0),yp(0));
   for(let d=0;d<=Math.min(cur,DAYS-1);d++){const f=d===cur?Math.min(1,t-d):1;const prev=d?sim.cum[d-1]:0;const v=prev+(sim.cum[d]-prev)*f;c.lineTo(xs(d)+bw*f,yp(v/60000));}
   c.stroke();
   // peak marker
-  if(t>=sim.peak+1){const x=xs(sim.peak)+bw/2,y=ys(sim.peakVal);c.fillStyle=pal.ink;c.textAlign="left";c.font="600 11px 'Instrument Sans',sans-serif";
+  if(t>=sim.peak+1){const x=xs(sim.peak)+bw/2,y=ys(sim.peakVal);c.fillStyle=pal.ink;c.textAlign="left";c.font="600 11px Calibri,Carlito,Arial,sans-serif";
     c.fillText("Peak, day "+sim.peak,Math.min(x+8,l+pw-70),Math.max(tp+26,y+2));}
   // cursor
   const xc=Math.round(xs(Math.min(t,DAYS)))+.5;c.strokeStyle=pal.ink;c.globalAlpha=.5;c.lineWidth=1;c.beginPath();c.moveTo(xc,tp);c.lineTo(xc,tp+ph);c.stroke();c.globalAlpha=1;
