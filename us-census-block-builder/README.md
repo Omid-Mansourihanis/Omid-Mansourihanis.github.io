@@ -12,6 +12,32 @@ GHSL (building height / volume / urbanization) — then download it as a GeoPack
 The geography picker is a static web page (GitHub Pages). The heavy processing runs in
 **Google Colab**, which has the disk, memory, and Python libraries the pipeline needs.
 
+## What you get
+
+One table for the county you choose, with **one row per 2020 census block** and several hundred
+columns from different sources, already joined on the block GeoID. Downloading, cleaning and merging
+these sources by hand usually takes days; here it takes a few clicks and one Colab run, and anyone who
+picks the same county gets the same table (see [What the dataset contains](#what-the-dataset-contains)).
+
+**Outputs**
+- **GeoPackage**: block polygons with every column; opens in ArcGIS Pro, QGIS or GeoPandas.
+- **CSV**: the same table without geometry, for Excel, R or machine-learning models.
+- **Metadata CSV**: the source and native geography of each column, for methods sections and reproducibility.
+
+**Useful for**
+- Urban planning research: walkability, access to services, spatial equity, site selection.
+- Transportation and safety: road-network features next to population characteristics.
+- Machine learning: a ready feature table keyed on GeoID, easy to join to crashes, crime or housing prices.
+- Comparing cities with identical definitions, e.g. Lubbock and Houston.
+- Teaching: students start analysing instead of wrestling with APIs and file formats.
+
+**Keep in mind**
+- ACS and DHC values are published for block groups or tracts and are *repeated* on every block
+  inside them; they do not show differences between neighbouring blocks.
+- ACS margins of error are not included; in small areas they can be large.
+- OpenStreetMap completeness varies by city (sidewalks are often missing).
+- GHSL is a 100 m–1 km grid sampled at each block's centroid, so it is approximate for small blocks.
+
 ## How it works
 
 ```
