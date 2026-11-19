@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Manhattan Forward View</title>
+<meta name="description" content="Click any Manhattan street to see the forward isovist a driver gets: 73 rays from five points, cast against open building footprints, with the indices from Mansourihanis (2026).">
+<link rel="canonical" href="https://omid-mansourihanis.github.io/manhattan-forward-view/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23143d59'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='800' fill='white' text-anchor='middle'%3EOM%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.1/dist/maplibre-gl.css">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://unpkg.com/maplibre-gl@5.24.1/dist/maplibre-gl.js"></script>
+</head>
+<body>
+<div id="map" aria-label="3D map of Manhattan"></div>
+
+<aside id="panel">
+  <header>
+    <button id="toggle" class="icon" aria-label="Show or hide the panel" title="Show or hide the panel">☰</button>
+    <div>
+      <h1>Manhattan Forward View</h1>
+      <p class="lede">How much of the street ahead can a driver see? Click any street.</p>
+      <a class="home" href="/">&larr; Omid Mansourihanis</a>
+    </div>
+  </header>
+
+  <div class="body">
+    <p id="status" class="status" role="status">Click a street on the map. Building footprints load from OpenStreetMap on the first click in an area.</p>
+
+    <section id="empty">
+      <p>Each click finds the street segment between two intersections, places five points between 30% and 70% of its length and casts 73 rays, 2.5° apart, across the half plane ahead of the driver. The <b>forward opening θ(R)</b> is the angle covered by rays that travel beyond the look-ahead distance <i>R</i> before meeting a building.</p>
+      <div class="fly">
+        <span>Go to</span>
+        <button data-fly="-74.0045,40.7322,16.8">West Village</button>
+        <button data-fly="-73.9855,40.7505,16.4">Midtown</button>
+        <button data-fly="-74.0110,40.7075,16.6">Financial District</button>
+        <button data-fly="-73.9465,40.8090,16.4">Harlem</button>
+      </div>
+    </section>
+
+    <section id="result" hidden>
+      <h2 id="streetName"></h2>
+      <p id="streetMeta" class="meta"></p>
+
+      <div class="hero">
+        <div class="big" id="theta"></div>
+        <div><div id="thetaLabel" class="hl"></div><div id="thetaSub" class="meta"></div></div>
+      </div>
+
+      <div class="ctl">
+        <label for="R">Look-ahead R <output id="Rval"></output></label>
+        <input id="R" type="range" min="30" max="240" step="10" value="80" list="Rticks">
+        <datalist id="Rticks"><option value="30"><option value="40"><option value="60"><option value="80"><option value="100"><option value="120"><option value="160"><option value="200"><option value="240"></datalist>
+      </div>
+
+      <div class="ctl">
+        <span class="lab">Direction</span>
+        <div class="seg"><button id="dirBoth" data-dir="both">Both (segment value)</button><button id="dirA" data-dir="a"></button><button id="dirB" data-dir="b"></button></div>
+      </div>
+      <div class="ctl">
+        <span class="lab">Draw rays from point</span>
+        <div class="seg pts"><button data-pt="0">1</button><button data-pt="1">2</button><button data-pt="2">3</button><button data-pt="3">4</button><button data-pt="4">5</button></div>
+        <p id="pointInfo" class="meta"></p>
+      </div>
+      <div class="actions"><button id="driver" class="primary">Driver's view</button><button id="overview">Re-center</button></div>
+
+      <ul id="flags" class="flags" hidden></ul>
+
+      <h3>Indices</h3>
+      <dl id="indices" class="indices"></dl>
+
+      <h3>Against the Manhattan study</h3>
+      <div id="compare"></div>
+
+      <h3>Opening across look-ahead distances</h3>
+      <div id="profile"></div>
+
+      <details>
+        <summary>What the study found, and what this page does not claim</summary>
+        <p>In the paper's pre-specified model, each standard deviation of opening at 80 ft was associated with a lower rate of mid-block injury crashes (IRR 0.805, 95% CI 0.729 to 0.890), and wider carriageways with a higher rate (IRR 1.356), across 4,373 crashes on 4,902 segments from 2021 to 2025. No traffic volumes or speeds were observed, so these are associations, not effects, and this page does not turn them into a risk score for any street.</p>
+        <p>Values here are computed live from OpenStreetMap footprints and streets. The paper used NYC planimetric footprints and the city's speed-limit layer, so a street's value here can differ from the paper's. The geometry is planar: building height, trees and parked cars do not block rays.</p>
+      </details>
+    </section>
+
+    <div class="layers">
+      <label><input type="checkbox" id="footprints"> Show footprints used for ray casting</label>
+      <label id="ownWrap" hidden><input type="checkbox" id="own"> Show paper results by segment</label>
+    </div>
+
+    <footer>
+      Method: Mansourihanis, O. (2026). <i>How much of the street ahead can a driver see? Forward views from open building footprints in Manhattan and their association with injury crashes.</i> Manuscript, not yet peer reviewed.<br>
+      Data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>. Basemap: <a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a>. Queries: Overpass API.
+    </footer>
+  </div>
+</aside>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
