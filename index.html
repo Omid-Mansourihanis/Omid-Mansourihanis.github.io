@@ -1678,16 +1678,17 @@
 
         <div class="animation-body">
           <div class="animation-meta">
-            <span class="tag">3D GIS</span>
+            <span class="no-ai">Made without AI</span>
+            <span class="tag">ArcGIS ArcScene</span>
             <span class="tag">MCDM</span>
             <span class="tag">Network analysis</span>
-            <span class="tag">2 min 40 s</span>
+            <span class="tag">2 min 39 s</span>
           </div>
           <h3>Optimal walking routes for elderly health</h3>
           <p id="anim-walk-desc">
             A parametric GIS model that finds the most comfortable walking routes, not just the shortest, with priority for
             elderly and disabled pedestrians. It was tested on a hypothetical city of ten zones (A&ndash;J) and transfers to
-            any city with the input data.
+            any city with the input data. I modeled and animated it myself in ArcGIS ArcScene. No AI tools were used.
           </p>
           <dl class="param-list">
             <dt>Criteria</dt>
@@ -1701,6 +1702,47 @@
             <dd>Network analysis with the Dijkstra algorithm</dd>
             <dt>Result</dt>
             <dd>Optimal walking routes differed from the shortest routes by about 40&ndash;50%</dd>
+          </dl>
+        </div>
+      </article>
+
+      <article class="animation">
+        <div class="animation-media">
+          <video controls preload="metadata" playsinline style="aspect-ratio: 960 / 656"
+                 poster="assets/images/crowd-poster.jpg"
+                 aria-describedby="anim-crowd-desc">
+            <source src="assets/videos/crowd-construction-waste-tehran.mp4" type="video/mp4">
+            Your browser cannot play this video.
+            <a href="assets/videos/crowd-construction-waste-tehran.mp4">Download the MP4</a> instead.
+          </video>
+        </div>
+
+        <div class="animation-body">
+          <div class="animation-meta">
+            <span class="no-ai">Made without AI</span>
+            <span class="tag">ArcGIS ArcScene</span>
+            <span class="tag">GIS optimization</span>
+            <span class="tag">3 min 3 s</span>
+          </div>
+          <h3>CROWD: reusing construction waste in Tehran</h3>
+          <p id="anim-crowd-desc">
+            Tehran demolishes old buildings and issues new building permits every day. This GIS model links the two:
+            waste from demolished dilapidated buildings is separated and stored in nearby warehouses, then sent to the sites
+            where new construction permits were issued. I modeled and animated it myself in ArcGIS ArcScene. No AI tools were used.
+          </p>
+          <dl class="param-list">
+            <dt>City</dt>
+            <dd>Tehran: 730+ km&sup2;, 8.6+ million people, 1.5 million buildings</dd>
+            <dt>Dilapidated</dt>
+            <dd>About 300,000 buildings, concentrated in the south and southeast, with some in the north near the heights</dd>
+            <dt>Horizon</dt>
+            <dd>20 years in four 5-year plan periods, with four priority classes from very critical to less critical</dd>
+            <dt>Demolition</dt>
+            <dd>75,000 buildings in the first 5 years, about 40 a day</dd>
+            <dt>New permits</dt>
+            <dd>About 90 a day, or 2.25 for every building demolished</dd>
+            <dt>Network</dt>
+            <dd>12 warehouses for temporary separation and storage (for example, one month), with flows optimized in GIS</dd>
           </dl>
         </div>
       </article>
