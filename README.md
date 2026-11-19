@@ -9,6 +9,8 @@ The site presents my research in geospatial machine learning, urban analytics, s
 ```
 .
 ├── index.html                              # The entire site (HTML, CSS, and a small script)
+├── simulations/
+│   └── covid-nowruz-sari/index.html        # Interactive COVID-19 and Nowruz simulation (standalone page)
 └── assets/
     ├── documents/
     │   └── Omid-Mansourihanis-CV.pdf       # Academic CV linked from the site
