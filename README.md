@@ -9,6 +9,9 @@ The site presents my research in geospatial machine learning, urban analytics, s
 ```
 .
 ├── index.html                              # The entire site (HTML, CSS, and a small script)
+├── portfolio/
+│   ├── index.html                          # Mapping and Research Portfolio (generated page)
+│   └── img/                                # Portfolio figures and thumbnails
 ├── simulations/
 │   └── covid-nowruz-sari/index.html        # Interactive COVID-19 and Nowruz simulation (standalone page)
 └── assets/
