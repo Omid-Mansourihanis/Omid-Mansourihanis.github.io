@@ -383,6 +383,82 @@
       font-size: .9rem;
     }
 
+    .animation {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+      gap: 30px;
+      align-items: start;
+      margin-top: 34px;
+      padding: 22px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px rgba(12,36,56,.05);
+    }
+
+    .animation video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 10px;
+      background: var(--navy);
+    }
+
+    .animation-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-items: center;
+    }
+
+    .no-ai {
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: var(--navy-2);
+      color: white;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+
+    .animation h3 {
+      margin: 14px 0 10px;
+      color: var(--navy-2);
+      font-size: 1.3rem;
+      line-height: 1.3;
+    }
+
+    .animation p,
+    .animation-steps {
+      color: var(--muted);
+    }
+
+    .animation-steps {
+      margin: 14px 0 0;
+      padding-left: 20px;
+      font-size: .93rem;
+    }
+
+    .animation-steps li + li {
+      margin-top: 6px;
+    }
+
+    .animation-link {
+      margin: 16px 0 0;
+      font-size: .9rem;
+      font-weight: 750;
+    }
+
+    .animation-link a {
+      text-decoration: none;
+    }
+
+    @media (max-width: 900px) {
+      .animation {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .card .data-link {
       margin-top: 14px;
       font-size: .9rem;
@@ -705,6 +781,7 @@
         <a href="#experience">Experience</a>
         <a href="#education">Education</a>
         <a href="#presentations">Presentations</a>
+        <a href="#animations">Animations</a>
         <a href="#skills">Skills</a>
         <a href="#contact">Contact</a>
       </div>
@@ -1145,6 +1222,50 @@
           <p><a href="https://www.esri.com/en-us/about/events/uc/agenda/virtual-map-gallery#/event/65b4098aec8645b4cedb266f/submission-detail/35676" target="_blank" rel="noopener">View map-gallery entry</a></p>
         </article>
       </div>
+    </section>
+
+    <section id="animations">
+      <p class="section-kicker">3D Visualization</p>
+      <h2 class="section-title">Animations</h2>
+      <p class="section-lead">
+        Animated 3D models that explain how my spatial analyses work. Each one was built by hand in GIS software,
+        without AI-generated imagery, video, or narration.
+      </p>
+
+      <article class="animation">
+        <div class="animation-media">
+          <video controls preload="metadata" playsinline
+                 poster="assets/images/land-use-compatibility-3d-poster.jpg"
+                 aria-describedby="anim-luc-desc">
+            <source src="assets/videos/land-use-compatibility-3d-animation.mp4" type="video/mp4">
+            Your browser cannot play this video.
+            <a href="assets/videos/land-use-compatibility-3d-animation.mp4">Download the MP4</a> instead.
+          </video>
+        </div>
+
+        <div class="animation-body">
+          <div class="animation-meta">
+            <span class="no-ai">Made without AI</span>
+            <span class="tag">2021</span>
+            <span class="tag">ArcGIS ArcScene</span>
+            <span class="tag">4 min 10 s</span>
+          </div>
+          <h3>Land-use compatibility assessment in 3D</h3>
+          <p id="anim-luc-desc">
+            A step-by-step 3D walkthrough of a cell-based model that scores how compatible every pair of land uses is,
+            using neighborhood focal analysis in a GIS. I modeled, analyzed, and animated every scene myself in
+            ArcGIS ArcScene in 2021. No AI tools were used at any stage.
+          </p>
+          <ol class="animation-steps">
+            <li>A hypothetical district is built from cubes, one per land use, on the ground and on upper floors of one- to four-story buildings.</li>
+            <li>Each cube's center point is linked to its neighbors, so every pair of land uses can be evaluated one by one.</li>
+            <li>For a selected central land use, all connections within its radius of influence are scored. Closer pairs carry more weight.</li>
+            <li>A compatibility matrix rates each pair on five levels, from fully compatible through neutral to fully incompatible.</li>
+            <li>The process repeats for every urban cell, with a radius that can range from one neighborhood to the whole city, producing a 3D compatibility map.</li>
+          </ol>
+          <p class="animation-link"><a href="#publications">Related land-use compatibility publications</a></p>
+        </div>
+      </article>
     </section>
 
     <section id="skills">
