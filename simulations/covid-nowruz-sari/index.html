@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>One visit is enough: COVID-19 and Nowruz visiting in Sari · Omid Mansourihanis</title>
+<meta name="description" content="Interactive household-level simulation of how family visits during Nowruz 2020 could spread COVID-19 through a city the size of Sari, Iran.">
+<meta name="author" content="Omid Mansourihanis">
+<meta property="og:title" content="One visit is enough: COVID-19 and Nowruz visiting in Sari">
+<meta property="og:description" content="Run the simulation yourself and change the assumptions.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://omid-mansourihanis.github.io/simulations/covid-nowruz-sari/">
+<link rel="canonical" href="https://omid-mansourihanis.github.io/simulations/covid-nowruz-sari/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23143d59'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='800' fill='white' text-anchor='middle'%3EOM%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#eef0ec; --surface:#f8f9f6; --ink:#1c2430; --muted:#5a6571; --line:#d4d9d5;
+  --accent:#11807e; --accent-ink:#ffffff; --band:rgba(227,163,58,.14); --band-ink:#9a6514;
+  --map-bg:#c9d3cf; --map-sus:#d5dfda; --map-exp:#e3a33a; --map-inf:#b3203a; --map-rec:#8a6577;
+  --map-flash:#fff2c4; --map-hub:#0f7c7a; --spark:#c8283f; --border-k:.80;
+  --chart-bar:#b3203a; --chart-seed:#a6afb6; --chart-line:#1c2430; --chart-base:#11807e;
+  color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111a27; --surface:#172234; --ink:#e7ebf0; --muted:#97a3b2; --line:#2a3749;
+    --accent:#3cc2bd; --accent-ink:#0b1a1f; --band:rgba(232,168,64,.12); --band-ink:#e8b55c;
+    --map-bg:#0d1520; --map-sus:#24324a; --map-exp:#e8a840; --map-inf:#e2435b; --map-rec:#6a4a5d;
+    --map-flash:#fff1c0; --map-hub:#45d1cb; --spark:#ff6b7f; --border-k:.70;
+    --chart-bar:#e2435b; --chart-seed:#56637a; --chart-line:#e7ebf0; --chart-base:#3cc2bd;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111a27; --surface:#172234; --ink:#e7ebf0; --muted:#97a3b2; --line:#2a3749;
+  --accent:#3cc2bd; --accent-ink:#0b1a1f; --band:rgba(232,168,64,.12); --band-ink:#e8b55c;
+  --map-bg:#0d1520; --map-sus:#24324a; --map-exp:#e8a840; --map-inf:#e2435b; --map-rec:#6a4a5d;
+  --map-flash:#fff1c0; --map-hub:#45d1cb; --spark:#ff6b7f; --border-k:.70;
+  --chart-bar:#e2435b; --chart-seed:#56637a; --chart-line:#e7ebf0; --chart-base:#3cc2bd;
+  color-scheme: dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding:40px 28px 56px}
+h1,h2,.daynum,.big{font-family:"Fraunces",Georgia,"Times New Roman",serif;font-variation-settings:"opsz" 96}
+h1{font-size:clamp(2.4rem,5vw,4rem);line-height:1.02;font-weight:600;margin:0 0 14px;letter-spacing:-.015em}
+.lede{font-size:1.125rem;max-width:62ch;color:var(--muted);margin:0 0 34px}
+.lede strong{color:var(--ink);font-weight:600}
+.stage{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(320px,1fr);gap:36px;align-items:start}
+@media (max-width:980px){.stage{grid-template-columns:1fr}}
+
+/* map */
+.mapcol{position:sticky;top:calc(16px + env(safe-area-inset-top,0px))}
+@media (max-width:980px){.mapcol{position:static}}
+.mapframe{position:relative;aspect-ratio:1/1;width:100%;background:var(--map-bg);border-radius:10px;overflow:hidden;box-shadow:0 1px 0 var(--line),0 18px 40px -24px rgba(16,30,48,.45)}
+#map{display:block;width:100%;height:100%;cursor:zoom-in}
+#map.zoomed{cursor:crosshair}
+.maptag{position:absolute;left:12px;top:12px;font-size:.78rem;padding:5px 9px;border-radius:6px;background:color-mix(in srgb,var(--surface) 86%,transparent);color:var(--muted);backdrop-filter:blur(6px);pointer-events:none}
+.maptag b{color:var(--ink);font-weight:600}
+.loader{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:.95rem;background:var(--map-bg)}
+.loader[hidden]{display:none}
+.maptools{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;margin-top:14px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.84rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+.sw.hub{border-radius:50%;width:9px;height:9px}
+.toggles{display:flex;gap:14px;font-size:.84rem;color:var(--muted)}
+.toggles label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.hint{font-size:.82rem;color:var(--muted);margin:8px 0 0}
+
+/* panel */
+.panel{display:flex;flex-direction:column;gap:22px}
+.daybar{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.daynum{font-size:3.2rem;line-height:1;font-weight:600;font-variant-numeric:tabular-nums lining-nums;letter-spacing:-.01em}
+.date{font-size:1.05rem;color:var(--muted);margin-left:10px}
+.phase{font-size:.85rem;padding:5px 11px;border-radius:999px;background:var(--band);color:var(--band-ink);font-weight:500;white-space:nowrap}
+.phase.after{background:color-mix(in srgb,var(--line) 60%,transparent);color:var(--muted)}
+.headline{padding:18px 20px;background:var(--surface);border-radius:10px;border:1px solid var(--line)}
+.big{font-size:2.6rem;line-height:1.05;font-weight:600;font-variant-numeric:tabular-nums lining-nums}
+.big small{font-family:"Instrument Sans",sans-serif;font-size:1rem;font-weight:400;color:var(--muted);margin-left:6px}
+.bar{height:8px;border-radius:5px;background:color-mix(in srgb,var(--line) 70%,transparent);margin:12px 0 4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--map-exp),var(--map-inf));border-radius:5px}
+.minis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.mini{font-size:.8rem;color:var(--muted)}
+.mini b{display:block;font-size:1.25rem;color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.chartbox{position:relative}
+#chart{display:block;width:100%;height:210px}
+.caption{font-size:.84rem;color:var(--muted);margin:6px 0 0}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);font-size:.78rem;padding:6px 9px;border-radius:6px;white-space:nowrap;transform:translate(-50%,-110%);opacity:0;transition:opacity .12s}
+.summary{font-size:.95rem;margin:0;padding-left:12px;border-left:3px solid var(--accent)}
+
+.controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+button,.seg button{font:inherit;cursor:pointer}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:8px;font-size:.92rem;font-weight:500}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent;min-width:104px;justify-content:center}
+.btn:hover{border-color:var(--muted)}
+.btn.primary:hover{filter:brightness(1.07)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:transparent;color:var(--muted);padding:7px 11px;font-size:.86rem}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+#scrub{width:100%;accent-color:var(--accent);margin:2px 0 0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.scenario{border-top:1px solid var(--line);padding-top:20px;display:flex;flex-direction:column;gap:14px}
+.scenario h2{font-size:1.35rem;margin:0;font-weight:600}
+.scenario p{margin:0;font-size:.9rem;color:var(--muted)}
+.field{display:flex;flex-direction:column;gap:6px;font-size:.92rem}
+.field .row{display:flex;justify-content:space-between;gap:10px}
+.field output{font-weight:600;font-variant-numeric:tabular-nums}
+input[type=range]{accent-color:var(--accent)}
+
+/* method */
+.method{margin-top:72px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;border-top:1px solid var(--line);padding-top:40px}
+@media (max-width:860px){.method{grid-template-columns:1fr;gap:28px}}
+.method h2{font-size:1.9rem;margin:0 0 14px;font-weight:600;line-height:1.1}
+.method p,.method li{max-width:62ch}
+.facts{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.facts li{display:grid;grid-template-columns:7.5rem 1fr;gap:14px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.facts li b{font-family:"Fraunces",Georgia,serif;font-size:1.15rem;font-weight:600;font-variant-numeric:lining-nums}
+.rules{counter-reset:r;list-style:none;padding:0;margin:18px 0 0;display:grid;gap:12px}
+.rules li{counter-increment:r;display:grid;grid-template-columns:2rem 1fr;gap:8px}
+.rules li::before{content:counter(r);font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.3rem;line-height:1.2;color:var(--accent)}
+.kin{width:100%;max-width:440px;height:auto;display:block;margin:4px 0 6px}
+.kin text{font-family:"Instrument Sans",sans-serif;font-size:12px;fill:var(--muted)}
+.limits{margin-top:56px;border-top:1px solid var(--line);padding-top:32px}
+.limits h2{font-size:1.5rem;margin:0 0 10px;font-weight:600}
+.limits p{max-width:76ch;color:var(--muted);margin:0 0 12px}
+.limits p strong{color:var(--ink);font-weight:600}
+footer{margin-top:40px;font-size:.82rem;color:var(--muted)}
+.topnav{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between;align-items:center;margin:0 0 28px;font-size:.88rem}
+.topnav a{color:var(--accent);text-decoration:none;font-weight:600}
+.topnav a:hover{text-decoration:underline}
+footer a{color:var(--accent)}
+@media (max-width:560px){.wrap{padding:28px 18px 44px}.daynum{font-size:2.6rem}.big{font-size:2.1rem}.facts li{grid-template-columns:6rem 1fr}}
+@media (prefers-reduced-motion: reduce){.tip{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topnav" aria-label="Site">
+    <a href="/">&larr; Omid Mansourihanis &middot; Portfolio</a>
+    <a href="/#animations">Watch the original 2020 video</a>
+  </nav>
+  <header>
+    <h1>One visit is enough</h1>
+    <p class="lede">A household-level simulation of COVID-19 in a city the size of Sari, Iran, during Nowruz. Every family stays home <strong>except to visit its parents</strong>. Watch how far the virus travels through that one exception.</p>
+  </header>
+
+  <section class="stage">
+    <div class="mapcol">
+      <div class="mapframe">
+        <canvas id="map" aria-label="Simulated map of 60,000 households changing colour as infection spreads"></canvas>
+        <div class="maptag" id="maptag"><b>Whole city</b> 600 × 600 cells, one resident each</div>
+        <div class="loader" id="loader">Building a city of 60,000 households…</div>
+      </div>
+      <div class="maptools">
+        <div class="legend">
+          <span><i class="sw" style="background:var(--map-sus)"></i>Not reached</span>
+          <span><i class="sw" style="background:var(--map-exp)"></i>Just infected</span>
+          <span><i class="sw" style="background:var(--map-inf)"></i>Contagious</span>
+          <span><i class="sw" style="background:var(--map-rec)"></i>Past infection</span>
+          <span><i class="sw hub" style="background:var(--map-hub)"></i>Parents’ home</span>
+        </div>
+        <div class="toggles">
+          <label><input type="checkbox" id="tHubs"> Parents’ homes</label>
+          <label><input type="checkbox" id="tSparks" checked> Transmissions</label>
+        </div>
+      </div>
+      <p class="hint" id="hint">Click anywhere on the map to zoom into that neighbourhood and see the family links.</p>
+    </div>
+
+    <div class="panel">
+      <div class="daybar">
+        <div><span class="daynum" id="dayNum">Day 0</span><span class="date" id="dateTxt">21 March</span></div>
+        <span class="phase" id="phase">Nowruz visiting period</span>
+      </div>
+
+      <div class="headline">
+        <div class="big" id="hhInf">0<small>of 60,000 households infected</small></div>
+        <div class="bar"><i id="hhBar"></i></div>
+        <div class="minis">
+          <div class="mini"><b id="mNew">0</b>New today</div>
+          <div class="mini"><b id="mCont">0</b>Contagious now</div>
+          <div class="mini"><b id="mPeople">0</b>Residents affected</div>
+        </div>
+      </div>
+
+      <div class="chartbox">
+        <canvas id="chart" aria-label="Daily new household infections and cumulative share of the city"></canvas>
+        <div class="tip" id="tip"></div>
+        <p class="caption">Bars: households newly infected each day. Line: share of the city infected so far.</p>
+      </div>
+
+      <div>
+        <div class="controls">
+          <button class="btn primary" id="play" aria-label="Play">Play</button>
+          <button class="btn" id="restart">Restart</button>
+          <div class="seg" role="group" aria-label="Playback speed" id="speed">
+            <button data-v="0.5" aria-pressed="false">½×</button>
+            <button data-v="1" aria-pressed="true">1×</button>
+            <button data-v="2" aria-pressed="false">2×</button>
+            <button data-v="4" aria-pressed="false">4×</button>
+          </div>
+        </div>
+        <input type="range" id="scrub" min="0" max="60" step="0.05" value="0" aria-label="Simulation day">
+      </div>
+
+      <p class="summary" id="summary">Preparing the simulation…</p>
+
+      <div class="scenario">
+        <h2>Try a scenario</h2>
+        <p>Change the assumptions and the simulation reruns from 21 March.</p>
+        <div class="field">
+          <div class="row"><label for="skip">Families that skip the parental visit</label><output id="skipOut">0%</output></div>
+          <input type="range" id="skip" min="0" max="90" step="10" value="0">
+        </div>
+        <div class="field">
+          <span>How often families visit during Nowruz</span>
+          <div class="seg" role="group" aria-label="Visiting frequency" id="freq">
+            <button data-v="0.4" aria-pressed="false">Less often</button>
+            <button data-v="0.6" aria-pressed="true">Typical</button>
+            <button data-v="0.8" aria-pressed="false">More often</button>
+          </div>
+        </div>
+        <div><button class="btn" id="reseed">Rerun with new random first cases</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="method">
+    <div>
+      <h2>How the model works</h2>
+      <ul class="facts">
+        <li><b>360,000</b><span>residents placed on a 600 × 600 grid, one cell per person, standing in for Sari.</span></li>
+        <li><b>60,000</b><span>households formed by grouping neighbouring cells at random, about six people each.</span></li>
+        <li><b>15,000</b><span>of them, one in four, play the role of parents’ homes.</span></li>
+        <li><b>2 links</b><span>per family: its own parents (the nearest parents’ home, a Thiessen assignment) and its in-laws (a parents’ home elsewhere in the city).</span></li>
+        <li><b>1,000</b><span>people infected on 21 March, scattered at random. Each infects their own household first.</span></li>
+      </ul>
+    </div>
+    <div>
+      <svg class="kin" viewBox="0 0 440 200" role="img" aria-label="Diagram: a family links to its own parents nearby and to its in-laws elsewhere; each parents’ home is shared by several families">
+        <g stroke="var(--muted)" stroke-width="1.4" fill="none">
+          <line x1="110" y1="100" x2="50" y2="40"/><line x1="110" y1="100" x2="40" y2="135"/><line x1="110" y1="100" x2="105" y2="175"/>
+          <line x1="330" y1="100" x2="395" y2="40"/><line x1="330" y1="100" x2="405" y2="140"/><line x1="330" y1="100" x2="340" y2="175"/>
+          <line x1="110" y1="100" x2="220" y2="60" stroke="var(--map-inf)" stroke-width="2"/>
+          <line x1="220" y1="60" x2="330" y2="100" stroke="var(--map-inf)" stroke-width="2" stroke-dasharray="5 4"/>
+        </g>
+        <g fill="var(--map-sus)" stroke="var(--muted)" stroke-width="1">
+          <circle cx="50" cy="40" r="11"/><circle cx="40" cy="135" r="11"/><circle cx="105" cy="175" r="11"/>
+          <circle cx="395" cy="40" r="11"/><circle cx="405" cy="140" r="11"/><circle cx="340" cy="175" r="11"/>
+        </g>
+        <circle cx="220" cy="60" r="13" fill="var(--map-inf)"/>
+        <circle cx="110" cy="100" r="20" fill="var(--map-hub)"/><circle cx="330" cy="100" r="20" fill="var(--map-hub)"/>
+        <text x="110" y="134" text-anchor="middle">Own parents</text>
+        <text x="330" y="134" text-anchor="middle">In-laws</text>
+        <text x="220" y="30" text-anchor="middle">One family</text>
+      </svg>
+      <ol class="rules">
+        <li><span>Families visit no one except their parents or in-laws.</span></li>
+        <li><span>Visits never overlap, so sibling families never meet each other directly.</span></li>
+        <li><span>The virus passes only inside homes. Streets, shops and workplaces carry no infection.</span></li>
+      </ol>
+      <p style="color:var(--muted);font-size:.95rem;margin-top:16px">Even with every visit kept separate, a parents’ home collects the virus from one family and hands it to the next. Because each family belongs to two such homes, those small clusters chain together across the whole city.</p>
+    </div>
+  </section>
+
+  <section class="limits">
+    <h2>Assumptions and limits</h2>
+    <p><strong>This is an illustration of a mechanism, not a forecast.</strong> It shows how much the single parental-visit channel could spread infection on its own; it is not calibrated to reported case data for Sari.</p>
+    <p>Some timing values are assumed in this version: on a typical Nowruz day each family visits with a 60% chance (25% after the holidays), a household becomes contagious one day after infection and stays contagious for ten days, and in-laws live on average about 40 cells away. These values were chosen to roughly reproduce the original study’s reported pattern, with most new cases in the first ten days or so and most households reached within about three weeks.</p>
+    <p>Households average six people, which is larger than a typical Iranian household; the grid is a synthetic city and does not follow Sari’s real streets or neighbourhoods. The 1,000 starting cases follow the original study’s reading of Ministry of Health estimates for late March 2020.</p>
+  </section>
+
+  <footer>Reconstructed from the original two-part study of Nowruz family visiting in Sari by Omid Mansourihanis (2020). Each run uses a newly randomised city layout, so numbers vary slightly between runs. <a href="/#animations">Watch the original video</a> &middot; <a href="/">Back to the portfolio</a></footer>
+</div>
+
+<script>
+(()=>{
+"use strict";
+// ---------- Model ----------
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+
+function buildCity(seed,N=600,H=60000,P=15000,INLAW=40){
+  const rnd=mulberry32(seed);
+  const sx=new Float32Array(H), sy=new Float32Array(H);
+  const perm=new Int32Array(N*N); for(let i=0;i<N*N;i++)perm[i]=i;
+  for(let i=0;i<H;i++){const j=i+((rnd()*(N*N-i))|0);const t=perm[i];perm[i]=perm[j];perm[j]=t;sx[i]=perm[i]%N+.5;sy[i]=((perm[i]/N)|0)+.5;}
+  const jfa=()=>{
+    const owner=new Int32Array(N*N).fill(-1);
+    for(let i=0;i<H;i++){const k=(sy[i]|0)*N+(sx[i]|0); if(owner[k]<0)owner[k]=i;}
+    const buf=new Int32Array(N*N);
+    for(let step=256;step>=1;step>>=1){
+      buf.set(owner);
+      for(let y=0;y<N;y++)for(let x=0;x<N;x++){
+        let best=owner[y*N+x], bd=best>=0?((sx[best]-x-.5)**2+(sy[best]-y-.5)**2):1e18;
+        for(let dy=-step;dy<=step;dy+=step){const yy=y+dy;if(yy<0||yy>=N)continue;
+          for(let dx=-step;dx<=step;dx+=step){const xx=x+dx;if(xx<0||xx>=N)continue;
+            const o=owner[yy*N+xx];if(o<0||o===best)continue;
+            const d=(sx[o]-x-.5)**2+(sy[o]-y-.5)**2;if(d<bd){bd=d;best=o;}}}
+        buf[y*N+x]=best;
+      }
+      owner.set(buf);
+    }
+    return owner;
+  };
+  let owner=jfa();
+  {const ax=new Float64Array(H),ay=new Float64Array(H),n=new Int32Array(H);
+   for(let y=0;y<N;y++)for(let x=0;x<N;x++){const o=owner[y*N+x];ax[o]+=x+.5;ay[o]+=y+.5;n[o]++;}
+   for(let i=0;i<H;i++)if(n[i]){sx[i]=Math.floor(ax[i]/n[i])+.5;sy[i]=Math.floor(ay[i]/n[i])+.5;}
+   owner=jfa();}
+  const size=new Int32Array(H),cx=new Float32Array(H),cy=new Float32Array(H);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){const o=owner[y*N+x];size[o]++;cx[o]+=x+.5;cy[o]+=y+.5;}
+  for(let i=0;i<H;i++){if(size[i]){cx[i]/=size[i];cy[i]/=size[i];}else{cx[i]=sx[i];cy[i]=sy[i];}}
+  const idx=Array.from({length:H},(_,i)=>i);
+  for(let i=H-1;i>0;i--){const j=(rnd()*(i+1))|0;const t=idx[i];idx[i]=idx[j];idx[j]=t;}
+  const isParent=new Uint8Array(H);const parents=idx.slice(0,P);parents.forEach(i=>isParent[i]=1);
+  const G=20,cs=N/G;const bucket=Array.from({length:G*G},()=>[]);
+  for(const p of parents)bucket[Math.min(G-1,(cy[p]/cs)|0)*G+Math.min(G-1,(cx[p]/cs)|0)].push(p);
+  const near=(px,py,min,excl)=>{const gx=Math.min(G-1,(px/cs)|0),gy=Math.min(G-1,(py/cs)|0);let c=[];
+    for(let r=1;c.length<min;r++){c=[];for(let yy=gy-r;yy<=gy+r;yy++)for(let xx=gx-r;xx<=gx+r;xx++){if(xx<0||yy<0||xx>=G||yy>=G)continue;const b=bucket[yy*G+xx];for(let k=0;k<b.length;k++)c.push(b[k]);}}
+    let b=-1,bd=1e18;for(const p of c){if(p===excl)continue;const d=(cx[p]-px)**2+(cy[p]-py)**2;if(d<bd){bd=d;b=p;}}return b;};
+  const par1=new Int32Array(H).fill(-1),par2=new Int32Array(H).fill(-1);
+  for(let i=0;i<H;i++){if(isParent[i])continue;par1[i]=near(cx[i],cy[i],4,-1);}
+  for(let i=0;i<H;i++){if(isParent[i])continue;let px,py;
+    do{const r=INLAW*Math.sqrt(-2*Math.log(rnd()+1e-9)),a=rnd()*Math.PI*2;px=cx[i]+r*Math.cos(a);py=cy[i]+r*Math.sin(a);}while(px<0||py<0||px>=N||py>=N);
+    par2[i]=near(px,py,2,par1[i]);}
+  return {N,H,P,owner,size,cx,cy,isParent,par1,par2,parents};
+}
+
+function simulate(city,prm){
+  const {N,H,owner,isParent,par1,par2}=city;const rnd=mulberry32(prm.seed*7919+13);
+  const inf=new Float32Array(H).fill(Infinity);
+  const skips=new Uint8Array(H);for(let i=0;i<H;i++)if(!isParent[i]&&rnd()<prm.skip)skips[i]=1;
+  const events=[];
+  for(let s=0;s<prm.seeds;s++){const h=owner[(rnd()*N*N)|0];if(inf[h]===Infinity)inf[h]=rnd()*0.9;}
+  const L=prm.latent,D=prm.infectious;
+  for(let d=0;d<prm.days;d++){
+    const w=Math.min(1,Math.max(0,(d-(prm.nowruzDays-3))/5));const p=prm.pNowruz*(1-w)+prm.pAfter*w;const ev=[];
+    for(let c=0;c<H;c++){if(isParent[c]||skips[c])continue;if(rnd()>=p)continue;
+      const g=rnd()<0.6?par1[c]:par2[c];const t=d+rnd();
+      const ac=inf[c],ag=inf[g];
+      if(ac<Infinity&&d>=ac+L&&d<ac+L+D&&ag===Infinity){inf[g]=t;ev.push(c,g);}
+      else if(ag<Infinity&&d>=ag+L&&d<ag+L+D&&ac===Infinity){inf[c]=t;ev.push(g,c);}}
+    events.push(Int32Array.from(ev));
+  }
+  const daily=new Int32Array(prm.days);for(let i=0;i<H;i++){const a=inf[i];if(a<prm.days)daily[Math.floor(a)]++;}
+  const cum=new Float32Array(prm.days);let s=0;for(let d=0;d<prm.days;d++){s+=daily[d];cum[d]=s;}
+  let peak=1,pv=0;for(let d=1;d<prm.days;d++)if(daily[d]>pv){pv=daily[d];peak=d;}
+  return {inf,daily,cum,events,peak,peakVal:pv};
+}
+
+// ---------- State ----------
+const DAYS=60, NOWRUZ=14, LATENT=1, INFD=10;
+const params={seed:1,seeds:1000,skip:0,pNowruz:0.6,pAfter:0.25,latent:LATENT,infectious:INFD,days:DAYS,nowruzDays:NOWRUZ};
+const reduceMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let city,sim,baseline,t=0,playing=false,speed=1,last=0,view={zoom:false,x:300,y:300,R:72};
+let border,hubIdx,jit,hr,hg,hb,pal;
+const base=document.createElement("canvas");base.width=base.height=600;const bctx=base.getContext("2d");
+const img=bctx.createImageData(600,600);const px=img.data;
+const linkLayer=document.createElement("canvas");let linkKey="";
+const $=id=>document.getElementById(id);
+const map=$("map"),mctx=map.getContext("2d"),chart=$("chart"),cctx=chart.getContext("2d");
+const fmt=n=>Math.round(n).toLocaleString("en-US");
+const dateOf=d=>new Date(Date.UTC(2020,2,21)+Math.floor(d)*864e5).toLocaleDateString("en-GB",{day:"numeric",month:"long",timeZone:"UTC"});
+const dateShort=d=>new Date(Date.UTC(2020,2,21)+d*864e5).toLocaleDateString("en-GB",{day:"numeric",month:"short",timeZone:"UTC"});
+
+function hex(v){v=v.trim();if(v.startsWith("#")){const n=parseInt(v.slice(1),16);return[(n>>16)&255,(n>>8)&255,n&255];}const m=v.match(/[\d.]+/g);return m?m.slice(0,3).map(Number):[128,128,128];}
+function readPalette(){const cs=getComputedStyle(document.documentElement);const g=k=>cs.getPropertyValue(k);
+  pal={bg:g("--map-bg").trim(),sus:hex(g("--map-sus")),exp:hex(g("--map-exp")),inf:hex(g("--map-inf")),rec:hex(g("--map-rec")),flash:hex(g("--map-flash")),hub:hex(g("--map-hub")),hubCss:g("--map-hub").trim(),spark:g("--spark").trim(),k:parseFloat(g("--border-k"))||.8,
+    band:g("--band").trim(),bandInk:g("--band-ink").trim(),bar:g("--chart-bar").trim(),seed:g("--chart-seed").trim(),line:g("--chart-line").trim(),baseLine:g("--chart-base").trim(),muted:g("--muted").trim(),grid:g("--line").trim(),ink:g("--ink").trim()};
+  linkKey="";}
+
+function prepCity(){
+  const {N,H,owner,isParent,cx,cy}=city;
+  border=new Uint8Array(N*N);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){const i=y*N+x,o=owner[i];
+    if((x<N-1&&owner[i+1]!==o)||(y<N-1&&owner[i+N]!==o))border[i]=1;}
+  hubIdx=new Int32Array(N*N).fill(0);
+  for(let h=0;h<H;h++)if(isParent[h]){const i=Math.min(N-1,cy[h]|0)*N+Math.min(N-1,cx[h]|0);hubIdx[i]=1;}
+  const r=mulberry32(99);jit=new Float32Array(H);for(let h=0;h<H;h++)jit[h]=(r()-.5)*0.10;
+  hr=new Uint8ClampedArray(H);hg=new Uint8ClampedArray(H);hb=new Uint8ClampedArray(H);
+}
+
+// ---------- Rendering ----------
+const mix=(a,b,f)=>[a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f,a[2]+(b[2]-a[2])*f];
+let stats={total:0,cont:0,people:0};
+function renderBase(){
+  const {H,N,owner,size}=city;const inf=sim.inf;let total=0,cont=0,people=0;
+  const S=pal.sus,E=pal.exp,I=pal.inf,R=pal.rec,F=pal.flash;
+  for(let h=0;h<H;h++){const a=inf[h];let c;
+    if(a>t){const j=1+jit[h];c=[S[0]*j,S[1]*j,S[2]*j];}
+    else{total++;people+=size[h];const age=t-a;
+      if(age<LATENT){c=age<.35?mix(F,E,age/.35):E;}
+      else if(age<LATENT+INFD){cont++;const f=Math.min(1,(age-LATENT)/.6);c=mix(E,I,f);}
+      else{c=mix(I,R,Math.min(1,(age-LATENT-INFD)/2.5));}}
+    hr[h]=c[0];hg[h]=c[1];hb[h]=c[2];}
+  const k=pal.k,showHubs=$("tHubs").checked,Hb=pal.hub;
+  for(let i=0,p=0;i<N*N;i++,p+=4){const o=owner[i];
+    if(showHubs&&hubIdx[i]){px[p]=Hb[0];px[p+1]=Hb[1];px[p+2]=Hb[2];px[p+3]=255;continue;}
+    const f=border[i]?k:1;px[p]=hr[o]*f;px[p+1]=hg[o]*f;px[p+2]=hb[o]*f;px[p+3]=255;}
+  bctx.putImageData(img,0,0);
+  stats={total,cont,people};
+}
+
+function sizeCanvas(c){const r=c.getBoundingClientRect(),d=Math.min(2,window.devicePixelRatio||1);const w=Math.round(r.width*d),h=Math.round(r.height*d);if(c.width!==w||c.height!==h){c.width=w;c.height=h;linkKey="";}return{w,h,d};}
+
+function region(){if(!view.zoom)return{x0:0,y0:0,R:600};const R=view.R;const x0=Math.max(0,Math.min(600-R,view.x-R/2)),y0=Math.max(0,Math.min(600-R,view.y-R/2));return{x0,y0,R};}
+
+function buildLinks(W){
+  const key=[W,view.zoom,view.x,view.y,pal.hubCss].join("|");if(key===linkKey)return;linkKey=key;
+  linkLayer.width=W;linkLayer.height=W;const l=linkLayer.getContext("2d");l.clearRect(0,0,W,W);
+  if(!view.zoom)return;
+  const {x0,y0,R}=region(),s=W/R,{H,cx,cy,isParent,par1,par2}=city;
+  const inR=(x,y)=>x>=x0-8&&x<=x0+R+8&&y>=y0-8&&y<=y0+R+8;
+  l.lineWidth=Math.max(1,W/600);l.strokeStyle=pal.ink;l.globalAlpha=.32;l.beginPath();
+  for(let h=0;h<H;h++){if(isParent[h]||!inR(cx[h],cy[h]))continue;const p=par1[h];l.moveTo((cx[h]-x0)*s,(cy[h]-y0)*s);l.lineTo((cx[p]-x0)*s,(cy[p]-y0)*s);}
+  l.stroke();
+  l.globalAlpha=.22;l.setLineDash([4*W/700,4*W/700]);l.beginPath();
+  for(let h=0;h<H;h++){if(isParent[h]||!inR(cx[h],cy[h]))continue;const p=par2[h];l.moveTo((cx[h]-x0)*s,(cy[h]-y0)*s);l.lineTo((cx[p]-x0)*s,(cy[p]-y0)*s);}
+  l.stroke();l.setLineDash([]);l.globalAlpha=1;
+  const rr=Math.max(2.5,s*0.62);
+  for(const p of city.parents){if(!inR(cx[p],cy[p]))continue;const X=(cx[p]-x0)*s,Y=(cy[p]-y0)*s;
+    l.beginPath();l.arc(X,Y,rr,0,Math.PI*2);l.fillStyle=pal.hubCss;l.fill();l.lineWidth=Math.max(1,W/500);l.strokeStyle=pal.bg;l.stroke();}
+}
+
+function drawMap(){
+  const {w:W}=sizeCanvas(map);const {x0,y0,R}=region(),s=W/R;
+  mctx.imageSmoothingEnabled=false;mctx.drawImage(base,x0,y0,R,R,0,0,W,W);
+  if(view.zoom){buildLinks(W);mctx.drawImage(linkLayer,0,0);}
+  if($("tSparks").checked&&sim){
+    const {cx,cy}=city,inf=sim.inf;const d=Math.floor(t);const cap=view.zoom?1e9:900;
+    const buckets=[new Path2D(),new Path2D(),new Path2D()];let n=0;
+    for(let dd=d;dd>=Math.max(0,d-1);dd--){const ev=sim.events[dd];if(!ev)continue;const step=Math.max(1,Math.ceil((ev.length/2)/cap));
+      for(let e=0;e<ev.length;e+=2*step){const a=ev[e],b=ev[e+1];const age=t-inf[b];if(age<0||age>1)continue;
+        const ax=(cx[a]-x0)*s,ay=(cy[a]-y0)*s,bx=(cx[b]-x0)*s,by=(cy[b]-y0)*s;
+        if(view.zoom&&((ax<0&&bx<0)||(ax>W&&bx>W)||(ay<0&&by<0)||(ay>W&&by>W)))continue;
+        const k=age<.33?0:age<.66?1:2;buckets[k].moveTo(ax,ay);buckets[k].lineTo(bx,by);n++;}}
+    mctx.lineCap="round";mctx.strokeStyle=pal.spark;mctx.lineWidth=Math.max(1,(view.zoom?1.6:1.2)*W/600);
+    [.85,.5,.22].forEach((al,i)=>{mctx.globalAlpha=al;mctx.stroke(buckets[i]);});mctx.globalAlpha=1;
+  }
+}
+
+function niceMax(v){const e=Math.pow(10,Math.floor(Math.log10(v)));const f=v/e;return(f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*e;}
+let chartGeo=null;
+function drawChart(){
+  const {w:W,h:Hh,d:dpr}=sizeCanvas(chart);const c=cctx;c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,W,Hh);c.scale(dpr,dpr);
+  const w=W/dpr,h=Hh/dpr,l=44,r=40,tp=14,b=24,pw=w-l-r,ph=h-tp-b;
+  const xs=d=>l+d/DAYS*pw;const bw=pw/DAYS;
+  let mx=0;for(let d=1;d<DAYS;d++){mx=Math.max(mx,sim.daily[d],baseline?baseline.daily[d]:0);}mx=niceMax(Math.max(mx,sim.daily[0])*1.08||1);
+  const ys=v=>tp+ph-v/mx*ph,yp=f=>tp+ph-f*ph;
+  chartGeo={l,pw,bw};
+  // band
+  c.fillStyle=pal.band;c.fillRect(xs(0),tp,xs(NOWRUZ)-xs(0),ph);
+  c.fillStyle=pal.bandInk;c.font="500 11px 'Instrument Sans',sans-serif";c.textAlign="left";c.fillText("Nowruz holidays",xs(0)+6,tp+13);
+  // grid
+  c.strokeStyle=pal.grid;c.lineWidth=1;c.fillStyle=pal.muted;c.font="11px 'Instrument Sans',sans-serif";
+  for(let i=0;i<=4;i++){const v=mx*i/4,y=Math.round(ys(v))+.5;c.beginPath();c.moveTo(l,y);c.lineTo(l+pw,y);c.stroke();c.textAlign="right";c.fillText(v>=1000?(v/1000)+"k":fmt(v),l-6,y+4);c.textAlign="left";c.fillText(i*25+"%",l+pw+6,y+4);}
+  c.textAlign="center";for(let d=0;d<=DAYS;d+=10)c.fillText(dateShort(d),xs(d),h-6);
+  // bars
+  const cur=Math.floor(t);
+  for(let d=0;d<=Math.min(cur,DAYS-1);d++){let v=sim.daily[d];if(d===cur)v*=Math.min(1,t-d);
+    c.fillStyle=d===0?pal.seed:pal.bar;const x=xs(d)+bw*.14,y=ys(v);c.fillRect(x,y,bw*.72,tp+ph-y);}
+  // baseline
+  if(baseline&&params.skip>0){c.setLineDash([4,4]);c.strokeStyle=pal.baseLine;c.lineWidth=1.6;c.beginPath();
+    for(let d=0;d<DAYS;d++){const x=xs(d+1),y=yp(baseline.cum[d]/60000);d?c.lineTo(x,y):c.moveTo(x,y);}c.stroke();c.setLineDash([]);
+    c.fillStyle=pal.baseLine;c.textAlign="right";c.font="500 11px 'Instrument Sans',sans-serif";c.fillText("If every family visits",l+pw-4,yp(baseline.cum[DAYS-1]/60000)-6);}
+  // cumulative line
+  c.strokeStyle=pal.line;c.lineWidth=2;c.beginPath();c.moveTo(xs(0),yp(0));
+  for(let d=0;d<=Math.min(cur,DAYS-1);d++){const f=d===cur?Math.min(1,t-d):1;const prev=d?sim.cum[d-1]:0;const v=prev+(sim.cum[d]-prev)*f;c.lineTo(xs(d)+bw*f,yp(v/60000));}
+  c.stroke();
+  // peak marker
+  if(t>=sim.peak+1){const x=xs(sim.peak)+bw/2,y=ys(sim.peakVal);c.fillStyle=pal.ink;c.textAlign="left";c.font="600 11px 'Instrument Sans',sans-serif";
+    c.fillText("Peak, day "+sim.peak,Math.min(x+8,l+pw-70),Math.max(tp+26,y+2));}
+  // cursor
+  const xc=Math.round(xs(Math.min(t,DAYS)))+.5;c.strokeStyle=pal.ink;c.globalAlpha=.5;c.lineWidth=1;c.beginPath();c.moveTo(xc,tp);c.lineTo(xc,tp+ph);c.stroke();c.globalAlpha=1;
+}
+
+function updateText(){
+  const d=Math.min(DAYS-1,Math.floor(t));
+  $("dayNum").textContent="Day "+Math.floor(t);$("dateTxt").textContent=dateOf(t);
+  const ph=$("phase");if(t<NOWRUZ){ph.textContent="Nowruz visiting period";ph.classList.remove("after");}else{ph.textContent="After the holidays";ph.classList.add("after");}
+  $("hhInf").firstChild.nodeValue=fmt(stats.total);$("hhBar").style.width=(stats.total/600)+"%";
+  $("mNew").textContent=fmt(sim.daily[d]);
+  $("mCont").textContent=fmt(stats.cont);$("mPeople").textContent=fmt(stats.people);
+  $("scrub").value=t;
+}
+
+function summarize(){
+  const c21=sim.cum[20]/600,c60=sim.cum[DAYS-1]/600;
+  let s=`In this run, new infections peak on day ${sim.peak} (${dateOf(sim.peak)}). By day 21, ${c21.toFixed(0)}% of households have been infected; by day 60, ${c60.toFixed(0)}%.`;
+  if(params.skip>0&&baseline){const b60=baseline.cum[DAYS-1]/600;s+=` If every family had visited, it would have been ${b60.toFixed(0)}%.`;}
+  $("summary").textContent=s;
+}
+
+function frame(now){
+  if(playing){const dt=Math.min(.1,(now-last)/1000);t=Math.min(DAYS,t+dt*1.5*speed);if(t>=DAYS){playing=false;setPlayLabel();}}
+  last=now;renderBase();drawMap();drawChart();updateText();
+  if(playing)requestAnimationFrame(frame);
+}
+function redraw(){if(!sim)return;if(!playing){renderBase();drawMap();drawChart();updateText();}}
+function setPlayLabel(){const b=$("play");b.textContent=playing?"Pause":(t>=DAYS?"Replay":"Play");b.setAttribute("aria-label",b.textContent);}
+function play(){if(t>=DAYS)t=0;playing=true;setPlayLabel();last=performance.now();requestAnimationFrame(frame);}
+function pause(){playing=false;setPlayLabel();redraw();}
+
+function rerun(){
+  sim=simulate(city,params);
+  baseline=params.skip>0?simulate(city,{...params,skip:0}):null;
+  summarize();t=0;if(reduceMotion){pause();}else play();
+}
+
+// ---------- UI ----------
+$("play").onclick=()=>playing?pause():play();
+$("restart").onclick=()=>{t=0;if(!playing)play();};
+$("scrub").addEventListener("input",e=>{t=parseFloat(e.target.value);if(playing){playing=false;setPlayLabel();}redraw();});
+document.querySelectorAll("#speed button").forEach(b=>b.onclick=()=>{speed=parseFloat(b.dataset.v);document.querySelectorAll("#speed button").forEach(x=>x.setAttribute("aria-pressed",x===b));});
+document.querySelectorAll("#freq button").forEach(b=>b.onclick=()=>{params.pNowruz=parseFloat(b.dataset.v);document.querySelectorAll("#freq button").forEach(x=>x.setAttribute("aria-pressed",x===b));rerun();});
+$("skip").addEventListener("input",e=>{$("skipOut").textContent=e.target.value+"%";});
+$("skip").addEventListener("change",e=>{params.skip=parseInt(e.target.value,10)/100;rerun();});
+$("reseed").onclick=()=>{params.seed=(params.seed*16807)%2147483647||7;rerun();};
+$("tHubs").onchange=redraw;$("tSparks").onchange=redraw;
+map.addEventListener("click",e=>{if(!city)return;const r=map.getBoundingClientRect();const fx=(e.clientX-r.left)/r.width,fy=(e.clientY-r.top)/r.height;
+  const {x0,y0,R}=region();view.x=x0+fx*R;view.y=y0+fy*R;view.zoom=true;map.classList.add("zoomed");linkKey="";
+  $("maptag").innerHTML="<b>Close-up</b> lines join each family to its parents (solid) and in-laws (dashed)";
+  $("hint").innerHTML='Click to move the close-up. <button class="btn" id="back" style="padding:3px 10px;font-size:.82rem;margin-left:6px">Show whole city</button>';
+  $("back").onclick=ev=>{ev.stopPropagation();view.zoom=false;map.classList.remove("zoomed");linkKey="";$("maptag").innerHTML="<b>Whole city</b> 600 × 600 cells, one resident each";$("hint").textContent="Click anywhere on the map to zoom into that neighbourhood and see the family links.";redraw();};
+  redraw();});
+document.addEventListener("keydown",e=>{if(e.code==="Space"&&!["INPUT","BUTTON"].includes(document.activeElement.tagName)){e.preventDefault();playing?pause():play();}});
+chart.addEventListener("mousemove",e=>{if(!sim||!chartGeo)return;const r=chart.getBoundingClientRect();const x=e.clientX-r.left;const d=Math.floor((x-chartGeo.l)/(chartGeo.pw/DAYS));const tip=$("tip");
+  if(d<0||d>=DAYS){tip.style.opacity=0;return;}
+  tip.textContent=`Day ${d}, ${dateOf(d)}: ${fmt(sim.daily[d])} new households, ${(sim.cum[d]/600).toFixed(1)}% of the city`;
+  tip.style.left=Math.max(110,Math.min(r.width-110,x))+"px";tip.style.top=(e.clientY-r.top)+"px";tip.style.opacity=1;});
+chart.addEventListener("mouseleave",()=>{$("tip").style.opacity=0;});
+new ResizeObserver(()=>redraw()).observe(map);new ResizeObserver(()=>redraw()).observe(chart);
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{readPalette();redraw();});
+new MutationObserver(()=>{readPalette();redraw();}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+
+// ---------- Boot ----------
+readPalette();
+setTimeout(()=>{
+  city=buildCity(20200321);prepCity();
+  $("loader").hidden=true;
+  rerun();
+},40);
+})();
+</script>
+</body>
+</html>
