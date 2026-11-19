@@ -80,6 +80,20 @@
     .lightbox img { display: block; width: 100%; height: auto; max-height: calc(95vh - 62px); object-fit: contain; background: white; }
     .lightbox-bar { display: flex; gap: 12px; justify-content: space-between; align-items: center; padding: 10px 16px; font-family: var(--font-ui); font-weight: 700; color: var(--navy-2); }
     .lightbox-bar button { font: inherit; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; background: white; cursor: pointer; }
+    .project.fire { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .ahp table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-family: var(--font-ui); font-size: .9rem; }
+    .ahp caption { text-align: left; font-weight: 800; color: var(--navy-2); padding-bottom: 6px; }
+    .ahp th { text-align: left; background: var(--navy-2); color: white; padding: 6px 8px; font-weight: 700; }
+    .ahp td { padding: 6px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .ahp td:last-child, .ahp th:last-child { text-align: right; font-variant-numeric: tabular-nums; width: 64px; }
+    .ahp td span { color: var(--muted); font-size: .85rem; }
+    .ahp .bar { display: block; height: 10px; background: #eef2f6; border-radius: 5px; overflow: hidden; }
+    .ahp .bar i { display: block; height: 100%; background: #9fb3c4; }
+    .ahp tr.win td { font-weight: 800; color: var(--navy-2); }
+    .ahp tr.win .bar i { background: var(--teal); }
+    .fire-gallery { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+    @media (max-width: 900px) { .project.fire { grid-template-columns: 1fr; } .fire-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 520px) { .fire-gallery { grid-template-columns: 1fr; } }
     @media (max-width: 900px) { .project { grid-template-columns: 1fr; } }
     @media (max-width: 520px) { .project-figs.two-figs { grid-template-columns: 1fr; } .project { padding: 16px; } body { font-size: 16px; } }
   </style>
@@ -399,6 +413,28 @@
           <h3>3D solar-access design controls</h3>
           <p>As a licensed urban planner I prepared 22 building-compliance plans, using 3D shadow analysis in ArcGIS Pro to turn height and setback rules into winter-solstice sunlight standards.</p>
         </div>
+      </article>
+      <article class="project fire" id="fire-station">
+        <div class="project-body">
+          <p class="kicker">Practice · Sari Municipality · 2021</p>
+          <h3>Site selection for Fire Station No. 7, Sari</h3>
+          <p>Coverage of Sari's six fire stations was tested first with the conventional 3 km buffer, then with network
+            service areas by road distance (500–3,000 m) and by travel time (3–12 minutes). The buffers suggested near-complete
+            coverage; the network analysis showed uncovered areas on the northwest, west, south and east edges of the city.
+            Five candidate sites were placed to close those gaps and ranked with the Analytic Hierarchy Process (AHP).</p>
+          <div class="pstats"><div class="pstat"><b>6</b><span>existing stations</span></div><div class="pstat"><b>5</b><span>candidate sites</span></div>
+            <div class="pstat"><b>5</b><span>AHP criteria</span></div><div class="pstat"><b>CR 0.066</b><span>criteria consistency</span></div></div>
+          <p><b>Result.</b> Alternative 1 ranked first (0.428), well ahead of Alternative 2 (0.256). It lies on Sari's western
+            ring road near Bar Square, on the north side of the road, located to within 75 m. Its service areas cover most of
+            the northwest gap by both distance and travel time.</p>
+          <p class="plink muted">Project manager: Alireza Saeedi, Deputy for Transportation and Infrastructure, Sari Municipality.
+            GIS siting, modeling and cartography: Omid Mansourihanis.</p>
+        </div>
+        <div class="ahp">
+          <table><caption>Criteria weights (pairwise comparison)</caption><thead><tr><th>Criterion and measure</th><th>Weight</th></tr></thead><tbody><tr><td><b>Travel-time accessibility</b><br><span>areas outside the 12-minute service area</span></td><td>0.499</td></tr><tr><td><b>Population served</b><br><span>daytime population of census blocks (2016 census)</span></td><td>0.203</td></tr><tr><td><b>Distance accessibility</b><br><span>areas outside the 3 km service area</span></td><td>0.183</td></tr><tr><td><b>Activity density</b><br><span>work and activity uses under the master plan&#x27;s service zoning</span></td><td>0.074</td></tr><tr><td><b>Building density</b><br><span>average building density under master-plan regulations</span></td><td>0.040</td></tr></tbody></table>
+          <table><caption>Final scores</caption><tbody><tr class="win"><td>Alternative 1</td><td><span class="bar"><i style="width:100%"></i></span></td><td>0.428</td></tr><tr><td>Alternative 2</td><td><span class="bar"><i style="width:60%"></i></span></td><td>0.256</td></tr><tr><td>Alternative 3</td><td><span class="bar"><i style="width:40%"></i></span></td><td>0.172</td></tr><tr><td>Alternative 4</td><td><span class="bar"><i style="width:21%"></i></span></td><td>0.092</td></tr><tr><td>Alternative 5</td><td><span class="bar"><i style="width:12%"></i></span></td><td>0.052</td></tr></tbody></table>
+        </div>
+        <div class="fire-gallery"><figure><a class="lightbox-link" href="img/fire/01-buffering-analysis.jpg" target="_blank" rel="noopener"><img src="img/fire/01-buffering-analysis-thumb.jpg" alt="3 km buffers around the six existing stations (the conventional method)" loading="lazy"></a><figcaption><strong>1. 3 km buffers around the six existing stations (the conventional method).</strong></figcaption></figure><figure><a class="lightbox-link" href="img/fire/04-overlay-distance-based.jpg" target="_blank" rel="noopener"><img src="img/fire/04-overlay-distance-based-thumb.jpg" alt="Network service areas by distance, 500–3,000 m" loading="lazy"></a><figcaption><strong>2. Network service areas by distance, 500–3,000 m.</strong></figcaption></figure><figure><a class="lightbox-link" href="img/fire/05-overlay-travel-time-based.jpg" target="_blank" rel="noopener"><img src="img/fire/05-overlay-travel-time-based-thumb.jpg" alt="Network service areas by travel time, 3–12 minutes" loading="lazy"></a><figcaption><strong>3. Network service areas by travel time, 3–12 minutes.</strong></figcaption></figure><figure><a class="lightbox-link" href="img/fire/03-overlay-distance-and-travel-time.jpg" target="_blank" rel="noopener"><img src="img/fire/03-overlay-distance-and-travel-time-thumb.jpg" alt="Areas lacking effective coverage by distance and travel time" loading="lazy"></a><figcaption><strong>4. Areas lacking effective coverage by distance and travel time.</strong></figcaption></figure><figure><a class="lightbox-link" href="img/fire/02-distribution-of-alternatives.jpg" target="_blank" rel="noopener"><img src="img/fire/02-distribution-of-alternatives-thumb.jpg" alt="The five candidate sites" loading="lazy"></a><figcaption><strong>5. The five candidate sites.</strong></figcaption></figure><figure><a class="lightbox-link" href="img/fire/06-selected-site-distance-scenario.jpg" target="_blank" rel="noopener"><img src="img/fire/06-selected-site-distance-scenario-thumb.jpg" alt="Distance service areas from the selected site" loading="lazy"></a><figcaption><strong>6. Distance service areas from the selected site.</strong></figcaption></figure><figure><a class="lightbox-link" href="img/fire/07-selected-site-travel-time-scenario.jpg" target="_blank" rel="noopener"><img src="img/fire/07-selected-site-travel-time-scenario-thumb.jpg" alt="Travel-time service areas from the selected site" loading="lazy"></a><figcaption><strong>7. Travel-time service areas from the selected site.</strong></figcaption></figure></div>
       </article>
     </section>
   </main>
