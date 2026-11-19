@@ -1225,6 +1225,21 @@
     @media (max-width: 520px) {
       .pf-tiles { grid-template-columns: 1fr; }
     }
+
+    .tools-heading {
+      margin: 44px 0 0;
+      color: var(--navy-2);
+      font-size: 1.45rem;
+    }
+
+    .tools-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 18px;
+    }
+
+    @media (max-width: 760px) {
+      .tools-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 
@@ -1608,6 +1623,27 @@
           <p>Reproducibility package for a two-stage approximation algorithm: Python source, tests including more than 500 perturbation tests, synthetic instance generators, raw logs, an OpenStreetMap pipeline, and a single script that reproduces the results.</p>
           <div class="tags"><span class="tag">Python</span><span class="tag">Approximation</span><span class="tag">Tests</span></div>
           <p class="data-link"><a href="https://doi.org/10.17632/z9vv2zywyr" target="_blank" rel="noopener">Mendeley Data · doi:10.17632/z9vv2zywyr</a></p>
+        </article>
+      </div>
+
+      <h3 class="tools-heading">Interactive web tools</h3>
+      <div class="grid tools-grid">
+        <article class="card tool-card">
+          <span class="label">Street Visibility · Manhattan</span>
+          <h3>Manhattan Forward View</h3>
+          <p>A 3D map of Manhattan. Click any street to cast 73 rays from five points along the segment and see the forward
+            view a driver gets: the opening angle at a chosen look-ahead distance, wall distances, frontage gaps, and a comparison
+            with the Manhattan averages from my study. Runs in the browser on live OpenStreetMap footprints.</p>
+          <div class="tags"><span class="tag">Isovists</span><span class="tag">Ray casting</span><span class="tag">MapLibre 3D</span><span class="tag">OpenStreetMap</span></div>
+          <p class="data-link"><a href="manhattan-forward-view/">Open the tool &rarr;</a></p>
+        </article>
+        <article class="card tool-card">
+          <span class="label">Spatial Simulation · Sari</span>
+          <h3>One visit is enough: COVID-19 and Nowruz</h3>
+          <p>An interactive household-level simulation of 360,000 residents. Play it day by day, zoom into a neighbourhood to see
+            family links, and test what happens when some families skip the Nowruz visit.</p>
+          <div class="tags"><span class="tag">Household-level</span><span class="tag">Thiessen polygons</span><span class="tag">Scenarios</span></div>
+          <p class="data-link"><a href="simulations/covid-nowruz-sari/">Run the simulation &rarr;</a></p>
         </article>
       </div>
     </section>
