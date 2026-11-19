@@ -453,6 +453,120 @@
       text-decoration: none;
     }
 
+    .animation + .animation {
+      margin-top: 26px;
+    }
+
+    .animation-gallery {
+      grid-column: 1 / -1;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+    }
+
+    .animation-gallery h4 {
+      margin: 0 0 6px;
+      color: var(--navy-2);
+      font-size: 1.05rem;
+    }
+
+    .animation-gallery > p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .93rem;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .gallery-grid figure {
+      margin: 0;
+    }
+
+    .gallery-grid img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+
+    .gallery-grid a:hover img,
+    .gallery-grid a:focus-visible img {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(12,36,56,.14);
+    }
+
+    .gallery-grid figcaption {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: .84rem;
+      line-height: 1.45;
+    }
+
+    .gallery-grid figcaption strong {
+      color: var(--navy-2);
+    }
+
+    .lightbox {
+      width: min(1200px, 94vw);
+      max-height: 94vh;
+      padding: 0;
+      border: 0;
+      border-radius: 12px;
+      background: white;
+    }
+
+    .lightbox::backdrop {
+      background: rgba(8, 22, 34, .82);
+    }
+
+    .lightbox img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: calc(94vh - 70px);
+      object-fit: contain;
+    }
+
+    .lightbox-bar {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      color: var(--navy-2);
+      font-size: .9rem;
+      font-weight: 700;
+    }
+
+    .lightbox-bar button {
+      flex: none;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: white;
+      color: var(--navy-2);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    @media (max-width: 900px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 900px) {
       .animation {
         grid-template-columns: 1fr;
@@ -1270,6 +1384,106 @@
           </p>
         </div>
       </article>
+
+      <article class="animation">
+        <div class="animation-media">
+          <video controls preload="metadata" playsinline style="aspect-ratio: 960 / 726"
+                 poster="assets/images/airport-airspace-oeaaa-poster.jpg"
+                 aria-describedby="anim-oeaaa-desc">
+            <source src="assets/videos/airport-airspace-oeaaa-animation.mp4" type="video/mp4">
+            Your browser cannot play this video.
+            <a href="assets/videos/airport-airspace-oeaaa-animation.mp4">Download the MP4</a> instead.
+          </video>
+        </div>
+
+        <div class="animation-body">
+          <div class="animation-meta">
+            <span class="no-ai">Made without AI</span>
+            <span class="tag">OE/AAA</span>
+            <span class="tag">3D GIS</span>
+            <span class="tag">1 min 11 s</span>
+          </div>
+          <h3>Aviation obstruction and airspace analysis: Nowshahr Airport</h3>
+          <p id="anim-oeaaa-desc">
+            An Obstruction Evaluation / Airport Airspace Analysis (OE/AAA) that models the protected airspace around
+            Nowshahr Airport in 3D, to set height limits for tall buildings in neighboring Chalus and to account for
+            flight paths. I modeled and animated every surface by hand in GIS, and produced the maps below the same way.
+            No AI tools were used.
+          </p>
+          <ol class="animation-steps">
+            <li>The runway, with an obstacle-free zone at each end and 1:7 transitional surfaces along its sides.</li>
+            <li>A 1:50 precision approach surface, with 1:40 approach and 1:7 turnaround surfaces extending out over the coast.</li>
+            <li>An inner horizontal surface 4 km around the runway, where buildings must stay below 45 m.</li>
+            <li>A 500 m conical surface rising at 1:20, then a control zone out to 15 km, where the limit is 150 m.</li>
+          </ol>
+          <p class="animation-link">
+            Part of the Comprehensive Feasibility Study for High-Rise Development in Chalus City, a multi-criteria GIS
+            study of 298+ urban blocks.
+          </p>
+        </div>
+
+        <div class="animation-gallery">
+          <h4>Study maps</h4>
+          <p>The airspace limits were combined with land price, street network, service access, and shadow criteria
+            to rate each block's capacity for high-rise development. Select a map to enlarge it.</p>
+          <div class="gallery-grid">
+            <figure>
+              <a href="assets/images/chalus/chalus-01-aviation-clearance-zone.jpg" class="lightbox-link" target="_blank" rel="noopener">
+                <img src="assets/images/chalus/chalus-01-aviation-clearance-zone-thumb.jpg" alt="Map: Nowshahr Airport aviation clearance zone, Chalus high-rise feasibility study" loading="lazy" width="720" height="509">
+              </a>
+              <figcaption><strong>Nowshahr Airport aviation clearance zone.</strong> All obstacle limitation surfaces at 1:200,000: approach and turnaround areas, the 4 km inner horizontal surface, the 1:20 conical surface, and the 15 km control zone.</figcaption>
+            </figure>
+            <figure>
+              <a href="assets/images/chalus/chalus-02-flight-boundaries-chalus.jpg" class="lightbox-link" target="_blank" rel="noopener">
+                <img src="assets/images/chalus/chalus-02-flight-boundaries-chalus-thumb.jpg" alt="Map: Flight boundaries over Chalus City, Chalus high-rise feasibility study" loading="lazy" width="720" height="509">
+              </a>
+              <figcaption><strong>Flight boundaries over Chalus City.</strong> Surface slopes (1:7, 1:20, 1:40, 1:50) and radii drawn over the city, showing where each height limit applies.</figcaption>
+            </figure>
+            <figure>
+              <a href="assets/images/chalus/chalus-03-flight-boundaries-blocks.jpg" class="lightbox-link" target="_blank" rel="noopener">
+                <img src="assets/images/chalus/chalus-03-flight-boundaries-blocks-thumb.jpg" alt="Map: Flight boundaries and proposed development blocks, Chalus high-rise feasibility study" loading="lazy" width="720" height="509">
+              </a>
+              <figcaption><strong>Flight boundaries and proposed development blocks.</strong> Each proposed block overlaid on the airspace surfaces, so its height ceiling can be read directly.</figcaption>
+            </figure>
+            <figure>
+              <a href="assets/images/chalus/chalus-04-land-price.jpg" class="lightbox-link" target="_blank" rel="noopener">
+                <img src="assets/images/chalus/chalus-04-land-price-thumb.jpg" alt="Map: Land price, Chalus high-rise feasibility study" loading="lazy" width="720" height="509">
+              </a>
+              <figcaption><strong>Land price.</strong> Blocks reclassified by land value into five classes of economic efficiency for high-rise development.</figcaption>
+            </figure>
+            <figure>
+              <a href="assets/images/chalus/chalus-05-street-connectivity.jpg" class="lightbox-link" target="_blank" rel="noopener">
+                <img src="assets/images/chalus/chalus-05-street-connectivity-thumb.jpg" alt="Map: Street network connectivity, Chalus high-rise feasibility study" loading="lazy" width="720" height="509">
+              </a>
+              <figcaption><strong>Street network connectivity.</strong> Blocks rated against street-network connectivity standards, from undesirable to optimal.</figcaption>
+            </figure>
+            <figure>
+              <a href="assets/images/chalus/chalus-06-street-performance.jpg" class="lightbox-link" target="_blank" rel="noopener">
+                <img src="assets/images/chalus/chalus-06-street-performance-thumb.jpg" alt="Map: Street network functional performance, Chalus high-rise feasibility study" loading="lazy" width="720" height="509">
+              </a>
+              <figcaption><strong>Street network functional performance.</strong> Blocks rated by network performance, with the major trip and population attraction centers marked.</figcaption>
+            </figure>
+            <figure>
+              <a href="assets/images/chalus/chalus-07-welfare-access.jpg" class="lightbox-link" target="_blank" rel="noopener">
+                <img src="assets/images/chalus/chalus-07-welfare-access-thumb.jpg" alt="Map: Access to public welfare services, Chalus high-rise feasibility study" loading="lazy" width="720" height="509">
+              </a>
+              <figcaption><strong>Access to public welfare services.</strong> Block-level accessibility to public services, in five classes from poor to good.</figcaption>
+            </figure>
+            <figure>
+              <a href="assets/images/chalus/chalus-08-shadow-impact.jpg" class="lightbox-link" target="_blank" rel="noopener">
+                <img src="assets/images/chalus/chalus-08-shadow-impact-thumb.jpg" alt="Map: High-rise shadow impact, Chalus high-rise feasibility study" loading="lazy" width="720" height="509">
+              </a>
+              <figcaption><strong>High-rise shadow impact.</strong> Blocks rated by how much shadow tall buildings would cast on their surroundings.</figcaption>
+            </figure>
+            <figure>
+              <a href="assets/images/chalus/chalus-09-final-overlay.jpg" class="lightbox-link" target="_blank" rel="noopener">
+                <img src="assets/images/chalus/chalus-09-final-overlay-thumb.jpg" alt="Map: Final criteria overlay, Chalus high-rise feasibility study" loading="lazy" width="720" height="509">
+              </a>
+              <figcaption><strong>Final criteria overlay.</strong> All criteria combined into block-level high-rise development capacity, from minimum to maximum potential.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="skills">
@@ -1368,6 +1582,37 @@
         });
       });
     });
+  </script>
+
+  <dialog class="lightbox" id="lightbox" aria-label="Enlarged map">
+    <img src="" alt="">
+    <div class="lightbox-bar">
+      <span class="lightbox-title"></span>
+      <button type="button" data-close>Close</button>
+    </div>
+  </dialog>
+
+  <script>
+    (() => {
+      const box = document.getElementById("lightbox");
+      if (!box || typeof box.showModal !== "function") return;
+      const img = box.querySelector("img");
+      const title = box.querySelector(".lightbox-title");
+      document.querySelectorAll(".lightbox-link").forEach(link => {
+        link.addEventListener("click", event => {
+          event.preventDefault();
+          const thumb = link.querySelector("img");
+          img.src = link.getAttribute("href");
+          img.alt = thumb ? thumb.alt : "";
+          const caption = link.closest("figure")?.querySelector("figcaption strong");
+          title.textContent = caption ? caption.textContent.replace(/\.$/, "") : "";
+          box.showModal();
+        });
+      });
+      box.querySelector("[data-close]").addEventListener("click", () => box.close());
+      box.addEventListener("click", event => { if (event.target === box) box.close(); });
+      box.addEventListener("close", () => { img.src = ""; });
+    })();
   </script>
 </body>
 </html>
