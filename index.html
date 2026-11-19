@@ -1233,7 +1233,7 @@
     }
 
     .tools-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       margin-top: 18px;
     }
 
@@ -1637,6 +1637,16 @@
           <div class="tags"><span class="tag">Isovists</span><span class="tag">Ray casting</span><span class="tag">MapLibre 3D</span><span class="tag">OpenStreetMap</span></div>
           <p class="data-link"><a href="manhattan-forward-view/">Open the tool &rarr;</a></p>
         </article>
+        <article class="card tool-card">
+          <span class="label">Transit Resilience · Cincinnati</span>
+          <h3>Cincinnati Transit Vulnerability</h3>
+          <p>An interactive map of the Cincinnati Metro bus network: 3,532 stops scored by graph centrality from GTFS, four
+            disruption scenarios (hub closure, Ohio River flood, power outage, top-5 failure), and a neighborhood equity overlay.
+            Python pipeline, notebooks and a Streamlit dashboard included.</p>
+          <div class="tags"><span class="tag">GTFS</span><span class="tag">NetworkX</span><span class="tag">PCA</span><span class="tag">Equity</span></div>
+          <p class="data-link"><a href="cincinnati-transit-vulnerability/">Open the map &rarr;</a> · <a href="https://github.com/Omid-Mansourihanis/Omid-Mansourihanis.github.io/tree/main/cincinnati-transit-vulnerability" target="_blank" rel="noopener">Code</a></p>
+        </article>
+
         <article class="card tool-card">
           <span class="label">Spatial Simulation · Sari</span>
           <h3>One visit is enough: COVID-19 and Nowruz</h3>
