@@ -34,6 +34,7 @@ us-census-block-builder/
 ├── index.html                   ← geography picker (served by GitHub Pages)
 ├── run_pipeline.ipynb           ← Colab notebook that builds the dataset
 ├── census_pipeline_modular.py   ← the pipeline: run_county(state_fips, county_fips, ...)
+├── data/states_counties.json    ← 51 states/DC and 3,143 counties (2020 Census)
 └── README.md
 ```
 
@@ -88,8 +89,12 @@ Block-group and tract values are repeated on every block inside them; they are n
   buildings + GHSL layers.
 - **Coverage:** the 50 states and DC. Puerto Rico is not offered because there is no
   Microsoft Building Footprints state file for it.
-- The state/county/tract lists come **live from the US Census API**, so they stay current
-  and need no manual maintenance. No API key is required just to browse the geography.
+- **States and counties** are bundled with the page (`data/states_counties.json`, the 3,143
+  county equivalents of the 2020 Census, matching the 2020 TIGER/Line blocks the pipeline uses),
+  so the picker works even where `api.census.gov` is blocked or unreachable.
+- **Tracts** are listed live from the Census API. If that request fails, the page switches to a
+  text box: leave it empty for the whole county or type a 6-digit tract code.
+  The Colab notebook itself runs on Google's servers, so it reaches the Census API either way.
 - Nothing is stored on a server; the token is encoded entirely in your browser.
 
 ## Variable check (November 2026)
