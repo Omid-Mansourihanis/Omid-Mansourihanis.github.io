@@ -502,6 +502,11 @@
       font-weight: 400;
     }
 
+    .video-stack {
+      display: grid;
+      gap: 20px;
+    }
+
     .animation-note {
       margin: 14px 0 0;
       padding-left: 12px;
@@ -1583,22 +1588,39 @@
       </article>
 
       <article class="animation">
-        <div class="animation-media">
-          <video controls preload="metadata" playsinline
-                 poster="assets/images/covid19-nowruz-sari-poster.jpg"
-                 aria-describedby="anim-covid-desc">
-            <source src="assets/videos/covid19-nowruz-sari-simulation.mp4" type="video/mp4">
-            Your browser cannot play this video.
-            <a href="assets/videos/covid19-nowruz-sari-simulation.mp4">Download the MP4</a> instead.
-          </video>
+        <div class="animation-media video-stack">
+          <figure class="video-version">
+            <video controls preload="metadata" playsinline style="aspect-ratio: 16 / 9"
+                   poster="assets/images/covid19-nowruz-sari-poster.jpg"
+                   aria-describedby="anim-covid-desc" aria-label="Original 2020 simulation">
+              <source src="assets/videos/covid19-nowruz-sari-simulation.mp4" type="video/mp4">
+              Your browser cannot play this video.
+              <a href="assets/videos/covid19-nowruz-sari-simulation.mp4">Download the MP4</a> instead.
+            </video>
+            <figcaption><strong>Original study, 2020 (4 min).</strong> The model as I first built and presented it:
+              the reasoning, the family-visit rules, and the city-wide simulation from 21 March.</figcaption>
+          </figure>
+          <figure class="video-version">
+            <video controls preload="metadata" playsinline style="aspect-ratio: 16 / 9"
+                   poster="assets/images/covid19-nowruz-sari-2026-poster.jpg"
+                   aria-label="2026 reconstruction, animated explainer">
+              <source src="assets/videos/covid19-nowruz-sari-2026-reconstruction.mp4" type="video/mp4">
+              Your browser cannot play this video.
+              <a href="assets/videos/covid19-nowruz-sari-2026-reconstruction.mp4">Download the MP4</a> instead.
+            </video>
+            <figcaption><strong>Reconstruction, 2026 (1 min 37 s, no sound).</strong> A rebuilt animated explainer that
+              follows one chain of infection from family to parents&rsquo; home to in-laws, then the whole city day by day.
+              In this run, 82% of households were infected within three weeks and 95% by day 60. When half the families
+              skipped the visits, 49% were still reached.</figcaption>
+          </figure>
         </div>
 
         <div class="animation-body">
           <div class="animation-meta">
             <span class="tag">2020</span>
+            <span class="tag">Rebuilt 2026</span>
             <span class="tag">Spatial simulation</span>
             <span class="tag">360,000 residents</span>
-            <span class="tag">4 min 1 s</span>
           </div>
           <h3>One visit is enough: COVID-19 and Nowruz visiting in Sari</h3>
           <p id="anim-covid-desc">
@@ -1615,8 +1637,8 @@
           </ol>
           <p class="animation-note">
             Even with every visit kept separate, a parents&rsquo; home picks up the virus from one family and passes it to the next.
-            Because each family belongs to two such homes, these clusters chain together, and the virus reaches every household
-            in about three weeks. This illustrates a mechanism. It is not a forecast and is not calibrated to reported cases.
+            Because each family belongs to two such homes, these clusters chain together. In the original 2020 model, the virus
+            reached every household in about three weeks. This illustrates a mechanism. It is not a forecast and is not calibrated to reported cases.
           </p>
           <p class="animation-link">
             <a href="simulations/covid-nowruz-sari/">Run the interactive simulation yourself &rarr;</a>
