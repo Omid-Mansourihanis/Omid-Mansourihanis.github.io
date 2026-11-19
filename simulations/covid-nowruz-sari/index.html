@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
 <title>One visit is enough: COVID-19 and Nowruz visiting in Sari · Omid Mansourihanis</title>
 <meta name="description" content="Interactive household-level simulation of how family visits during Nowruz 2020 could spread COVID-19 through a city the size of Sari, Iran.">
 <meta name="author" content="Omid Mansourihanis">
@@ -11,36 +12,19 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://omid-mansourihanis.github.io/simulations/covid-nowruz-sari/">
 <link rel="canonical" href="https://omid-mansourihanis.github.io/simulations/covid-nowruz-sari/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23143d59'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='800' fill='white' text-anchor='middle'%3EOM%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23000000' stroke='white' stroke-width='3'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='800' fill='white' text-anchor='middle'%3EOM%3C/text%3E%3C/svg%3E">
 <style>
 :root{
-  --paper:#eef0ec; --surface:#f8f9f6; --ink:#1c2430; --muted:#5a6571; --line:#d4d9d5;
-  --accent:#11807e; --accent-ink:#ffffff; --band:rgba(227,163,58,.14); --band-ink:#9a6514;
-  --map-bg:#c9d3cf; --map-sus:#d5dfda; --map-exp:#e3a33a; --map-inf:#b3203a; --map-rec:#8a6577;
-  --map-flash:#fff2c4; --map-hub:#0f7c7a; --spark:#c8283f; --border-k:.80;
-  --chart-bar:#b3203a; --chart-seed:#a6afb6; --chart-line:#1c2430; --chart-base:#11807e;
-  color-scheme: light;
+  /* Terminal theme: black & white; only the epidemic states keep colour */
+  --paper:#000000; --surface:#0a0a0a; --ink:#e6e6e6; --muted:#9b9b9b; --line:#2a2a2a;
+  --accent:#ffffff; --accent-ink:#000000; --band:rgba(255,255,255,.07); --band-ink:#cfcfcf;
+  --map-bg:#050505; --map-sus:#2b2b2b; --map-exp:#e8a840; --map-inf:#e2435b; --map-rec:#6e6e6e;
+  --map-flash:#ffffff; --map-hub:#ffffff; --spark:#ff6b7f; --border-k:.70;
+  --chart-bar:#e2435b; --chart-seed:#5a5a5a; --chart-line:#e6e6e6; --chart-base:#ffffff;
+  color-scheme: dark;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --paper:#111a27; --surface:#172234; --ink:#e7ebf0; --muted:#97a3b2; --line:#2a3749;
-    --accent:#3cc2bd; --accent-ink:#0b1a1f; --band:rgba(232,168,64,.12); --band-ink:#e8b55c;
-    --map-bg:#0d1520; --map-sus:#24324a; --map-exp:#e8a840; --map-inf:#e2435b; --map-rec:#6a4a5d;
-    --map-flash:#fff1c0; --map-hub:#45d1cb; --spark:#ff6b7f; --border-k:.70;
-    --chart-bar:#e2435b; --chart-seed:#56637a; --chart-line:#e7ebf0; --chart-base:#3cc2bd;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"]{
-  --paper:#111a27; --surface:#172234; --ink:#e7ebf0; --muted:#97a3b2; --line:#2a3749;
-  --accent:#3cc2bd; --accent-ink:#0b1a1f; --band:rgba(232,168,64,.12); --band-ink:#e8b55c;
-  --map-bg:#0d1520; --map-sus:#24324a; --map-exp:#e8a840; --map-inf:#e2435b; --map-rec:#6a4a5d;
-  --map-flash:#fff1c0; --map-hub:#45d1cb; --spark:#ff6b7f; --border-k:.70;
-  --chart-bar:#e2435b; --chart-seed:#56637a; --chart-line:#e7ebf0; --chart-base:#3cc2bd;
-  color-scheme: dark;
 }
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:border-box}
@@ -96,7 +80,7 @@ h1{font-size:clamp(2.4rem,5vw,4rem);line-height:1.02;font-weight:600;margin:0 0 
 .controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 button,.seg button{font:inherit;cursor:pointer}
 .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:8px;font-size:.92rem;font-weight:500}
-.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent;min-width:104px;justify-content:center}
+.btn.primary{border-color:#fff;background:var(--accent);color:var(--accent-ink);border-color:transparent;min-width:104px;justify-content:center}
 .btn:hover{border-color:var(--muted)}
 .btn.primary:hover{filter:brightness(1.07)}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}

@@ -3,23 +3,21 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#000000">
 <title>US Census Block Dataset Builder · Omid Mansourihanis</title>
 <meta name="description" content="Pick a US state, county and tract, then build a block-level urban-analysis dataset (Census 2020, ACS 2023, OpenStreetMap, building footprints, GHSL) in Google Colab.">
 <meta name="author" content="Omid Mansourihanis">
 <link rel="canonical" href="https://omid-mansourihanis.github.io/us-census-block-builder/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23143d59'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='800' fill='white' text-anchor='middle'%3EOM%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23000000' stroke='white' stroke-width='3'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='800' fill='white' text-anchor='middle'%3EOM%3C/text%3E%3C/svg%3E">
 <style>
   :root{
-    --bg:#f6f8fb; --card:#ffffff; --ink:#1f2a37; --muted:#657789;
-    --accent:#0c2438; --accent2:#147d84; --line:#dfe7ee; --ok:#147d84;
+    /* terminal theme: black & white */
+    --bg:#000000; --card:#0a0a0a; --ink:#d6d6d6; --muted:#9b9b9b;
+    --accent:#ffffff; --accent2:#ffffff; --line:#2a2a2a; --ok:#ffffff;
+    --font-mono:"Cascadia Mono",Consolas,"Lucida Console","Courier New",ui-monospace,monospace;
+    color-scheme:dark;
     --font-serif:"Times New Roman",Times,"Liberation Serif",Tinos,serif;
     --font-ui:Calibri,Carlito,"Segoe UI",Candara,Arial,sans-serif;
-  }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --bg:#0f1621; --card:#17202c; --ink:#e7edf5; --muted:#9bacc2;
-      --accent:#7fb0e6; --accent2:#4f93d6; --line:#26323f; --ok:#4cc38a;
-    }
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -28,7 +26,14 @@
   .home{display:inline-block;font-family:var(--font-ui);font-size:14px;text-decoration:none;margin-bottom:14px}
   .home:hover{text-decoration:underline}
   label,select,button,input,.badge,.hint,.warn{font-family:var(--font-ui)}
-  input.bad{border-color:#c0392b}
+  input.bad{border-color:#e2435b}
+  h1{color:#fff}
+  h1::before{content:"$ ";font-family:var(--font-mono);font-weight:400;color:var(--muted)}
+  .card{border-radius:6px}
+  .token{color:#fff}
+  .badge,.about th{font-family:var(--font-mono)}
+  select:focus,input:focus{outline:1px dashed #fff;outline-offset:2px}
+  ::selection{background:#fff;color:#000}
   .about h2{font-size:21px;margin:22px 0 8px;color:var(--accent)}
   .about h2:first-child{margin-top:0}
   .about p,.about li{font-size:16px}
@@ -50,16 +55,16 @@
   .hint{font-size:12px;color:var(--muted);margin-top:4px}
   .row{display:flex;gap:12px;flex-wrap:wrap}
   .row>div{flex:1;min-width:220px}
-  button.go{background:var(--accent);color:#fff;border:none;font-weight:700;
+  button.go{background:var(--accent);color:#000;border:none;font-weight:700;
     margin-top:20px;cursor:pointer;padding:14px}
   button.go:disabled{opacity:.4;cursor:not-allowed}
-  button.go:hover:not(:disabled){background:var(--accent2)}
+  button.go:hover:not(:disabled){background:#000;color:#fff;outline:1px solid #fff}
   .out{margin-top:16px;display:none}
   .out.show{display:block}
   code,.token{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
   .token{display:block;background:var(--bg);border:1px dashed var(--line);
     border-radius:8px;padding:12px;font-size:13px;word-break:break-all;margin:8px 0}
-  .copybtn{background:var(--ok);color:#fff;border:none;border-radius:8px;
+  .copybtn{background:var(--ok);color:#000;border:none;border-radius:8px;
     padding:10px 14px;font-weight:600;cursor:pointer;width:auto;display:inline-block}
   .steps{font-size:14px;padding-left:18px}
   .steps li{margin:6px 0}

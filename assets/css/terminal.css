@@ -1,0 +1,193 @@
+/* ==========================================================================
+   Terminal theme — black & white, console-style dark mode for the whole site.
+   Loaded AFTER each page's own styles, so it only overrides colours,
+   borders and a few accents. Body and headings stay Times New Roman,
+   navigation and buttons stay Calibri; small labels use a console font.
+   ========================================================================== */
+:root {
+  color-scheme: dark;
+  --term-bg: #000000;
+  --term-panel: #0a0a0a;
+  --term-panel-2: #111111;
+  --term-line: #2a2a2a;
+  --term-line-2: #3d3d3d;
+  --term-text: #d6d6d6;
+  --term-dim: #9b9b9b;
+  --term-bright: #ffffff;
+  --font-mono: "Cascadia Mono", Consolas, "Lucida Console", "Courier New", ui-monospace, monospace;
+
+  /* page variables used by the home page and portfolio */
+  --navy: #ffffff;
+  --navy-2: #f2f2f2;
+  --teal: #ffffff;
+  --teal-soft: transparent;
+  --gold: #ffffff;
+  --ink: var(--term-text);
+  --muted: var(--term-dim);
+  --surface: var(--term-panel);
+  --surface-2: var(--term-bg);
+  --border: var(--term-line);
+  --shadow: none;
+}
+
+html, body { background: var(--term-bg); color: var(--term-text); }
+::selection { background: #ffffff; color: #000000; }
+a { color: var(--term-bright); text-decoration-color: rgba(255,255,255,.45); }
+a:hover { text-decoration-color: #ffffff; }
+:focus-visible { outline: 2px dashed #ffffff; outline-offset: 3px; }
+
+/* scrollbar */
+html { scrollbar-color: #444 #000; }
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: #3a3a3a; border: 2px solid #000; }
+
+/* ---------- navigation ---------- */
+.site-nav { background: rgba(0,0,0,.92); border-bottom: 1px solid var(--term-line); }
+.brand { color: var(--term-bright); }
+.brand::before { content: "~/ "; font-family: var(--font-mono); font-weight: 400; color: var(--term-dim); }
+.nav-links a { color: #bdbdbd; }
+.nav-links a:hover, .nav-links a:focus-visible { color: #000; background: #fff; }
+.skip-link:focus { background: #fff; color: #000; }
+
+/* ---------- hero ---------- */
+.hero {
+  color: var(--term-bright);
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.028) 0 1px, transparent 1px 3px),
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 48px 48px,
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 48px 48px,
+    #000;
+  border-bottom: 1px solid var(--term-line);
+}
+.eyebrow { color: var(--term-dim); font-family: var(--font-mono); letter-spacing: .12em; }
+.eyebrow::before { content: "> "; color: var(--term-bright); }
+.hero h1::after {
+  content: "_";
+  display: inline-block;
+  margin-left: .06em;
+  font-weight: 400;
+  animation: term-blink 1.1s steps(1) infinite;
+}
+@keyframes term-blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .hero h1::after { animation: none; } }
+.hero h2 { color: #e6e6e6; }
+.hero-copy { color: #bdbdbd; }
+.hero-photo img { border: 1px solid #555; border-radius: 6px; box-shadow: none; filter: none; }
+.monogram { color: #fff; background: #000; border: 1px solid #555; box-shadow: none; }
+
+/* ---------- buttons ---------- */
+.button.primary { background: #fff; color: #000; box-shadow: none; border: 1px solid #fff; }
+.button.primary:hover { background: #000; color: #fff; }
+.button.secondary { color: #fff; border: 1px solid #fff; background: transparent; }
+.button.secondary:hover { background: #fff; color: #000; }
+.button.pf-button { background: #fff; color: #000; border: 1px solid #fff; }
+.button.pf-button:hover { background: #000; color: #fff; }
+
+/* ---------- panels: cards, tiles, timeline ... ---------- */
+.stats, .focus-list li, .card, .animation, .publication, .timeline-item,
+.education-card, .skill-card, .contact-card, .fellowships li, .press-card,
+.pf-tile, .lightbox, .social-links a, .filter-btn, .lightbox-bar button {
+  background: var(--term-panel);
+  border-color: var(--term-line);
+  box-shadow: none;
+  border-radius: 6px;
+}
+.card:hover, .publication:hover, .press-card:hover, .press-card:focus-visible,
+.pf-tile:hover, .pf-tile:focus-visible, .timeline-item:hover {
+  border-color: #8a8a8a;
+  box-shadow: none;
+}
+.stat { border-color: var(--term-line); }
+.stat strong { color: var(--term-bright); font-family: var(--font-mono); }
+.stat span, .stat:nth-child(-n+2) { border-color: var(--term-line); }
+section { border-bottom: 1px solid var(--term-line); }
+
+.section-kicker, .label, .timeline-date, .press-source, .tools-heading + p .label {
+  color: var(--term-dim);
+  font-family: var(--font-mono);
+  letter-spacing: .06em;
+}
+.section-kicker::before { content: "// "; color: #6d6d6d; }
+.section-title, .card h3, .animation h3, .publication h3, .timeline-item h3,
+.education-card h3, .skill-card h3, .contact-card h3, .press-title, .tools-heading,
+.animation-gallery h4, .pf-tile span, .lightbox-bar, .param-list dt,
+.video-version figcaption strong, .gallery-grid figcaption strong { color: var(--term-bright); }
+.section-lead, .card p, .publication p, .timeline-item h4, .timeline-item p,
+.education-card p, .skill-card p, .animation p, .animation-steps, .param-list dd,
+.video-version figcaption, .gallery-grid figcaption, .animation-link-sub,
+.animation-gallery > p, .press-cta, .social-label, .recognition .lead-in,
+.fellowships li span, .stat span { color: var(--term-dim); }
+.fellowships li { color: var(--term-bright); border-left: 3px solid #fff; }
+.publication { border-left: 3px solid #fff; }
+
+/* tags & badges */
+.tag {
+  background: transparent;
+  color: #cfcfcf;
+  border: 1px solid var(--term-line-2);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: .78rem;
+}
+.status { font-family: var(--font-mono); border-radius: 3px; }
+.status.published { color: #000; background: #fff; border: 1px solid #fff; }
+.status.review { color: #fff; background: transparent; border: 1px dashed #fff; }
+.status.preprint { color: #bdbdbd; background: transparent; border: 1px dotted #bdbdbd; }
+.no-ai { background: #000; color: #fff; border: 1px solid #fff; border-radius: 3px; font-family: var(--font-mono); }
+
+/* filters */
+.filter-btn { color: #cfcfcf; }
+.filter-btn.active, .filter-btn:hover { background: #fff; color: #000; border-color: #fff; }
+
+/* media */
+.animation video, .video-version video { background: #000; border: 1px solid var(--term-line); }
+.gallery-grid img, .press-card img, .pf-tile img { border-color: var(--term-line); }
+.gallery-grid a:hover img, .gallery-grid a:focus-visible img { box-shadow: none; border-color: #fff; }
+.animation-note { border-left: 3px solid #fff; }
+.animation-gallery { border-top: 1px solid var(--term-line); }
+.lightbox { color: var(--term-text); }
+.lightbox::backdrop { background: rgba(0,0,0,.9); }
+.lightbox-bar button { color: #fff; }
+
+/* social links */
+.social-links a { color: #fff; }
+.social-links a:hover, .social-links a:focus-visible { background: #fff; color: #000; border-color: #fff; }
+
+/* resource band & footer */
+.resource-band { color: #fff; background: #000; border: 1px solid #fff; box-shadow: none; border-radius: 6px; }
+.resource-band p { color: #bdbdbd; }
+footer { color: #9b9b9b; background: #000; border-top: 1px solid var(--term-line); }
+footer a { color: #fff; }
+
+/* tables & code */
+code, kbd, pre { font-family: var(--font-mono); }
+table th, table td { border-color: var(--term-line); }
+
+/* ---------- portfolio page ---------- */
+.topbar { background: rgba(0,0,0,.92); border-bottom: 1px solid var(--term-line); }
+.topbar a { color: var(--term-bright); }
+.topbar nav a { color: #bdbdbd; }
+.topbar nav a:hover { color: #000; background: #fff; }
+.hero p.sub { color: #bdbdbd; }
+.hero-stats div { color: var(--term-dim); }
+.hero-stats b { color: var(--term-bright); }
+.toc a { background: var(--term-panel); border-color: var(--term-line); color: var(--term-bright); border-radius: 6px; }
+.toc a span, .section-num, .kicker { color: var(--term-dim); font-family: var(--font-mono); }
+.toc a:hover { border-color: #fff; }
+.psection > h2, .project h3, .pstat b, .practice-list strong, .ahp caption, .ahp tr.win td { color: var(--term-bright); }
+.project { background: var(--term-panel); border-color: var(--term-line); box-shadow: none; border-radius: 6px; }
+.project img { border-color: var(--term-line); }
+.project a:hover img, .project a:focus-visible img { box-shadow: none; border-color: #fff; }
+.project figcaption, .points, .plink.muted, .practice-list span, .ahp td span { color: var(--term-dim); }
+.project-body > p, .lead { color: var(--term-text); }
+.pstat { background: transparent; border: 1px solid var(--term-line-2); border-radius: 4px; }
+.pstat span { color: var(--term-dim); font-family: var(--font-mono); }
+.practice-list li { background: var(--term-panel); border-color: var(--term-line); }
+.lightbox::backdrop { background: rgba(0,0,0,.9); }
+.lightbox-bar { color: var(--term-bright); }
+.ahp th { background: #fff; color: #000; }
+.ahp td { border-bottom-color: var(--term-line); }
+.ahp .bar { background: #1c1c1c; }
+.ahp .bar i { background: #8a8a8a; }
+.ahp tr.win .bar i { background: #fff; }

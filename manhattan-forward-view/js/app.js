@@ -4,7 +4,7 @@ import {
 } from './geometry.js';
 import { PAPER } from './reference.js';
 
-const STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';
+const STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';   // recoloured black & white by monoBasemap()
 // The main Overpass instance rejects browser POST preflights, so queries go by GET, with mirrors as fallback.
 const OVERPASS = [
   'https://overpass-api.de/api/interpreter',
@@ -26,10 +26,81 @@ const DEG = Math.PI / 180;
 const state = { R: SETTINGS.R, dir: 'both', point: 2, result: null, regions: [], busy: false };
 
 // ---------------- map ----------------
+// Turn a light vector basemap style into a black & white (terminal-style) one.
+// Every colour in the style's paint properties is converted to a grey whose
+// brightness depends on the property: land and water become near-black,
+// roads mid-grey, labels light grey on a black halo. Used with
+// map.setStyle(url, { transformStyle: (_, next) => monoBasemap(next) }).
+function monoBasemap(style) {
+  try {
+    const NAMED = { white: [255, 255, 255, 1], black: [0, 0, 0, 1], transparent: [0, 0, 0, 0] };
+    const hsl2rgb = (h, s, l) => {
+      s /= 100; l /= 100;
+      const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l);
+      const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1));
+      return [255 * f(0), 255 * f(8), 255 * f(4)];
+    };
+    const parse = str => {
+      const s = str.trim().toLowerCase();
+      if (NAMED[s]) return NAMED[s];
+      let m = s.match(/^#([0-9a-f]{3,8})$/);
+      if (m) {
+        let h = m[1];
+        if (h.length === 3 || h.length === 4) h = [...h].map(c => c + c).join('');
+        if (h.length !== 6 && h.length !== 8) return null;
+        const n = [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16));
+        return [...n, h.length === 8 ? parseInt(h.slice(6, 8), 16) / 255 : 1];
+      }
+      m = s.match(/^rgba?\(([^)]+)\)$/);
+      if (m) { const p = m[1].split(',').map(parseFloat); return p.length >= 3 ? [p[0], p[1], p[2], p[3] ?? 1] : null; }
+      m = s.match(/^hsla?\(([^)]+)\)$/);
+      if (m) { const p = m[1].split(',').map(parseFloat); return p.length >= 3 ? [...hsl2rgb(p[0], p[1], p[2]), p[3] ?? 1] : null; }
+      return null;
+    };
+    // brightness rules per paint property (y = luminance of the original colour, 0–1)
+    const RULES = {
+      'background-color': y => 4 + 40 * (1 - y),
+      'fill-color': y => 6 + 90 * (1 - y),
+      'fill-outline-color': y => 26 + 40 * (1 - y),
+      'fill-extrusion-color': y => 34 + 70 * y,
+      'line-color': y => 30 + 92 * y,
+      'text-color': y => 238 - 120 * y,
+      'text-halo-color': () => 0,
+      'icon-color': () => 200,
+      'icon-halo-color': () => 0,
+      'circle-color': y => 60 + 90 * y,
+      'circle-stroke-color': () => 0
+    };
+    const conv = (str, rule) => {
+      const c = parse(str);
+      if (!c) return str;
+      const y = (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255;
+      const v = Math.max(0, Math.min(255, Math.round(rule(y))));
+      return c[3] < 1 ? `rgba(${v},${v},${v},${+c[3].toFixed(3)})` : `rgb(${v},${v},${v})`;
+    };
+    const walk = (v, rule) => typeof v === 'string' ? conv(v, rule)
+      : Array.isArray(v) ? v.map(x => walk(x, rule))
+      : (v && typeof v === 'object') ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, walk(x, rule)]))
+      : v;
+    for (const layer of style.layers || []) {
+      const paint = layer.paint || {};
+      for (const key of Object.keys(paint)) if (RULES[key]) paint[key] = walk(paint[key], RULES[key]);
+      if (layer.type === 'symbol' && layer.layout && layer.layout['icon-image'] && paint['icon-opacity'] === undefined) {
+        paint['icon-opacity'] = 0.5;      // colour POI icons, dimmed
+      }
+      layer.paint = paint;
+    }
+  } catch (err) {
+    console.warn('monoBasemap: keeping the original colours', err);
+  }
+  return style;
+}
+
 const map = new maplibregl.Map({
-  container: 'map', style: STYLE_URL, ...MANHATTAN,
+  container: 'map', ...MANHATTAN,
   maxPitch: 85, attributionControl: { compact: true }, hash: false
 });
+map.setStyle(STYLE_URL, { transformStyle: (_, next) => monoBasemap(next) });
 map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
 map.getCanvas().style.cursor = 'crosshair';
 
@@ -51,7 +122,7 @@ function ensureBuildings() {
       map.addLayer({
         id: 'fv-buildings-3d', type: 'fill-extrusion', source: src[0], 'source-layer': 'building', minzoom: 14,
         paint: {
-          'fill-extrusion-color': '#d8d4cc',
+          'fill-extrusion-color': '#5c5c5c',
           'fill-extrusion-height': ['coalesce', ['get', 'render_height'], 12],
           'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
           'fill-extrusion-opacity': 0.88
@@ -74,19 +145,19 @@ function addLayers() {
     paint: { 'line-width': ['interpolate', ['linear'], ['zoom'], 13, 1.5, 17, 5],
       'line-color': ['interpolate', ['linear'], ['coalesce', ['get', 'opening_80'], 0], 30, '#3b1f5e', 70, '#8a3b78', 110, '#d8576b', 150, '#f9a65a', 180, '#fde68a'] } }, beforeId);
   map.addLayer({ id: 'fv-footprints', type: 'line', source: 'fv-footprints', layout: { visibility: 'none' },
-    paint: { 'line-color': '#1f2937', 'line-width': 1, 'line-opacity': 0.55 } }, beforeId);
+    paint: { 'line-color': '#bdbdbd', 'line-width': 1, 'line-opacity': 0.55 } }, beforeId);
   map.addLayer({ id: 'fv-edge', type: 'line', source: 'fv-edge', layout: { 'line-cap': 'round' },
-    paint: { 'line-color': '#111827', 'line-width': 6, 'line-opacity': 0.75 } }, beforeId);
+    paint: { 'line-color': '#ffffff', 'line-width': 6, 'line-opacity': 0.75 } }, beforeId);
   map.addLayer({ id: 'fv-iso', type: 'fill-extrusion', source: 'fv-iso',
     paint: { 'fill-extrusion-color': '#c0392b', 'fill-extrusion-height': 1.4, 'fill-extrusion-base': 0, 'fill-extrusion-opacity': 0.42 } }, beforeId);
   map.addLayer({ id: 'fv-rays', type: 'line', source: 'fv-rays',
     paint: { 'line-color': ['case', ['get', 'open'], '#c0392b', '#7c8591'],
       'line-width': ['case', ['get', 'open'], 2.2, 1.1], 'line-opacity': ['case', ['get', 'open'], 1, 0.75] } }, beforeId);
   map.addLayer({ id: 'fv-circle', type: 'line', source: 'fv-circle',
-    paint: { 'line-color': '#111827', 'line-width': 1.6, 'line-dasharray': [3, 3] } }, beforeId);
+    paint: { 'line-color': '#ffffff', 'line-width': 1.6, 'line-dasharray': [3, 3] } }, beforeId);
   map.addLayer({ id: 'fv-points', type: 'circle', source: 'fv-points',
-    paint: { 'circle-radius': ['case', ['get', 'sel'], 7, 4.5], 'circle-color': ['case', ['get', 'sel'], '#ffffff', '#111827'],
-      'circle-stroke-color': '#111827', 'circle-stroke-width': ['case', ['get', 'sel'], 3, 1] } });
+    paint: { 'circle-radius': ['case', ['get', 'sel'], 7, 4.5], 'circle-color': ['case', ['get', 'sel'], '#000000', '#ffffff'],
+      'circle-stroke-color': '#ffffff', 'circle-stroke-width': ['case', ['get', 'sel'], 3, 1] } });
 }
 
 async function loadOwnResults() {
