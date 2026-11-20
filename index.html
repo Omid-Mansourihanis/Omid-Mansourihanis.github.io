@@ -1859,8 +1859,8 @@
       <p class="section-kicker">3D Visualization</p>
       <h2 class="section-title">Animations</h2>
       <p class="section-lead">
-        Animated 3D models that explain how my spatial analyses work. Each one was built by hand in GIS software,
-        without AI-generated imagery, video, or narration.
+        Animated models that explain how my spatial analyses work. Each one was built in GIS software or drawn
+        frame by frame with code from my own data, without AI-generated imagery, video, or narration.
       </p>
 
       <article class="animation">
@@ -2182,6 +2182,50 @@
             <dt>Network</dt>
             <dd>12 warehouses for temporary separation and storage (for example, one month), with flows optimized in GIS</dd>
           </dl>
+        </div>
+      </article>
+
+      <article class="animation">
+        <div class="animation-media">
+          <video controls preload="metadata" playsinline style="aspect-ratio: 16 / 9"
+                 poster="assets/images/sari-zoning-story-poster.jpg"
+                 aria-describedby="anim-zoning-desc">
+            <source src="assets/videos/sari-zoning-story.mp4" type="video/mp4">
+            Your browser cannot play this video.
+            <a href="assets/videos/sari-zoning-story.mp4">Download the MP4</a> instead.
+          </video>
+        </div>
+
+        <div class="animation-body">
+          <div class="animation-meta">
+            <span class="no-ai">No AI imagery</span>
+            <span class="tag">Python &middot; cairo</span>
+            <span class="tag">Zoning &amp; FAR</span>
+            <span class="tag">1 min 50 s</span>
+          </div>
+          <h3>One line in a plan: the Sari zoning story</h3>
+          <p id="anim-zoning-desc">
+            A real project from my seven years at Sari Municipality. When Sari (about 300,000 people) adopted a new
+            detailed plan, some owners gained the right to build more. I found which residential parcels gained building
+            capacity, which led the city to offer reduced permit fees to owners who applied early. Every frame is drawn
+            with Python from my own zoning data: no stock footage, no AI-generated imagery and no web map tiles.
+          </p>
+          <ol class="animation-steps">
+            <li><strong>Data recovery.</strong> The base layers (zoning, cadastral parcels, buildings, existing and
+              proposed street widths) existed only as CAD drawings that past edits had shifted. I georeferenced each one
+              into a single GIS base; the city's cadastral GIS covers more than 185,000 residential units.</li>
+            <li><strong>Overlay and spatial joins</strong> gave every parcel its zone, buildings, street widths and the
+              matching rule set from the plan's proposed alternatives (A to D).</li>
+            <li><strong>Rules per parcel.</strong> Python scripts extracted the coverage, floor, FAR and setback rules
+              for each lot and modeled them lot by lot.</li>
+            <li><strong>Finding the gap.</strong> Where the new limit exceeded what was built, the difference was unused
+              capacity. Its value was estimated, and early applicants were offered reduced fees.</li>
+          </ol>
+          <p class="animation-note">
+            The new zoning map (1,874 polygons) is real and was designed and produced by me. Parcels, buildings and
+            streets are schematic and labeled as illustrations on screen; the code shown is a simplified sketch of the
+            workflow; no money figures or owner counts are shown.
+          </p>
         </div>
       </article>
     </section>
