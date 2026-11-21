@@ -1,6 +1,6 @@
 # Prebuilds the OpenStreetMap building footprints and drivable streets of Manhattan for
 # /manhattan-forward-view/, so clicks never wait on the public Overpass servers.
-# Source: Geofabrik New York extract (OpenStreetMap contributors, ODbL).
+# Source: Geofabrik New York extract, or BBBike New York City as a fallback (OpenStreetMap contributors, ODbL).
 # Run it again from the Actions tab ("Build Manhattan tiles") to refresh the OSM data.
 name: Build Manhattan tiles
 
@@ -37,9 +37,24 @@ jobs:
 
       - name: Download the OpenStreetMap New York extract and cut Manhattan
         run: |
-          curl -fsSL --retry 3 -o "$RUNNER_TEMP/ny.osm.pbf" https://download.geofabrik.de/north-america/us/new-york-latest.osm.pbf
+          # Find the New York extract in Geofabrik's index; fall back to BBBike's New York City extract.
+          URL=$(curl -fsSL --retry 3 https://download.geofabrik.de/index-v1-nogeom.json | python -c "
+          import json, sys
+          d = json.load(sys.stdin)
+          for f in d['features']:
+              p = f['properties']
+              if p.get('id') == 'us/new-york' or (p.get('name') == 'New York' and 'us' in (p.get('parent') or '')):
+                  print(p['urls']['pbf']); break
+          " || true)
+          echo "extract: ${URL:-none from Geofabrik index}"
+          if [ -z "$URL" ] || ! curl -fsSL --retry 3 -o "$RUNNER_TEMP/ny.osm.pbf" "$URL"; then
+            URL=https://download.bbbike.org/osm/bbbike/NewYork/NewYork.osm.pbf
+            echo "falling back to $URL"
+            curl -fsSL --retry 3 -A "Mozilla/5.0 (github.com/Omid-Mansourihanis)" -o "$RUNNER_TEMP/ny.osm.pbf" "$URL"
+          fi
           osmium extract --strategy complete_ways -b -74.035,40.69,-73.895,40.89 "$RUNNER_TEMP/ny.osm.pbf" -o "$RUNNER_TEMP/manhattan.osm.pbf"
-          TS=$(osmium fileinfo -g header.option.osmosis_replication_timestamp "$RUNNER_TEMP/ny.osm.pbf" || true)
+          TS=$(osmium fileinfo -g header.option.osmosis_replication_timestamp "$RUNNER_TEMP/ny.osm.pbf" 2>/dev/null || true)
+          [ -n "$TS" ] || TS=$(osmium fileinfo -e -g data.timestamp.last "$RUNNER_TEMP/ny.osm.pbf" 2>/dev/null || true)
           echo "OSM_DATE=${TS%%T*}" >> "$GITHUB_ENV"
           ls -la "$RUNNER_TEMP"
 
