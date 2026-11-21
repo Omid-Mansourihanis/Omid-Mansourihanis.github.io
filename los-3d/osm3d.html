@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='9' width='4' height='6' fill='%231A9850'/%3E%3Crect x='6' y='5' width='4' height='10' fill='%23FEE08B'/%3E%3Crect x='11' y='1' width='4' height='14' fill='%23D73027'/%3E%3C/svg%3E">
+<meta name="author" content="Omid Mansourihanis">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Block-level LOS in 3D — OpenStreetMap</title>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.1/dist/maplibre-gl.css">
+<link rel="stylesheet" href="css/viewer.css">
+<script src="https://unpkg.com/maplibre-gl@5.24.1/dist/maplibre-gl.js"></script>
+<script src="js/config.js"></script>
+<script src="js/los-common.js"></script>
+</head>
+<body>
+<div id="map"></div>
+<div class="panel">
+  <h1>Traffic LOS by census block</h1>
+  <div class="sub">TomTom 2024, Monday 07:00–09:00 · OpenStreetMap 3D</div>
+  <label>City</label><select id="city"></select>
+  <label>Colour by</label><select id="mode"></select>
+  <label>Palette</label><select id="pal"></select>
+  <label>Display</label>
+  <select id="disp">
+    <option value="extrude">3D columns: height = Congestion Index</option>
+    <option value="drape">Flat blocks under OSM 3D buildings</option>
+  </select>
+  <label>Column height scale: <span id="hv"></span> m per CI step</label>
+  <input id="h" type="range" min="5" max="150" step="5" value="40">
+  <label>Opacity: <span id="ov"></span></label>
+  <input id="o" type="range" min="0.2" max="1" step="0.05" value="0.85">
+  <div id="legend"></div>
+  <div class="status" id="status"></div>
+  <div class="nav"><a id="toGoogle" href="google3d.html">→ Same view on Google Photorealistic 3D</a> · <a href="index.html">About</a> · <a href="/">Omid Mansourihanis</a></div>
+  <div class="note">LOS is a block-level, length-weighted summary of the street segments bounding or traversing each block.
+    Grey blocks had no probe observations: missing data, not free-flowing or congested traffic. Right-drag (or Ctrl+drag) to tilt and rotate.</div>
+</div>
+<script>
+(async function () {
+  const $ = (id) => document.getElementById(id), C = window.LOS_CONFIG;
+  const st = LOS.urlState({ city: C.defaultCity, mode: 'los6', pal: 'hcm', disp: 'extrude' });
+  const active = new Set([...LOS.LETTERS, 'NA']);
+  let cities, buildingLayers = [];
+
+  for (const [k, v] of Object.entries(LOS.MODES)) $('mode').add(new Option(v, k));
+  for (const [k, v] of Object.entries(LOS.PALETTES)) $('pal').add(new Option(v.name, k));
+  try { cities = await LOS.loadCities(); } catch (e) { $('status').textContent = 'The block data for this map is being prepared and will appear here shortly.'; return; }
+  for (const [k, v] of Object.entries(cities)) $('city').add(new Option(v.label, k));
+  if (!cities[st.city]) st.city = Object.keys(cities)[0];
+  $('city').value = st.city; $('mode').value = st.mode; $('pal').value = st.pal; $('disp').value = st.disp;
+
+  const map = new maplibregl.Map({
+    container: 'map', style: C.osmStyle, hash: 'view',
+    center: cities[st.city].center, zoom: 13.5, pitch: 55, bearing: -20, maxPitch: 75,
+  });
+  map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }));
+  map.addControl(new maplibregl.ScaleControl());
+  map.addControl(new maplibregl.FullscreenControl());
+
+  map.on('load', async () => {
+    const layers = map.getStyle().layers;
+    buildingLayers = layers.filter((l) => l.type === 'fill-extrusion').map((l) => l.id);   // OSM 3D buildings of the basemap
+    const firstSymbol = (layers.find((l) => l.type === 'symbol') || {}).id;
+    const beforeBuildings = buildingLayers[0] || firstSymbol;
+
+    map.addSource('blocks', { type: 'geojson', data: { type: 'FeatureCollection', features: [] }, attribution:
+      'LOS: TomTom-derived block values (2024) · Blocks: U.S. Census TIGER/Line 2020' });
+    map.addLayer({ id: 'blocks-flat', type: 'fill', source: 'blocks', paint: { 'fill-opacity': 0.75 } }, beforeBuildings);
+    map.addLayer({ id: 'blocks-3d', type: 'fill-extrusion', source: 'blocks', paint: { 'fill-extrusion-vertical-gradient': true } }, firstSymbol);
+    map.addLayer({ id: 'blocks-line', type: 'line', source: 'blocks', minzoom: 14,
+      paint: { 'line-color': '#333', 'line-width': 0.4, 'line-opacity': 0.5 } }, beforeBuildings);
+
+    const popup = new maplibregl.Popup({ closeButton: true, maxWidth: '280px' });
+    for (const id of ['blocks-flat', 'blocks-3d']) {
+      map.on('click', id, (e) => popup.setLngLat(e.lngLat).setHTML(LOS.tooltipHtml(e.features[0].properties, cities[st.city].label)).addTo(map));
+      map.on('mouseenter', id, () => (map.getCanvas().style.cursor = 'pointer'));
+      map.on('mouseleave', id, () => (map.getCanvas().style.cursor = ''));
+    }
+    restyle();
+    await showCity(st.city, !location.hash.includes('view='));
+  });
+
+  function restyle() {
+    if (!map.getLayer('blocks-3d')) return;
+    const col = LOS.colorExpression(st.mode, st.pal), h = +$('h').value, op = +$('o').value, flt = LOS.filterExpression(active);
+    $('hv').textContent = h; $('ov').textContent = op;
+    map.setPaintProperty('blocks-flat', 'fill-color', col);
+    map.setPaintProperty('blocks-flat', 'fill-opacity', op);
+    map.setPaintProperty('blocks-3d', 'fill-extrusion-color', col);
+    map.setPaintProperty('blocks-3d', 'fill-extrusion-opacity', op);
+    map.setPaintProperty('blocks-3d', 'fill-extrusion-height', ['case', ['==', ['get', 'x'], 0], ['*', ['coalesce', ['get', 'c'], 0], h], 2]);
+    for (const id of ['blocks-flat', 'blocks-3d', 'blocks-line']) map.setFilter(id, flt);
+    const ext = st.disp === 'extrude';
+    map.setLayoutProperty('blocks-3d', 'visibility', ext ? 'visible' : 'none');
+    map.setLayoutProperty('blocks-flat', 'visibility', ext ? 'none' : 'visible');
+    for (const id of buildingLayers) map.setLayoutProperty(id, 'visibility', ext ? 'none' : 'visible');
+    LOS.renderLegend($('legend'), st.mode, st.pal, cities[st.city], active, (keys) => { LOS.toggleKeys(active, keys); restyle(); });
+    LOS.saveUrlState(st);
+    updateLink();
+  }
+  function updateLink() {   // carry city, colours and camera over to the Google page
+    const c = map.getCenter();
+    $('toGoogle').href = `google3d.html?city=${st.city}&mode=${st.mode}&pal=${st.pal}` +
+      `&lng=${c.lng.toFixed(5)}&lat=${c.lat.toFixed(5)}&zoom=${map.getZoom().toFixed(2)}&bearing=${map.getBearing().toFixed(0)}`;
+  }
+  map.on('moveend', updateLink);
+
+  async function showCity(slug, fly) {
+    $('status').textContent = `Loading ${cities[slug].label} (${cities[slug].n_mapped.toLocaleString()} blocks)…`;
+    try {
+      const fc = await LOS.loadCity(slug, cities);
+      map.getSource('blocks').setData(fc);
+      if (fly) map.fitBounds(cities[slug].bbox, { padding: 40, pitch: 55, bearing: -20, duration: 1500 });
+      $('status').textContent = '';
+    } catch (e) { $('status').textContent = 'Failed to load city data: ' + e.message; }
+    restyle();
+  }
+
+  $('city').onchange = (e) => { st.city = e.target.value; showCity(st.city, true); };
+  for (const k of ['mode', 'pal', 'disp']) $(k).onchange = (e) => { st[k] = e.target.value; restyle(); };
+  $('h').oninput = $('o').oninput = restyle;
+})();
+</script>
+</body>
+</html>

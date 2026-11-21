@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='9' width='4' height='6' fill='%231A9850'/%3E%3Crect x='6' y='5' width='4' height='10' fill='%23FEE08B'/%3E%3Crect x='11' y='1' width='4' height='14' fill='%23D73027'/%3E%3C/svg%3E">
+<meta name="author" content="Omid Mansourihanis">
+<meta name="description" content="Interactive 3D maps of block-level traffic Level of Service (LOS) for 131,507 census blocks in Chicago, Houston, Los Angeles and New York City, on OpenStreetMap and Google Photorealistic 3D Tiles.">
+<link rel="canonical" href="https://omid-mansourihanis.github.io/los-3d/">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Block-level traffic LOS in four U.S. cities — interactive 3D maps</title>
+<style>
+  body { max-width: 860px; margin: 32px auto; padding: 0 18px; font: 17px/1.55 "Times New Roman", Times, "Liberation Serif", Tinos, serif; color: #222; }
+  h1 { font-size: 24px; margin-bottom: 4px; } .sub { color: #666; margin-top: 0; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 20px 0; }
+  .card { border: 1px solid #ddd; border-radius: 8px; padding: 12px; }
+  .card h3 { margin: 0 0 6px; font-size: 16px; } .card a { display: inline-block; margin-right: 10px; font-size: 15px; font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif; }
+  .home { font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif; font-size: 14px; text-decoration: none; }
+  .muted, table { font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif; }
+  .bar { display: flex; height: 10px; border-radius: 3px; overflow: hidden; margin: 6px 0; }
+  .muted { color: #666; font-size: 13px; } code { background: #f4f4f4; padding: 1px 4px; border-radius: 3px; }
+  table { border-collapse: collapse; font-size: 13px; } td, th { padding: 3px 10px 3px 0; text-align: left; }
+</style>
+<script src="js/config.js"></script>
+<script src="js/los-common.js"></script>
+</head>
+<body>
+<a class="home" href="/">&larr; Omid Mansourihanis</a>
+<h1>Where is traffic congested, block by block?</h1>
+<p class="sub">Level of Service (LOS) for 131,507 census blocks in Chicago, Houston, Los Angeles and New York City,
+  shown in 3D on OpenStreetMap and on Google Photorealistic 3D Tiles.</p>
+
+<div class="cards" id="cards">Loading…</div>
+
+<h2>What the colours mean</h2>
+<table>
+  <tr><th>LOS</th><th>Speed Performance Ratio (observed / free-flow speed)</th><th>3-class</th></tr>
+  <tr><td>A</td><td>&gt; 85%</td><td rowspan="2">Good</td></tr><tr><td>B</td><td>70–85%</td></tr>
+  <tr><td>C</td><td>55–70%</td><td rowspan="2">Medium</td></tr><tr><td>D</td><td>40–55%</td></tr>
+  <tr><td>E</td><td>25–40%</td><td rowspan="2">Poor</td></tr><tr><td>F</td><td>≤ 25%</td></tr>
+</table>
+<p class="muted">Values are TomTom probe data for 2024, Monday 07:00–09:00, length-weighted over the street segments that bound or
+  cross each block. Column height in the OSM view is the TomTom Congestion Index (1–6). Grey blocks had no probe observations;
+  they are missing data, not free-flowing or congested blocks. Blocks are 2020 U.S. Census TIGER/Line geometry.</p>
+
+<h2>Data and paper</h2>
+<p class="muted">Data and code: <a href="https://doi.org/10.17632/4ghf42bs96">Mendeley Data, doi:10.17632/4ghf42bs96</a>. Paper: “What Predicts Urban Traffic Congestion? An Interpretable
+  Machine Learning Analysis of Structural and Behavioral Correlates Across Four Major U.S. Cities” (in revision). Maps by Omid Mansourihanis.
+  Basemaps © OpenStreetMap contributors (via OpenFreeMap) and Google.</p>
+
+<script>
+LOS.loadCities().then((cities) => {
+  const P = LOS.PALETTES.hcm;
+  document.getElementById('cards').innerHTML = Object.entries(cities).map(([slug, c]) => {
+    const n = c.n_analysed, bar = LOS.LETTERS.map((k) => `<span title="LOS ${k}: ${(c.los_counts[k] || 0).toLocaleString()}"
+      style="width:${100 * (c.los_counts[k] || 0) / n}%;background:${P[k]}"></span>`).join('');
+    return `<div class="card"><h3>${c.label}</h3><div class="muted">${n.toLocaleString()} blocks · mean CI ${c.mean_ci.toFixed(2)}</div>
+      <div class="bar">${bar}</div><a href="osm3d.html?city=${slug}">OSM 3D →</a><a href="google3d.html?city=${slug}">Google 3D →</a></div>`;
+  }).join('');
+}).catch(() => { document.getElementById('cards').textContent = 'The block data for the maps is being prepared and will appear here shortly.'; });
+</script>
+</body>
+</html>
