@@ -1260,7 +1260,7 @@
         <a href="#education">Education</a>
         <a href="#recognition">Recognition</a>
         <a href="#presentations">Presentations</a>
-        <a href="#animations">Animations</a>
+        <a href="#animations">Visualizations</a>
         <a href="#skills">Skills</a>
         <a href="#contact">Contact</a>
       </div>
@@ -1856,11 +1856,11 @@
     </section>
 
     <section id="animations">
-      <p class="section-kicker">3D Visualization</p>
-      <h2 class="section-title">Animations</h2>
+      <p class="section-kicker">Animated walkthroughs</p>
+      <h2 class="section-title">Selected Visualizations and Projects</h2>
       <p class="section-lead">
-        Animated models that explain how my spatial analyses work. Each one was built in GIS software or drawn
-        frame by frame with code from my own data, without AI-generated imagery, video, or narration.
+        Video walkthroughs of selected projects and spatial analyses, from 3D GIS models to map-based explainers
+        of real planning work. The label on each card says how it was made.
       </p>
 
       <article class="animation">
@@ -2000,6 +2000,53 @@
               <figcaption><strong>Final criteria overlay.</strong> All criteria combined into block-level high-rise development capacity, from minimum to maximum potential.</figcaption>
             </figure>
           </div>
+        </div>
+      </article>
+
+      <article class="animation">
+        <div class="animation-media">
+          <video controls preload="metadata" playsinline style="aspect-ratio: 16 / 9"
+                 poster="assets/images/chalus-highrise-feasibility-poster.jpg"
+                 aria-describedby="anim-chalus-desc">
+            <source src="assets/videos/chalus-highrise-feasibility.mp4" type="video/mp4">
+            Your browser cannot play this video.
+            <a href="assets/videos/chalus-highrise-feasibility.mp4">Download the MP4</a> instead.
+          </video>
+        </div>
+
+        <div class="animation-body">
+          <div class="animation-meta">
+            <span class="tag">ArcGIS (ArcMap)</span>
+            <span class="tag">Multi-criteria analysis</span>
+            <span class="tag">3D shadow modelling</span>
+            <span class="tag">3 min</span>
+          </div>
+          <h3>High-rise development feasibility in Chalus</h3>
+          <p id="anim-chalus-desc">
+            A GIS-based multi-criteria assessment of where high-rise and infill development can fit inside the legal
+            boundary of Chalus, a coastal city of about 65,000 people between the Caspian Sea and the Alborz Mountains.
+            National and provincial rules were reviewed, then six groups of criteria were evaluated and combined into a
+            block-level capacity map. Prepared for Chalus Municipality with Faam-Zirsakht Consulting Engineers; I worked
+            in the core team as GIS and urban-planning analyst and produced most of the spatial analyses and maps.
+          </p>
+          <ol class="animation-steps">
+            <li><strong>Regulations:</strong> national high-rise rules, the Mazandaran spatial plan and the
+              Nowshahr&ndash;Chalus regional plan.</li>
+            <li><strong>Social environment:</strong> 2016 census indicators per statistical block (literacy, unemployment,
+              urban poverty, vacant land, crowding, school access), each compared with a benchmark.</li>
+            <li><strong>Economics:</strong> unit cost per m&sup2; modelled against height (+10% construction cost per
+              added floor), giving the optimal number of floors <em>n*</em> = &radic;(10&middot;LP / (BCR&middot;BP<sub>1</sub>)).</li>
+            <li><strong>Land use and services:</strong> parcel-level land use and network-based service areas for fire,
+              sport, cultural, health and education facilities.</li>
+            <li><strong>Movement and form:</strong> road hierarchy and average maximum speed, a figure&ndash;ground map
+              and plot orientation from each plot's longest axis.</li>
+            <li><strong>Shadows:</strong> plots raised from +1 to +25 floors (3.2&nbsp;m each), shadows modelled in 3D,
+              flattened to footprints and scored by frequency and area.</li>
+            <li><strong>Environment and safeguarding:</strong> terrain, geology, wind zones, the Alborz Protected Area,
+              Nowshahr Airport's obstacle limitation surfaces, and heritage, utility and hazard buffers.</li>
+            <li><strong>Synthesis:</strong> standardised, hierarchically weighted overlay aggregated to proposed blocks
+              in five capacity classes, from minimum to maximum.</li>
+          </ol>
         </div>
       </article>
 
