@@ -18,7 +18,7 @@ The site presents my research in geospatial machine learning, urban analytics, s
     ├── documents/
     │   └── Omid-Mansourihanis-CV.pdf       # Academic CV linked from the site
     ├── images/                             # Video poster images
-    └── videos/                             # Animations shown in the Animations section (MP4, H.264)
+    └── videos/                             # Videos shown in Selected Visualizations and Projects (MP4, H.264)
 ```
 
 The site is a single static page with no build step and no external dependencies. GitHub Pages serves it directly from the `main` branch.
@@ -26,7 +26,7 @@ The site is a single static page with no build step and no external dependencies
 ## Updating the site
 
 - **Publications:** each paper is an `<article class="publication">` in the `#publications` section. Set `data-type` to `published` or `review` (the latter covers manuscripts in review and preprints) so the filter buttons work, and use a matching `status` badge (`published`, `review`, or `preprint`). When you add or move a paper, update the counts in the stats bar near the top of the page as well.
-- **Animations:** put the MP4 in `assets/videos/` and a 16:9 poster image in `assets/images/`, then copy the `<article class="animation">` block in the `#animations` section. Keep each video under about 50 MB. GitHub warns above 50 MB and rejects files over 100 MB.
+- **Selected Visualizations and Projects:** put the MP4 in `assets/videos/` and a 16:9 poster image in `assets/images/`, then copy the `<article class="animation">` block in the `#animations` section. Keep each video under about 50 MB. GitHub warns above 50 MB and rejects files over 100 MB.
 - **CV:** replace `assets/documents/Omid-Mansourihanis-CV.pdf` with the new file and keep the same filename so existing links keep working.
 - **Preview locally:** open `index.html` in a browser, or run `python3 -m http.server` in this folder and visit http://localhost:8000.
 
