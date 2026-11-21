@@ -197,3 +197,25 @@ button.small { padding: 2px 8px; font-size: 14px; border-radius: 6px; border: 1p
   #viewport { flex: 1; }
   #legend { font-size: 11px; gap: 8px; }
 }
+
+/* ---------- English page (LTR) ---------- */
+html[lang="en"] body { font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif; font-size: 14.5px; line-height: 1.55; }
+html[lang="en"] .panel-head h1,
+html[lang="en"] .about p,
+html[lang="en"] .glossary dd,
+html[lang="en"] .glossary li,
+html[lang="en"] .credits { font-family: "Times New Roman", Times, "Liberation Serif", Tinos, serif; }
+html[lang="en"] .panel-head h1 { font-size: 21px; font-weight: 700; }
+html[lang="en"] #togglePanel { left: auto; right: 14px; }
+html[lang="en"] .compass button { direction: ltr; }
+html[lang="en"] .lbl { direction: ltr; font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif; }
+html[lang="en"] [lang="fa"] { font-family: "Vazirmatn", Tahoma, sans-serif; }
+.panel-head .sub.links a { color: inherit; }
+.about p { margin: 6px 0; font-size: 14.5px; }
+.about summary, .glossary summary { font-size: 14px; font-weight: 700; cursor: pointer; }
+.glossary dl { margin: 6px 0 0; }
+.glossary dt { font-weight: 700; margin-top: 8px; }
+.glossary dd { margin: 2px 0 0; color: var(--ink); font-size: 14px; }
+.glossary ul { margin: 6px 0 0; padding-inline-start: 18px; font-size: 14px; }
+.glossary li { margin: 3px 0; }
+html[lang="en"] .hint { font-size: 13px; }

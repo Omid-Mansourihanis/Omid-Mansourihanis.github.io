@@ -1,12 +1,14 @@
 # نمایشگر سه‌بعدی ضوابط ساختمانی — طرح تفصیلی شهر ساری (آلترناتیو A)
 
-**Live:** https://omid-mansourihanis.github.io/sari-zoning-3d/
+**Live:** English https://omid-mansourihanis.github.io/sari-zoning-3d/en/ · فارسی https://omid-mansourihanis.github.io/sari-zoning-3d/
 
 > **English summary.** An interactive 3D viewer of the building rules I designed, compiled and proposed in 2019 for the
 > detailed plan of Sari, Mazandaran (Alternative A), while working at Sari Municipality as urban-planning expert and head
 > of the spatial database. Pick a zone, sub-zone, lot-size class (minimum subdivision), street width and the lot's
 > position relative to the street to see, schematically in 3D, the allowed coverage, floors, floor-area ratio, setbacks,
 > buildable envelope and total floor area. All 50 rows (48 R and M rows plus the two M6 rows) were checked against the original table.
+> The English page (`en/`) adds a guide to reading the rules and the drawing assumptions; both pages share the same
+> data (`data/zoning-sari-alt-A.json`, with English labels in the `*_en` fields) and code (`js/i18n.js` holds the texts).
 > The rules are **proposed, not adopted**. — *Omid Mansourihanis*
 
 
@@ -27,12 +29,14 @@
 
 ## ساختار پوشه‌ها
 ```
-├── index.html                      صفحهٔ اصلی (RTL)
+├── index.html                      صفحهٔ فارسی (RTL)
+├── en/index.html                   صفحهٔ انگلیسی (LTR) با راهنمای خواندن ضوابط
 ├── css/style.css
 ├── js/
 │   ├── main.js                     رابط کاربری، وضعیت، لینک اشتراک
 │   ├── scene.js                    صحنهٔ سه‌بعدی (Three.js)
-│   └── geometry.js                 محاسبات هندسی خالص (قابل تست با Node)
+│   ├── geometry.js                 محاسبات هندسی خالص (قابل تست با Node)
+│   └── i18n.js                     متن‌های فارسی و انگلیسی رابط
 ├── data/zoning-sari-alt-A.json     ★ تمام ضوابط جدول — منبع اصلی داده
 ├── vendor/                         three.js r170 + OrbitControls + CSS2DRenderer
 ├── fonts/                          وزیرمتن (OFL)
