@@ -106,7 +106,7 @@ export function computeLayout(p) {
     const levels = full + (frac > 0 ? 1 : 0);
     const height = levels * p.floorH;
     const out = {
-      name: part.name, far: part.far, floors: part.floors, coverage: part.coverage,
+      name: part.name, name_en: part.name_en, far: part.far, floors: part.floors, coverage: part.coverage,
       setbacks: sb, envelope: env, envArea, allowedArea, foot, footArea,
       effCoverage: (footArea / p.area) * 100, limited,
       full, frac, fracRect, baseY, height,

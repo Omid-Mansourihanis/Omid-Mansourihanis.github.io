@@ -2,8 +2,9 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/OrbitControls.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/CSS2DRenderer.js';
 import { rectArea, sbVal } from './geometry.js';
+import { LANG, T, fmt } from './i18n.js';
 
-const fa = (n, d = 1) => Number(n).toLocaleString('fa-IR', { maximumFractionDigits: d });
+const fa = fmt;
 
 const COLORS = {
   ground: 0xecebe6,
@@ -71,7 +72,7 @@ export class Viewer {
     // Screen-space compass: stays visible and turns with the camera
     this.compass = document.createElement('div');
     this.compass.className = 'compass3d';
-    this.compass.innerHTML = '<div class="needle"><b>N</b><i></i></div><span>شمال</span>';
+    this.compass.innerHTML = `<div class="needle"><b>N</b><i></i></div><span>${T.north}</span>`;
     container.appendChild(this.compass);
     this._v1 = new THREE.Vector3(); this._v2 = new THREE.Vector3();
 
@@ -208,7 +209,7 @@ export class Viewer {
     const sc = { x: (street.xMin + street.xMax) / 2, z: (street.zMin + street.zMax) / 2 };
     // Street label to the west / south of the lot, the side the default camera (south-west) looks at, so the building doesn't cover it
     const roadOff = street.along === 'x' ? { x: -(lot.xMax - lot.xMin) / 2 - 10, z: 0 } : { x: 0, z: (lot.zMax - lot.zMin) / 2 + 10 };
-    this._label(`معبر ${fa(opts.roadWidth)} متری`, sc.x + roadOff.x, 0.3, sc.z + roadOff.z, 'road');
+    this._label(T.lRoad(fa(opts.roadWidth)), sc.x + roadOff.x, 0.3, sc.z + roadOff.z, 'road');
 
     // Lot (open space) and its boundary
     this._flat(lot, 0.01, COLORS.lot);
@@ -228,13 +229,13 @@ export class Viewer {
         const v = sbVal(sb[k]);
         if (v > 0) {
           this._flat(r, 0.02, COLORS.setback, 0.45);
-          this._label(`عقب‌نشینی ${fa(v)} م`, (r.xMin + r.xMax) / 2, 0.4, (r.zMin + r.zMax) / 2, 'red');
+          this._label(T.lSetback(fa(v)), (r.xMin + r.xMax) / 2, 0.4, (r.zMin + r.zMax) / 2, 'red');
         }
       }
       if (sb[street.side] === null) {
         const qx = (lot.xMax - lot.xMin) / 4, qz = (lot.zMax - lot.zMin) / 4;
         const e = { N: [qx, lot.zMin], S: [qx, lot.zMax], W: [lot.xMin, qz], E: [lot.xMax, qz] }[street.side];
-        this._label('بدون عقب‌نشینی از بَر معبر', e[0], 0.5, e[1], 'red');
+        this._label(T.lNoSetback, e[0], 0.5, e[1], 'red');
       }
     }
 
@@ -242,12 +243,12 @@ export class Viewer {
     const fr = lot.frontage, dp = lot.depth;
     if (street.along === 'x') {
       const zEdge = street.side === 'S' ? lot.zMax : lot.zMin;
-      this._label(`بَر: ${fa(fr)} م`, -(lot.xMax - lot.xMin) / 4, 0.3, zEdge + (street.side === 'S' ? 1.6 : -1.6), 'dark');
-      this._label(`عمق: ${fa(dp)} م`, lot.xMin - 1.5, 0.3, 0, 'dark');
+      this._label(T.lFront(fa(fr)), -(lot.xMax - lot.xMin) / 4, 0.3, zEdge + (street.side === 'S' ? 1.6 : -1.6), 'dark');
+      this._label(T.lDepth(fa(dp)), lot.xMin - 1.5, 0.3, 0, 'dark');
     } else {
       const xEdge = street.side === 'E' ? lot.xMax : lot.xMin;
-      this._label(`بَر: ${fa(fr)} م`, xEdge + (street.side === 'E' ? 1.6 : -1.6), 0.3, -(lot.zMax - lot.zMin) / 4, 'dark');
-      this._label(`عمق: ${fa(dp)} م`, 0, 0.3, lot.zMax + 1.5, 'dark');
+      this._label(T.lFront(fa(fr)), xEdge + (street.side === 'E' ? 1.6 : -1.6), 0.3, -(lot.zMax - lot.zMin) / 4, 'dark');
+      this._label(T.lDepth(fa(dp)), 0, 0.3, lot.zMax + 1.5, 'dark');
     }
 
     // Envelope and building mass
@@ -266,13 +267,14 @@ export class Viewer {
         const y = part.baseY + part.full * h;
         this._box(part.fracRect, y, h, fm);
         const c = part.fracRect;
-        this._label(`${fa(part.frac, 2)} طبقه`, (c.xMin + c.xMax) / 2, y + h + 0.6, (c.zMin + c.zMax) / 2, '');
+        this._label(T.lFrac(fa(part.frac, 2)), (c.xMin + c.xMax) / 2, y + h + 0.6, (c.zMin + c.zMax) / 2, '');
       }
       // Height and floor-count label
       const f = part.foot;
       const top = part.baseY + part.height;
-      const name = parts.length > 1 ? `${part.name}: ` : '';
-      this._label(`${name}${fa(part.floors)} طبقه — ارتفاع ≈ ${fa(part.height)} م`,
+      const pname = LANG === 'en' && part.name_en ? part.name_en : part.name;
+      const name = parts.length > 1 ? `${pname}: ` : '';
+      this._label(T.lFloors(name, fa(part.floors), fa(part.height)),
         f.xMax + 0.5, top + 0.8, (f.zMin + f.zMax) / 2, 'big');
     });
 

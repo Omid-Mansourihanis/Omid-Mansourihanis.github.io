@@ -1,11 +1,14 @@
 import { Viewer } from './scene.js';
 import { computeLayout, defaultFrontage, frontageBounds, STREET_SIDE } from './geometry.js';
+import { LANG, T, fmt, tx } from './i18n.js';
 
-const DATA_URL = 'data/zoning-sari-alt-A.json';
+// Resolved from this script's folder, so it works from both the Persian and the English page
+const DATA_URL = new URL('../data/zoning-sari-alt-A.json', import.meta.url).href;
 const $ = (id) => document.getElementById(id);
-const fa = (n, d = 1) => Number(n).toLocaleString('fa-IR', { maximumFractionDigits: d });
-const sbText = (v) => (v == null ? 'ندارد' : `${fa(v)} م`);
-const SIDE_FA = { N: 'شمال', S: 'جنوب', E: 'شرق', W: 'غرب' };
+const fa = fmt;
+const sbText = (v) => (v == null ? T.none : T.sbVal(fa(v)));
+const SIDE_FA = T.sides;
+const P = T.pct;
 
 let DB;            // data
 let viewer;
@@ -79,7 +82,7 @@ function chip(label, pressed, onClick, swatch) {
 function renderControls() {
   // 1. Zone
   const zc = $('zoneChips'); zc.replaceChildren();
-  DB.zones.forEach((z) => zc.appendChild(chip(z.name, z.id === S.zone, () => {
+  DB.zones.forEach((z) => zc.appendChild(chip(tx(z, 'name'), z.id === S.zone, () => {
     S.zone = z.id; S.sub = null; S.code = null; S.ai = 0; S.ri = 0; S.area = null; S.roadW = null;
     refresh(true);
   }, z.color)));
@@ -88,31 +91,31 @@ function renderControls() {
   const sel = $('subzoneSelect'); sel.replaceChildren();
   zoneOf().subzones.forEach((s) => {
     const og = document.createElement('optgroup');
-    og.label = s.name;
+    og.label = tx(s, 'name');
     s.codes.forEach((c) => {
       const o = document.createElement('option');
-      o.value = `${s.id}|${c}`; o.textContent = `${c} — ${s.name}`;
+      o.value = `${s.id}|${c}`; o.textContent = `${c} — ${tx(s, 'name')}`;
       if (s.id === S.sub && c === S.code) o.selected = true;
       og.appendChild(o);
     });
     sel.appendChild(og);
   });
-  $('subzoneName').textContent = subOf().name;
+  $('subzoneName').textContent = tx(subOf(), 'name');
 
   // 3. Area class
   const ac = $('areaChips'); ac.replaceChildren();
-  subOf().areaClasses.forEach((a, i) => ac.appendChild(chip(`${a.label} م²`, i === S.ai, () => {
+  subOf().areaClasses.forEach((a, i) => ac.appendChild(chip(LANG === 'en' ? a.label_en : `${a.label} م²`, i === S.ai, () => {
     S.ai = i; S.area = null;
     const prev = roadOf()?.label;
     const idx = subOf().areaClasses[i].roads.findIndex((r) => r.label === prev);
     S.ri = idx >= 0 ? idx : 0; S.roadW = null;
     refresh(true);
   })));
-  $('subdivisionNote').textContent = subOf().subdivisionNote || '';
+  $('subdivisionNote').textContent = tx(subOf(), 'subdivisionNote') || '';
 
   // 4. Street width
   const rc = $('roadChips'); rc.replaceChildren();
-  areaOf().roads.forEach((r, i) => rc.appendChild(chip(r.label, i === S.ri, () => {
+  areaOf().roads.forEach((r, i) => rc.appendChild(chip(tx(r, 'label'), i === S.ri, () => {
     S.ri = i; S.roadW = null; refresh(false);
   })));
 
@@ -136,6 +139,7 @@ function renderControls() {
 }
 
 /* ---------- results panel ---------- */
+const partName = (p) => (LANG === 'en' && p.name_en ? p.name_en : p.name);
 function renderResults(layout) {
   const sub = subOf(), ac = areaOf(), rd = roadOf();
   const prevRoad = ac.roads[S.ri - 1];
@@ -144,51 +148,51 @@ function renderResults(layout) {
   const top = layout.parts[layout.parts.length - 1];
 
   const kpi = (v, t) => `<div class="kpi"><b>${v}</b><span>${t}</span></div>`;
-  let html = `<h3><span class="code">${S.code}</span> — ${sub.name}</h3>`;
+  let html = `<h3><span class="code">${S.code}</span> — ${tx(sub, 'name')}</h3>`;
   html += `<div class="kpis">
-    ${kpi(multi ? layout.parts.map((p) => fa(p.coverage) + '٪').join(' / ') : fa(p0.coverage) + '٪', 'حداکثر سطح اشغال')}
-    ${kpi(multi ? layout.parts.map((p) => fa(p.floors)).join(' + ') : fa(p0.floors), 'حداکثر طبقات')}
-    ${kpi(multi ? layout.parts.map((p) => fa(p.far) + '٪').join(' + ') : fa(p0.far) + '٪', 'حداکثر تراکم')}
+    ${kpi(multi ? layout.parts.map((p) => fa(p.coverage) + P).join(' / ') : fa(p0.coverage) + P, T.kCoverage)}
+    ${kpi(multi ? layout.parts.map((p) => fa(p.floors)).join(' + ') : fa(p0.floors), T.kFloors)}
+    ${kpi(multi ? layout.parts.map((p) => fa(p.far) + P).join(' + ') : fa(p0.far) + P, T.kFar)}
   </div>`;
 
   html += '<table><tbody>';
   const row = (k, v) => { html += `<tr><td>${k}</td><td>${v}</td></tr>`; };
-  row('رده مساحت (نصاب تفکیک)', `${ac.label} مترمربع`);
-  row('رده عرض معبر', rd.label);
-  row('موقعیت قطعه', DB.orientations[S.orient]);
-  row('مساحت و ابعاد قطعه', `${fa(S.area, 0)} م² (بَر ${fa(layout.lot.frontage)} × عمق ${fa(layout.lot.depth)})`);
+  row(T.rArea, T.rAreaVal(tx(ac, 'label')));
+  row(T.rRoad, tx(rd, 'label'));
+  row(T.rOrient, (LANG === 'en' ? DB.orientations_en : DB.orientations)[S.orient]);
+  row(T.rLot, T.rLotVal(fa(S.area, 0), fa(layout.lot.frontage), fa(layout.lot.depth)));
 
   layout.parts.forEach((p) => {
-    if (multi) html += `<tr><td colspan="2" class="part-title">${p.name}</td></tr>`;
-    row('سطح اشغال مجاز در این قطعه', `${fa(p.allowedArea, 0)} م²`);
-    row('زیربنای کل مجاز (تراکم × مساحت)', `<b>${fa(p.gfaTable, 0)} م²</b>`);
+    if (multi) html += `<tr><td colspan="2" class="part-title">${partName(p)}</td></tr>`;
+    row(T.rCovArea, T.area(fa(p.allowedArea, 0)));
+    row(T.rGfa, `<b>${T.area(fa(p.gfaTable, 0))}</b>`);
     const startA = ac.min, endA = ac.max;
     const farX = p.floors * p.coverage / 100; // exact FAR, as in the table's floor-area columns
-    row('زیربنای کل در ابتدای / انتهای بازه', `${fa(startA * farX, 0)} / ${endA ? fa(endA * farX, 0) : '—'} م²`);
-    row('سطح اشغال در ابتدای / انتهای بازه', `${fa(startA * p.coverage / 100, 0)} / ${endA ? fa(endA * p.coverage / 100, 0) : '—'} م²`);
+    row(T.rGfaRange, T.area(`${fa(startA * farX, 0)} / ${endA ? fa(endA * farX, 0) : '—'}`));
+    row(T.rCovRange, T.area(`${fa(startA * p.coverage / 100, 0)} / ${endA ? fa(endA * p.coverage / 100, 0) : '—'}`));
     const sb = p.setbacks;
-    row('عقب‌نشینی از شمال / جنوب', `${sbText(sb.N)} / ${sbText(sb.S)}`);
-    row('عقب‌نشینی از شرق / غرب', `${sbText(sb.E)} / ${sbText(sb.W)}`);
-    row('ارتفاع تقریبی', `${fa(p.height)} م (${fa(Math.ceil(p.floors))} تراز × ${fa(S.floorH)} م)`);
+    row(T.rSbNS, `${sbText(sb.N)} / ${sbText(sb.S)}`);
+    row(T.rSbEW, `${sbText(sb.E)} / ${sbText(sb.W)}`);
+    row(T.rHeight, T.rHeightVal(fa(p.height), fa(Math.ceil(p.floors)), fa(S.floorH)));
   });
-  row('ارتفاع کل تقریبی', `<b>${fa(layout.totalHeight)} م</b>`);
-  row('محل استقرار توده', `چسبیده به ضلع ${SIDE_FA[layout.side]}`);
+  row(T.rTotalH, `<b>${T.rTotalHVal(fa(layout.totalHeight))}</b>`);
+  row(T.rAnchor, T.rAnchorVal(SIDE_FA[layout.side]));
 
   if (prevRoad && !multi) {
     const pp = prevRoad.parts[0], cp = rd.parts[0];
     const sg = (v, u = '') => `${v > 0 ? '+' : ''}${fa(v, 2)}${u}`;
-    row('تفاضل با رده معبر قبلی', `<span class="delta">تراکم ${sg(cp.far - pp.far, '٪')} · طبقات ${sg(cp.floors - pp.floors)} · سطح اشغال ${sg(cp.coverage - pp.coverage, '٪')}</span>`);
+    row(T.rDelta, `<span class="delta">${T.rDeltaVal(sg(cp.far - pp.far, P), sg(cp.floors - pp.floors), sg(cp.coverage - pp.coverage, P))}</span>`);
   }
   html += '</tbody></table>';
 
   // Notes
   const notes = [];
   layout.parts.forEach((p) => {
-    if (p.limited) notes.push(`<div class="note">با این ابعاد، عقب‌نشینی‌ها اجازه نمی‌دهند کل سطح اشغال مجاز${multi ? ` (${p.name})` : ''} استفاده شود؛ سطح اشغال قابل‌ساخت ≈ ${fa(p.effCoverage)}٪ است. بَر یا عمق قطعه را تغییر دهید.</div>`);
+    if (p.limited) notes.push(`<div class="note">${T.nLimited(multi ? partName(p) : '', fa(p.effCoverage))}</div>`);
   });
-  if (layout.parts.some((p) => p.frac > 0)) notes.push('<div class="note info">تعداد طبقات اعشاری در جدول برابر «تراکم ÷ سطح اشغال» است. کسر طبقه به‌صورت بخشی از تراز آخر (کم‌رنگ‌تر) نمایش داده شده است.</div>');
-  if (multi) notes.push('<div class="note info">در M6 فرض شده است که طبقات «بنای اصلی» روی پودیوم قرار می‌گیرند و عقب‌نشینی‌های بنای اصلی جداگانه اعمال می‌شود. اگر منظور جدول این است که طبقات بنای اصلی شامل پودیوم است، این فرض را در کد اصلاح کنید.</div>');
-  if (sub.minNewSubdivision && S.area < sub.minNewSubdivision) notes.push(`<div class="note info">مساحت این قطعه از حداقل نصاب تفکیک جدید (${fa(sub.minNewSubdivision)} م²) کمتر است؛ این حالت فقط برای قطعات تفکیک‌شدهٔ موجود معنا دارد.</div>`);
+  if (layout.parts.some((p) => p.frac > 0)) notes.push(`<div class="note info">${T.nFrac}</div>`);
+  if (multi) notes.push(`<div class="note info">${T.nM6}</div>`);
+  if (sub.minNewSubdivision && S.area < sub.minNewSubdivision) notes.push(`<div class="note info">${T.nSmall(fa(sub.minNewSubdivision))}</div>`);
   html += notes.join('');
   $('results').innerHTML = html;
 }
@@ -235,8 +239,8 @@ function bindEvents() {
   const tg = { tgEnvelope: 'env', tgSetback: 'sb', tgNeighbors: 'nb', tgLabels: 'lbl' };
   for (const [id, key] of Object.entries(tg)) $(id).addEventListener('change', (e) => { S[key] = e.target.checked; refresh(false); });
   $('btnShare').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(location.href); toast('لینک کپی شد'); }
-    catch { prompt('این لینک را کپی کنید:', location.href); }
+    try { await navigator.clipboard.writeText(location.href); toast(T.copied); }
+    catch { prompt(T.copyPrompt, location.href); }
   });
   $('btnShot').addEventListener('click', () => viewer.screenshot(`sari-${S.code}-${Math.round(S.area)}m2.png`));
   $('btnFit').addEventListener('click', () => viewer.fit());
@@ -251,7 +255,7 @@ async function boot() {
   try {
     DB = await (await fetch(DATA_URL)).json();
   } catch (e) {
-    $('results').innerHTML = '<div class="note">فایل داده بارگذاری نشد. صفحه را از طریق یک وب‌سرور (مثلاً GitHub Pages) باز کنید، نه با دوبار کلیک روی فایل.</div>';
+    $('results').innerHTML = `<div class="note">${T.loadFail}</div>`;
     throw e;
   }
   Object.assign(S, Object.fromEntries(Object.entries(readHash()).filter(([, v]) => v != null)));
