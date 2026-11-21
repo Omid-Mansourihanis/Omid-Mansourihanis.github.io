@@ -25,7 +25,7 @@
   </header>
 
   <div class="body">
-    <p id="status" class="status" role="status">Click a street on the map. Building footprints load from OpenStreetMap on the first click in an area.</p>
+    <p id="status" class="status" role="status">Click a street on the map. Building footprints load from OpenStreetMap the first time you visit an area (in the background while you pan); after that, clicks nearby are instant.</p>
 
     <section id="empty">
       <p>Each click finds the street segment between two intersections, places five points between 30% and 70% of its length and casts 73 rays, 2.5° apart, across the half plane ahead of the driver. The <b>forward opening θ(R)</b> is the angle covered by rays that travel beyond the look-ahead distance <i>R</i> before meeting a building.</p>

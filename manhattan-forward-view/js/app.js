@@ -12,7 +12,11 @@ const OVERPASS = [
   'https://overpass.private.coffee/api/interpreter'
 ];
 const MANHATTAN = { center: [-73.9855, 40.7505], zoom: 15.6, pitch: 58, bearing: 29 };
-const LOAD_RADIUS_M = 420;     // half-size of the box fetched around a click
+// Footprints and streets are fetched in fixed tiles (~445 m x 420 m) and kept for the session, so nearby
+// clicks reuse them. Missing tiles are fetched together in one query, from whichever server answers first.
+const TILE_LAT = 0.004, TILE_LNG = 0.005;
+const CLICK_PAD_M = 160;       // area loaded around a click before snapping to a street
+const PREFETCH_PAD_M = 260;    // area loaded in the background around the map centre
 const MARGIN_FT = 330;         // buildings needed beyond each sample point (wall cap 300 ft + margin)
 const SNAP_FT = 120;           // how close a click must be to a street
 // Optional: a GeoJSON of your own segment results (see README). Leave null to skip.
@@ -23,7 +27,9 @@ const DRIVE = '["highway"]["area"!~"yes"]["highway"!~"abandoned|bridleway|bus_gu
 
 const $ = s => document.querySelector(s);
 const DEG = Math.PI / 180;
-const state = { R: SETTINGS.R, dir: 'both', point: 2, result: null, regions: [], busy: false };
+const state = { R: SETTINGS.R, dir: 'both', point: 2, result: null, busy: false };
+// One projection for all of Manhattan, so tiles fetched at different times fit together.
+const PROJ = makeProjection(-73.97, 40.78);
 
 // ---------------- map ----------------
 const map = new maplibregl.Map({
@@ -107,40 +113,116 @@ function bboxAround([lng, lat], halfM) {
   return { s: lat - dLat, w: lng - dLng, n: lat + dLat, e: lng + dLng };
 }
 
-async function overpass(b) {
+// Lighter query: streets with tags and node ids; building ways as bare geometry (no tags);
+// building relations with their member geometry.
+function overpassQuery(b) {
   const bb = `${b.s.toFixed(6)},${b.w.toFixed(6)},${b.n.toFixed(6)},${b.e.toFixed(6)}`;
-  const q = `[out:json][timeout:60];(way${DRIVE}(${bb});way["building"]["building"!~"^(no|roof)$"](${bb});relation["building"]["building"!~"^(no|roof)$"](${bb}););out geom;`;
-  let lastErr;
-  for (const ep of OVERPASS) {
-    try {
-      const ctl = new AbortController(); const timer = setTimeout(() => ctl.abort(), 70000);
-      const res = await fetch(`${ep}?data=${encodeURIComponent(q)}`, { signal: ctl.signal });
-      clearTimeout(timer);
-      if (!res.ok) throw new Error(`${new URL(ep).host} returned ${res.status}`);
-      const json = await res.json();
-      if (!json.elements || !json.elements.length) throw new Error(`${new URL(ep).host} returned no data`);
-      return json;
-    } catch (err) { lastErr = err; console.warn('Overpass', ep, err); }
-  }
-  throw lastErr || new Error('No Overpass server answered');
+  return `[out:json][timeout:60];` +
+    `way${DRIVE}(${bb});out body geom qt;` +
+    `way["building"]["building"!~"^(no|roof)$"](${bb});out skel geom qt;` +
+    `relation["building"]["building"!~"^(no|roof)$"](${bb});out geom qt;`;
 }
 
-function buildRegion(json, b) {
-  const proj = makeProjection((b.w + b.e) / 2, (b.s + b.n) / 2);
+// Ask every server at once and keep the first good answer; the others are cancelled.
+async function overpass(b) {
+  const q = encodeURIComponent(overpassQuery(b));
+  const ctls = OVERPASS.map(() => new AbortController());
+  const tries = OVERPASS.map(async (ep, i) => {
+    const timer = setTimeout(() => ctls[i].abort(), 60000);
+    try {
+      const res = await fetch(`${ep}?data=${q}`, { signal: ctls[i].signal });
+      if (!res.ok) throw new Error(`${new URL(ep).host} returned ${res.status}`);
+      const json = await res.json();
+      if (!json.elements) throw new Error(`${new URL(ep).host} returned no data`);
+      if (json.remark && /error|timed out/i.test(json.remark)) throw new Error(`${new URL(ep).host}: ${json.remark}`);
+      return json;
+    } finally { clearTimeout(timer); }
+  });
+  try {
+    const json = await Promise.any(tries);
+    ctls.forEach(c => c.abort());
+    return json;
+  } catch (agg) {
+    const errs = (agg.errors || []).map(e => e.message).join('; ');
+    throw new Error(errs || 'No Overpass server answered');
+  }
+}
+
+// ---------------- tile cache ----------------
+const tiles = new Map();          // key -> array of elements (loaded)
+let inflight = null;              // promise of the fetch currently running
+const tileKey = (i, j) => `${i}:${j}`;
+const tileBox = (i, j) => ({ s: j * TILE_LAT, n: (j + 1) * TILE_LAT, w: i * TILE_LNG, e: (i + 1) * TILE_LNG });
+
+function tilesFor(b) {
+  const keys = [];
+  for (let i = Math.floor(b.w / TILE_LNG); i <= Math.floor(b.e / TILE_LNG); i++)
+    for (let j = Math.floor(b.s / TILE_LAT); j <= Math.floor(b.n / TILE_LAT); j++) keys.push([i, j]);
+  return keys;
+}
+
+function elementBox(el) {
+  const pts = el.geometry || (el.members || []).flatMap(m => m.geometry || []);
+  let s = Infinity, n = -Infinity, w = Infinity, e = -Infinity;
+  for (const g of pts) { if (!g) continue; s = Math.min(s, g.lat); n = Math.max(n, g.lat); w = Math.min(w, g.lon); e = Math.max(e, g.lon); }
+  return Number.isFinite(s) ? { s, n, w, e } : null;
+}
+
+// Make sure every tile touching box b is loaded. Missing tiles are fetched in one query.
+async function ensureTiles(b) {
+  for (;;) {
+    const missing = tilesFor(b).filter(([i, j]) => !tiles.has(tileKey(i, j)));
+    if (!missing.length) return;
+    if (inflight) { await inflight.catch(() => {}); continue; }   // a fetch (maybe a prefetch) is running: wait, then re-check
+    const is = missing.map(t => t[0]), js = missing.map(t => t[1]);
+    const box = { w: Math.min(...is) * TILE_LNG, e: (Math.max(...is) + 1) * TILE_LNG, s: Math.min(...js) * TILE_LAT, n: (Math.max(...js) + 1) * TILE_LAT };
+    inflight = (async () => {
+      const json = await overpass(box);
+      const buckets = new Map(missing.map(([i, j]) => [tileKey(i, j), []]));
+      for (const el of json.elements) {
+        const eb = elementBox(el); if (!eb) continue;
+        for (const [i, j] of tilesFor(eb)) { const k = tileKey(i, j); if (buckets.has(k)) buckets.get(k).push(el); }
+      }
+      for (const [k, v] of buckets) tiles.set(k, v);
+    })();
+    try { await inflight; } finally { inflight = null; }
+  }
+}
+
+// Assemble a region from the loaded tiles touching box b (duplicates across tiles removed).
+let lastRegion = null;
+function regionFromTiles(b) {
+  const keys = tilesFor(b).map(([i, j]) => tileKey(i, j));
+  const sig = keys.join('|');
+  if (lastRegion && lastRegion.sig === sig) return lastRegion;
+  const seen = new Set(), elements = [];
+  for (const k of keys) for (const el of tiles.get(k) || []) {
+    const id = el.type[0] + el.id;
+    if (!seen.has(id)) { seen.add(id); elements.push(el); }
+  }
+  const ts = tilesFor(b);
+  const bb = { w: Math.min(...ts.map(t => t[0])) * TILE_LNG, e: (Math.max(...ts.map(t => t[0])) + 1) * TILE_LNG,
+               s: Math.min(...ts.map(t => t[1])) * TILE_LAT, n: (Math.max(...ts.map(t => t[1])) + 1) * TILE_LAT };
+  lastRegion = { ...buildRegion(elements, bb), sig };
+  return lastRegion;
+}
+
+function buildRegion(elements, b) {
+  const proj = PROJ;
   const roads = [], rings = [], ringsLL = [];
   const coord = new Map(), nbrs = new Map();
   const link = (a, c) => { (nbrs.get(a) || nbrs.set(a, new Set()).get(a)).add(c); };
-  for (const el of json.elements) {
+  for (const el of elements) {
     const t = el.tags || {};
-    if (el.type === 'way' && t.highway && el.geometry) {
+    if (el.type === 'way' && t.highway && el.geometry && el.nodes) {
       const pts = el.geometry.map(g => proj.toXY([g.lon, g.lat]));
       el.nodes.forEach((id, i) => coord.set(id, pts[i]));
       for (let i = 1; i < el.nodes.length; i++) { link(el.nodes[i - 1], el.nodes[i]); link(el.nodes[i], el.nodes[i - 1]); }
       roads.push({ id: el.id, nodes: el.nodes, pts, tags: t });
-    } else if (t.building && el.type === 'way' && el.geometry) {
+    } else if (el.type === 'way' && el.geometry && !t.highway) {          // building way (printed without tags)
       rings.push(el.geometry.map(g => proj.toXY([g.lon, g.lat])));
       ringsLL.push(el.geometry.map(g => [g.lon, g.lat]));
-    } else if (t.building && el.type === 'relation') {
+    } else if (el.type === 'relation') {                                 // building relation
       for (const m of el.members || []) {
         if (m.type === 'way' && m.geometry && m.role !== 'inner') {
           rings.push(m.geometry.map(g => proj.toXY([g.lon, g.lat])));
@@ -153,24 +235,23 @@ function buildRegion(json, b) {
   return { b, proj, roads, obs: buildObstacles(rings), ringsLL, coord, nbrs, bounds: { x0, y0, x1, y1 }, nBuildings: rings.length };
 }
 
-const inRegion = (reg, [lng, lat], marginM) => {
-  const bb = bboxAround([lng, lat], marginM);
-  return bb.s >= reg.b.s && bb.n <= reg.b.n && bb.w >= reg.b.w && bb.e <= reg.b.e;
-};
-
-async function regionFor(lngLat) {
-  const hit = state.regions.find(r => inRegion(r, lngLat, 250));
-  if (hit) return hit;
-  return fetchRegion(bboxAround(lngLat, LOAD_RADIUS_M));
+async function regionAround(b, msg) {
+  if (tilesFor(b).some(([i, j]) => !tiles.has(tileKey(i, j)))) setStatus(msg, 'busy');
+  await ensureTiles(b);
+  return regionFromTiles(b);
 }
 
-async function fetchRegion(b) {
-  setStatus('Loading building footprints and streets from OpenStreetMap…', 'busy');
-  const reg = buildRegion(await overpass(b), b);
-  state.regions.push(reg);
-  if (state.regions.length > 4) state.regions.shift();
-  return reg;
-}
+// Load the area around the map centre in the background, so a click there is answered at once.
+let prefetchTimer = null;
+map.on('moveend', () => {
+  clearTimeout(prefetchTimer);
+  prefetchTimer = setTimeout(() => {
+    if (state.busy || inflight || map.getZoom() < 15) return;
+    const c = map.getCenter();
+    if (c.lng < -74.05 || c.lng > -73.88 || c.lat < 40.68 || c.lat > 40.89) return;   // Manhattan only
+    ensureTiles(bboxAround([c.lng, c.lat], PREFETCH_PAD_M)).catch(err => console.warn('prefetch', err));
+  }, 700);
+});
 
 // ---------------- street edges ----------------
 const EXCLUDED = /^(motorway|trunk_link|primary_link|secondary_link|tertiary_link|motorway_link)$/;
@@ -232,26 +313,28 @@ const compass = h => ['E', 'NE', 'N', 'NW', 'W', 'SW', 'S', 'SE'][Math.round(((h
 async function analyzeAt(lngLat, { fly } = {}) {
   state.busy = true;
   try {
-    let reg = await regionFor(lngLat);
+    const LOADING = 'Loading building footprints and streets for this area (first click here only)…';
+    let reg = await regionAround(bboxAround(lngLat, CLICK_PAD_M), LOADING);
     let s = snap(reg, reg.proj.toXY(lngLat));
     if (!s) { setStatus('No drivable street within 120 ft of that point. Click closer to a street centerline.', 'warn'); return; }
     let edge = edgeFrom(reg, s);
-    // Make sure the loaded buildings reach 330 ft past every part of the edge; otherwise reload around it.
-    const xs = edge.line.map(p => p[0]), ys = edge.line.map(p => p[1]);
-    const B = reg.bounds;
-    if (Math.min(...xs) - MARGIN_FT < B.x0 || Math.max(...xs) + MARGIN_FT > B.x1 || Math.min(...ys) - MARGIN_FT < B.y0 || Math.max(...ys) + MARGIN_FT > B.y1) {
+    // Buildings must reach 330 ft past every part of the edge: load any missing tiles and re-trace the edge.
+    for (let pass = 0; pass < 3; pass++) {
       const ll = edge.line.map(p => reg.proj.toLonLat(p));
-      const lats = ll.map(p => p[1]), lngs = ll.map(p => p[0]);
-      const pad = (MARGIN_FT + 150) / 3.28084;
-      const c = [(Math.min(...lngs) + Math.max(...lngs)) / 2, (Math.min(...lats) + Math.max(...lats)) / 2];
-      const half = Math.max(LOAD_RADIUS_M, pad + 111132 * Math.max(Math.max(...lats) - Math.min(...lats), (Math.max(...lngs) - Math.min(...lngs)) * Math.cos(c[1] * DEG)) / 2);
-      reg = await fetchRegion(bboxAround(c, half));
+      const padLat = MARGIN_FT / 3.28084 / 111132, padLng = padLat / Math.cos(lngLat[1] * DEG);
+      const need = { s: Math.min(...ll.map(p => p[1])) - padLat, n: Math.max(...ll.map(p => p[1])) + padLat,
+                     w: Math.min(...ll.map(p => p[0])) - padLng, e: Math.max(...ll.map(p => p[0])) + padLng };
+      const all = { s: Math.min(need.s, lngLat[1] - padLat), n: Math.max(need.n, lngLat[1] + padLat),
+                    w: Math.min(need.w, lngLat[0] - padLng), e: Math.max(need.e, lngLat[0] + padLng) };
+      const before = reg;
+      reg = await regionAround(all, LOADING);
+      if (reg === before) break;
       s = snap(reg, reg.proj.toXY(lngLat));
-      if (!s) { setStatus('Could not match that street after reloading. Try another click.', 'warn'); return; }
+      if (!s) { setStatus('Could not match that street after loading more of the area. Try another click.', 'warn'); return; }
       edge = edgeFrom(reg, s);
     }
     setStatus('Casting rays…', 'busy');
-    await new Promise(r => setTimeout(r, 20));
+    await new Promise(r => requestAnimationFrame(() => setTimeout(r, 0)));
     const ow = onewayOf(s.road.tags);
     const lines = ow === 1 ? [edge.line] : ow === -1 ? [[...edge.line].reverse()] : [edge.line, [...edge.line].reverse()];
     const dirs = lines.map(line => {
@@ -449,5 +532,5 @@ function parseHash() {
 }
 
 // Test hook (used by the local test script only).
-window.__fv = { analyzeAt, state, map };
+window.__fv = { analyzeAt, state, map, tiles };
 syncControls();
