@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/OrbitControls.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/CSS2DRenderer.js';
-import { rectArea, sbVal } from './geometry.js';
-import { LANG, T, fmt } from './i18n.js';
+import { rectArea, sbVal } from './geometry.js?v=20261121';
+import { LANG, T, fmt } from './i18n.js?v=20261121';
 
 const fa = fmt;
 

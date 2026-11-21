@@ -1,9 +1,9 @@
-import { Viewer } from './scene.js';
-import { computeLayout, defaultFrontage, frontageBounds, STREET_SIDE } from './geometry.js';
-import { LANG, T, fmt, tx } from './i18n.js';
+import { Viewer } from './scene.js?v=20261121';
+import { computeLayout, defaultFrontage, frontageBounds, STREET_SIDE } from './geometry.js?v=20261121';
+import { LANG, T, fmt, tx } from './i18n.js?v=20261121';
 
 // Resolved from this script's folder, so it works from both the Persian and the English page
-const DATA_URL = new URL('../data/zoning-sari-alt-A.json', import.meta.url).href;
+const DATA_URL = new URL('../data/zoning-sari-alt-A.json?v=20261121', import.meta.url).href;
 const $ = (id) => document.getElementById(id);
 const fa = fmt;
 const sbText = (v) => (v == null ? T.none : T.sbVal(fa(v)));
