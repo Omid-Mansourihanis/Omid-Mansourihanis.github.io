@@ -53,7 +53,7 @@ The page does not compute a composite score or a crash risk for a street. The pa
 
 ## Data sources and services
 
-- Building footprints and streets: © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), ODbL, queried through the public Overpass API. The page queries by GET, because the main instance (overpass-api.de) rejects browser POST requests, and falls back to `maps.mail.ru` and `overpass.private.coffee` if that fails. Public Overpass servers are shared and sometimes busy. If a click fails, wait a minute and try again.
+- Building footprints and streets: © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), ODbL, queried through the public Overpass API. The page queries by GET (the main instance, overpass-api.de, rejects browser POST requests) and sends each query to overpass-api.de, `maps.mail.ru` and `overpass.private.coffee` at once, keeping the first answer. Data are loaded in fixed tiles of about 445 m × 420 m and kept for the session, so nearby clicks are answered without a new query, and the area around the map centre is loaded in the background after you pan or zoom. Building ways are requested without tags, which makes each answer smaller. Public Overpass servers are shared and sometimes busy. If a click fails, wait a minute and try again.
 - Basemap and 3D buildings: [OpenFreeMap](https://openfreemap.org), Liberty style.
 - Map library: [MapLibre GL JS](https://maplibre.org) 5.24.1, pinned. Version 6 has breaking changes.
 
