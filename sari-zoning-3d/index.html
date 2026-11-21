@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>نمایشگر سه‌بعدی ضوابط ساختمانی — طرح تفصیلی ساری (آلترناتیو A)</title>
+  <meta name="description" content="نمایش شماتیک و سه‌بعدی ضوابط پیشنهادی ساخت‌وساز طرح تفصیلی شهر ساری بر اساس پهنه، خرده‌پهنه، مساحت قطعه و عرض معبر" />
+  <meta name="author" content="Omid Mansourihanis" />
+  <link rel="canonical" href="https://omid-mansourihanis.github.io/sari-zoning-3d/" />
+  <meta property="og:title" content="Sari detailed plan: 3D building-rule viewer (Alternative A, 2019)" />
+  <meta property="og:description" content="Pick a zone, sub-zone, lot-size class and street width to see the proposed building rules for a lot in 3D. Rules designed by Omid Mansourihanis for Sari Municipality." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='3' y='4' width='10' height='12' fill='%23f4c542' stroke='%231f2328'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three.module.js",
+        "three/addons/": "./vendor/addons/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="app">
+    <aside id="panel" aria-label="انتخاب ضوابط">
+      <header class="panel-head">
+        <h1>ضوابط ساختمانی سه‌بعدی</h1>
+        <p class="sub">طرح تفصیلی شهر ساری — پیشنهاد آلترناتیو A (۲۰۱۹)</p>
+        <p class="sub en" lang="en" dir="ltr">Sari detailed plan · proposed building rules in 3D ·
+          <a href="/">&larr; Omid Mansourihanis</a></p>
+        <button id="togglePanel" class="ghost small" aria-expanded="true" title="جمع/باز کردن پنل">☰</button>
+      </header>
+
+      <div class="panel-body">
+        <section class="step" id="step-zone">
+          <h2><span class="num">۱</span> پهنه</h2>
+          <div class="chips" id="zoneChips"></div>
+        </section>
+
+        <section class="step" id="step-subzone">
+          <h2><span class="num">۲</span> خرده‌پهنه</h2>
+          <select id="subzoneSelect"></select>
+          <p class="hint" id="subzoneName"></p>
+        </section>
+
+        <section class="step" id="step-area">
+          <h2><span class="num">۳</span> مساحت قطعه (رده نصاب تفکیک)</h2>
+          <div class="chips" id="areaChips"></div>
+          <p class="hint" id="subdivisionNote"></p>
+        </section>
+
+        <section class="step" id="step-road">
+          <h2><span class="num">۴</span> عرض معبر</h2>
+          <div class="chips" id="roadChips"></div>
+        </section>
+
+        <section class="step" id="step-orient">
+          <h2><span class="num">۵</span> موقعیت قطعه نسبت به معبر</h2>
+          <p class="hint" style="margin:-4px 0 8px">سمتی را بزنید که معبر در آن قرار دارد.</p>
+          <div class="compass" id="orientPad">
+            <button data-o="south" class="o-n">قطعه جنوبی<br><small>معبر در شمال</small></button>
+            <button data-o="west" class="o-e">قطعه غربی<br><small>معبر در شرق</small></button>
+            <span class="o-c">قطعه<br><small>↑ شمال</small></span>
+            <button data-o="east" class="o-w">قطعه شرقی<br><small>معبر در غرب</small></button>
+            <button data-o="north" class="o-s">قطعه شمالی<br><small>معبر در جنوب</small></button>
+          </div>
+        </section>
+
+        <details class="step" id="step-exact" open>
+          <summary><span class="num">۶</span> ابعاد دقیق (اختیاری)</summary>
+          <label class="range">
+            <span>مساحت دقیق قطعه: <b id="areaVal"></b> مترمربع</span>
+            <input type="range" id="areaRange" step="1" />
+          </label>
+          <label class="range">
+            <span>بَر قطعه (طول ضلع رو به معبر): <b id="frontVal"></b> متر — عمق: <b id="depthVal"></b> متر</span>
+            <input type="range" id="frontRange" step="0.1" />
+          </label>
+          <label class="range">
+            <span>عرض واقعی معبر (فقط برای ترسیم): <b id="roadVal"></b> متر</span>
+            <input type="range" id="roadRange" step="0.5" />
+          </label>
+          <label class="inline">
+            <span>ارتفاع هر طبقه (متر)</span>
+            <input type="number" id="floorH" min="2.6" max="6" step="0.1" value="3.2" />
+          </label>
+          <label class="inline">
+            <span>محل استقرار توده</span>
+            <select id="anchorSelect">
+              <option value="auto">خودکار (شمالی‌سازی؛ در قطعات شرقی/غربی: پشت قطعه)</option>
+              <option value="rear">چسبیده به عقب‌نشینی پشت قطعه</option>
+              <option value="street">چسبیده به بَر معبر</option>
+            </select>
+          </label>
+        </details>
+
+        <section class="step" id="step-view">
+          <h2>نمایش</h2>
+          <div class="toggles">
+            <label><input type="checkbox" id="tgEnvelope" checked /> پاکت حجمی مجاز</label>
+            <label><input type="checkbox" id="tgSetback" checked /> عقب‌نشینی‌ها</label>
+            <label><input type="checkbox" id="tgNeighbors" checked /> قطعات همجوار</label>
+            <label><input type="checkbox" id="tgLabels" checked /> برچسب‌ها</label>
+          </div>
+        </section>
+
+        <section class="results" id="results" aria-live="polite"></section>
+
+        <div class="actions">
+          <button id="btnShare">کپی لینک این حالت</button>
+          <button id="btnShot" class="ghost">دانلود تصویر</button>
+          <button id="btnFit" class="ghost">بازنشانی دید</button>
+        </div>
+
+        <footer class="credits">
+          <p>این ضوابط <b>پیشنهادی</b> است و جایگزین ضوابط مصوب طرح تفصیلی یا استعلام شهرداری نیست.</p>
+          <p>نمایش شماتیک است؛ ابعاد قطعه مستطیل فرض شده است.</p>
+          <p>طراحی، تدوین و پیشنهاد جدول ضوابط: <span lang="en" dir="ltr">Omid Mansourihanis</span>، کارشناس شهرسازی و مسئول پایگاه داده‌های مکانی شهرداری ساری (۲۰۱۹).</p>
+        </footer>
+      </div>
+    </aside>
+
+    <main id="viewport" aria-label="نمای سه‌بعدی">
+      <div id="legend">
+        <span><i style="background:#9fd39a"></i> فضای باز قطعه</span>
+        <span><i style="background:#e85d5d"></i> عقب‌نشینی</span>
+        <span><i style="background:#5b8def"></i> پاکت مجاز</span>
+        <span><i style="background:#444"></i> معبر</span>
+      </div>
+      <div id="toast" role="status"></div>
+    </main>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
