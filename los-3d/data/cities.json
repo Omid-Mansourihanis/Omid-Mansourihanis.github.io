@@ -1,0 +1,106 @@
+{
+ "chicago": {
+  "label": "Chicago",
+  "file": "chicago.geojson.gz",
+  "bbox": [
+   -87.94007,
+   41.6355,
+   -87.52366,
+   42.03396
+  ],
+  "center": [
+   -87.73187,
+   41.83473
+  ],
+  "n_mapped": 39308,
+  "n_analysed": 38785,
+  "los_counts": {
+   "A": 3075,
+   "B": 5927,
+   "C": 14799,
+   "D": 13176,
+   "E": 1717,
+   "F": 91
+  },
+  "no_data": 523,
+  "mean_ci": 3.247
+ },
+ "houston": {
+  "label": "Houston",
+  "file": "houston.geojson.gz",
+  "bbox": [
+   -95.87037,
+   29.51334,
+   -95.01215,
+   30.15591
+  ],
+  "center": [
+   -95.44126,
+   29.83462
+  ],
+  "n_mapped": 29577,
+  "n_analysed": 28372,
+  "los_counts": {
+   "A": 5481,
+   "B": 7908,
+   "C": 10408,
+   "D": 3946,
+   "E": 533,
+   "F": 96
+  },
+  "no_data": 1205,
+  "mean_ci": 2.707
+ },
+ "los-angeles": {
+  "label": "Los Angeles",
+  "file": "los-angeles.geojson.gz",
+  "bbox": [
+   -118.66818,
+   33.70365,
+   -118.15529,
+   34.33731
+  ],
+  "center": [
+   -118.41173,
+   34.02048
+  ],
+  "n_mapped": 28161,
+  "n_analysed": 27445,
+  "los_counts": {
+   "A": 5433,
+   "B": 6578,
+   "C": 7867,
+   "D": 5095,
+   "E": 1828,
+   "F": 644
+  },
+  "no_data": 716,
+  "mean_ci": 2.749
+ },
+ "new-york": {
+  "label": "New York",
+  "file": "new-york.geojson.gz",
+  "bbox": [
+   -74.25571,
+   40.49604,
+   -73.70017,
+   40.91528
+  ],
+  "center": [
+   -73.97794,
+   40.70566
+  ],
+  "n_mapped": 37690,
+  "n_analysed": 36783,
+  "los_counts": {
+   "A": 6403,
+   "B": 7003,
+   "C": 9541,
+   "D": 8660,
+   "E": 4218,
+   "F": 958
+  },
+  "no_data": 907,
+  "mean_ci": 3.0
+ }
+}

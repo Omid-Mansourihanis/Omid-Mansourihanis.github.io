@@ -1,0 +1,56 @@
+# Builds the block geometry + LOS data for /los-3d/ on GitHub's servers:
+# downloads the public Mendeley package (doi:10.17632/4ghf42bs96) and the 2020 TIGER/Line blocks
+# from census.gov, then commits los-3d/data/ to the branch it ran on.
+# Run it again from the Actions tab ("Build LOS 3D map data") if the data package changes.
+name: Build LOS 3D map data
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/los-3d]
+    paths:
+      - 'los-3d/scripts/**'
+      - '.github/workflows/build-los-data.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-los-data-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install
+        run: pip install -r los-3d/scripts/requirements.txt
+
+      - name: Download the Mendeley data package
+        id: mendeley
+        run: python los-3d/scripts/fetch_mendeley.py --dataset 4ghf42bs96 --out "$RUNNER_TEMP/mendeley"
+
+      - name: Build per-city GeoJSON (TIGER/Line 2020 blocks + LOS)
+        run: |
+          python los-3d/scripts/build_data.py \
+            --data-dir "${{ steps.mendeley.outputs.csv_dir }}" \
+            --out los-3d/data --cache "$RUNNER_TEMP/tiger" 2>&1 | tee "$RUNNER_TEMP/build.log"
+          test "${PIPESTATUS[0]}" -eq 0
+          ls -la los-3d/data
+
+      - name: Commit the data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add los-3d/data
+          if git diff --cached --quiet; then echo "no changes"; exit 0; fi
+          git commit -m "Build LOS 3D map data (TIGER/Line 2020 blocks + Mendeley doi:10.17632/4ghf42bs96)" \
+                     -m "$(grep -E '^==|matched|wrote|rows have|duplicate' "$RUNNER_TEMP/build.log" || true)"
+          git push

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='9' width='4' height='6' fill='%231A9850'/%3E%3Crect x='6' y='5' width='4' height='10' fill='%23FEE08B'/%3E%3Crect x='11' y='1' width='4' height='14' fill='%23D73027'/%3E%3C/svg%3E">
+<meta name="author" content="Omid Mansourihanis">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Block-level LOS in 3D — Google Photorealistic 3D Tiles</title>
+<link rel="stylesheet" href="css/viewer.css">
+<script src="https://unpkg.com/deck.gl@9.4.1/dist.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/los-common.js"></script>
+</head>
+<body>
+<div id="map"></div>
+<div class="panel">
+  <h1>Traffic LOS by census block</h1>
+  <div class="sub">TomTom 2024, Monday 07:00–09:00 · Google Photorealistic 3D</div>
+  <label>City</label><select id="city"></select>
+  <label>Colour by</label><select id="mode"></select>
+  <label>Palette</label><select id="pal"></select>
+  <label>Opacity: <span id="ov"></span></label>
+  <input id="o" type="range" min="0.1" max="1" step="0.05" value="0.55">
+  <div id="keybox" style="display:none">
+    <label>Google Map Tiles API key (stored only in this browser)</label>
+    <input id="key" type="text" placeholder="AIza…"><button id="usekey" style="margin-top:4px">Use key</button>
+  </div>
+  <div id="legend"></div>
+  <div class="status" id="status"></div>
+  <div class="nav"><a id="toOsm" href="osm3d.html">→ Same view on OpenStreetMap 3D</a> · <a href="index.html">About</a> · <a href="/">Omid Mansourihanis</a></div>
+  <div class="note">Blocks are draped on Google's photorealistic surface. Grey blocks had no probe observations: missing data, not congestion.
+    Ctrl+drag (or right-drag) to tilt and rotate.</div>
+</div>
+<div class="credits" id="credits"></div>
+<script>
+(async function () {
+  const $ = (id) => document.getElementById(id), C = window.LOS_CONFIG;
+  const { Deck, Tile3DLayer, GeoJsonLayer, TileLayer, BitmapLayer } = deck;
+  const TerrainExtension = deck._TerrainExtension || deck.TerrainExtension;
+  const st = LOS.urlState({ city: C.defaultCity, mode: 'los6', pal: 'hcm' });
+  const q = new URLSearchParams(location.search);
+  const active = new Set([...LOS.LETTERS, 'NA']);
+  let cities, fc = null, credits = '';
+  let apiKey = C.googleMapsApiKey || localStorage.getItem('gmapsKey') || '';
+
+  for (const [k, v] of Object.entries(LOS.MODES)) $('mode').add(new Option(v, k));
+  for (const [k, v] of Object.entries(LOS.PALETTES)) $('pal').add(new Option(v.name, k));
+  try { cities = await LOS.loadCities(); } catch (e) { $('status').textContent = 'The block data for this map is being prepared and will appear here shortly.'; return; }
+  for (const [k, v] of Object.entries(cities)) $('city').add(new Option(v.label, k));
+  if (!cities[st.city]) st.city = Object.keys(cities)[0];
+  $('city').value = st.city; $('mode').value = st.mode; $('pal').value = st.pal;
+
+  const c0 = cities[st.city].center;
+  let viewState = {
+    longitude: +q.get('lng') || c0[0], latitude: +q.get('lat') || c0[1], zoom: +q.get('zoom') || 13.5,
+    pitch: 55, bearing: +q.get('bearing') || -20, maxPitch: 80,
+  };
+
+  const deckgl = new Deck({
+    parent: $('map'), initialViewState: viewState,
+    controller: deck.TerrainController ? { type: deck.TerrainController } : true,
+    onViewStateChange: ({ viewState: v }) => { viewState = v; updateLink(); },
+    getTooltip: ({ object }) => object && object.properties && { html: LOS.tooltipHtml(object.properties, cities[st.city].label) },
+    onError: (e) => { $('status').textContent = 'Error: ' + (e && e.message || e); },
+  });
+
+  let base = null, baseKey = null;
+  function baseLayer() {   // built once per key, so re-colouring never reloads the 3D tiles
+    if (!base || baseKey !== apiKey) { baseKey = apiKey; base = makeBase(); }
+    return base;
+  }
+  function makeBase() {
+    if (apiKey) {
+      return new Tile3DLayer({
+        id: 'google-3d', data: 'https://tile.googleapis.com/v1/3dtiles/root.json',
+        loadOptions: { fetch: { headers: { 'X-GOOG-API-KEY': apiKey } } },
+        operation: 'terrain+draw',
+        onTilesetLoad: (ts) => {
+          ts.options.onTraversalComplete = (selected) => {   // Google requires showing the data attributions
+            const s = new Set();
+            selected.forEach((t) => (t.content?.gltf?.asset?.copyright || '').split(';').forEach((c) => c.trim() && s.add(c.trim())));
+            const txt = 'Google' + (s.size ? ' · ' + [...s].join('; ') : '');
+            if (txt !== credits) { credits = txt; $('credits').textContent = txt; }
+            return selected;
+          };
+        },
+      });
+    }
+    // No key: flat OpenStreetMap raster basemap so the page still works.
+    $('credits').innerHTML = '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+    return new TileLayer({
+      id: 'osm-raster', data: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', maxZoom: 19, tileSize: 256,
+      renderSubLayers: (p) => {
+        const { west, south, east, north } = p.tile.bbox;
+        return new BitmapLayer(p, { data: null, image: p.data, bounds: [west, south, east, north] });
+      },
+    });
+  }
+
+  function render() {
+    const op = +$('o').value; $('ov').textContent = op;
+    const data = fc ? { type: 'FeatureCollection', features: fc.features.filter((f) => LOS.isVisible(f.properties, active)) } : null;
+    const blocks = data && new GeoJsonLayer({
+      id: 'blocks', data, filled: true, stroked: false, pickable: true, opacity: op,
+      getFillColor: (f) => LOS.colorRgb(f.properties, st.mode, st.pal),
+      updateTriggers: { getFillColor: [st.mode, st.pal] },
+      autoHighlight: true, highlightColor: [255, 255, 255, 160],
+      extensions: apiKey && TerrainExtension ? [new TerrainExtension()] : [],
+    });
+    deckgl.setProps({ layers: [baseLayer(), blocks].filter(Boolean) });
+    LOS.renderLegend($('legend'), st.mode, st.pal, cities[st.city], active, (keys) => { LOS.toggleKeys(active, keys); render(); });
+    LOS.saveUrlState(st); updateLink();
+  }
+
+  function updateLink() {
+    $('toOsm').href = `osm3d.html?city=${st.city}&mode=${st.mode}&pal=${st.pal}` +
+      `#view=${viewState.zoom.toFixed(2)}/${viewState.latitude.toFixed(5)}/${viewState.longitude.toFixed(5)}/${(viewState.bearing || 0).toFixed(0)}/${(viewState.pitch || 0).toFixed(0)}`;
+  }
+
+  async function showCity(slug, fly) {
+    $('status').textContent = `Loading ${cities[slug].label} (${cities[slug].n_mapped.toLocaleString()} blocks)…`;
+    try { fc = await LOS.loadCity(slug, cities); $('status').textContent = apiKey ? '' : NOKEY; }
+    catch (e) { fc = null; $('status').textContent = 'Failed to load city data: ' + e.message; }
+    if (fly) {
+      const c = cities[slug].center;
+      deckgl.setProps({ initialViewState: { ...viewState, longitude: c[0], latitude: c[1], zoom: 13, transitionDuration: 1500,
+        transitionInterpolator: new deck.FlyToInterpolator() } });
+    }
+    render();
+  }
+
+  if (!C.googleMapsApiKey) { $('keybox').style.display = ''; $('key').value = apiKey; }
+  const NOKEY = 'No Google key: showing a flat OSM basemap. Paste a Map Tiles API key for photorealistic 3D.';
+  $('usekey').onclick = () => { apiKey = $('key').value.trim(); localStorage.setItem('gmapsKey', apiKey); credits = ''; $('status').textContent = ''; render(); };
+  $('city').onchange = (e) => { st.city = e.target.value; showCity(st.city, true); };
+  for (const k of ['mode', 'pal']) $(k).onchange = (e) => { st[k] = e.target.value; render(); };
+  $('o').oninput = render;
+  showCity(st.city, false);
+})();
+</script>
+</body>
+</html>

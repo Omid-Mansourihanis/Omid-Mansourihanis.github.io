@@ -1,0 +1,21 @@
+html, body { margin: 0; height: 100%; font: 13.5px/1.4 Calibri, Carlito, "Segoe UI", Arial, sans-serif; color: #222; }
+.panel h1 { font-family: "Times New Roman", Times, "Liberation Serif", Tinos, serif; }
+#map { position: absolute; inset: 0; }
+.panel { position: absolute; top: 10px; left: 10px; z-index: 5; width: 270px; background: rgba(255,255,255,.95);
+  border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); padding: 10px 12px; max-height: calc(100% - 40px); overflow: auto; }
+.panel h1 { font-size: 17px; margin: 0 0 2px; }
+.panel .sub { color: #666; font-size: 11px; margin-bottom: 8px; }
+.panel label { display: block; font-size: 11px; color: #555; margin: 8px 0 2px; }
+.panel select, .panel input[type=range], .panel input[type=text] { width: 100%; box-sizing: border-box; }
+.panel .nav { margin-top: 8px; font-size: 12px; }
+.lg-title { font-weight: 600; margin: 10px 0 4px; }
+.lg-row { display: flex; align-items: center; gap: 6px; padding: 2px 3px; border-radius: 4px; }
+.lg-row.clickable { cursor: pointer; } .lg-row.clickable:hover { background: #f0f0f0; }
+.lg-row.off { opacity: .35; text-decoration: line-through; }
+.lg-row .sw { width: 16px; height: 12px; border-radius: 2px; border: 1px solid rgba(0,0,0,.2); flex: none; }
+.lg-row .n { margin-left: auto; color: #777; font-variant-numeric: tabular-nums; }
+.lg-hint { color: #888; font-size: 10px; margin-top: 3px; }
+.status { color: #a33; font-size: 11px; margin-top: 6px; min-height: 1em; }
+.note { color: #666; font-size: 10.5px; margin-top: 8px; border-top: 1px solid #eee; padding-top: 6px; }
+.credits { position: absolute; bottom: 4px; right: 8px; z-index: 5; font-size: 10px; background: rgba(255,255,255,.8); padding: 1px 5px; border-radius: 3px; }
+.deck-tooltip { font-size: 12px !important; }
