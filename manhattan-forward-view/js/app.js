@@ -168,8 +168,53 @@ function elementBox(el) {
   return Number.isFinite(s) ? { s, n, w, e } : null;
 }
 
-// Make sure every tile touching box b is loaded. Missing tiles are fetched in one query.
+// ---------------- prebuilt tiles (data/tiles/) ----------------
+// Manhattan footprints and streets are prebuilt from an OpenStreetMap extract (scripts/build_tiles.py),
+// so clicks inside the covered box never wait for Overpass. Outside it, Overpass is used.
+const STATIC_DIR = 'data/tiles/';
+let staticIndex;                                   // undefined: not loaded yet; null: unavailable
+async function loadStaticIndex() {
+  if (staticIndex !== undefined) return staticIndex;
+  try {
+    const r = await fetch(STATIC_DIR + 'index.json');
+    if (!r.ok) throw new Error(r.status);
+    const j = await r.json();
+    if (j.tileLat !== TILE_LAT || j.tileLng !== TILE_LNG) throw new Error('tile grid mismatch');
+    staticIndex = { ...j, set: new Set(j.tiles) };
+  } catch (err) { console.warn('No prebuilt tiles; using Overpass', err); staticIndex = null; }
+  return staticIndex;
+}
+const staticCovers = (idx, [i, j]) => {
+  const [w, s, e, n] = idx.bbox;
+  return i * TILE_LNG >= w && (i + 1) * TILE_LNG <= e && j * TILE_LAT >= s && (j + 1) * TILE_LAT <= n;
+};
+// Convert a compact prebuilt tile to Overpass-style elements, so the rest of the code is unchanged.
+function tileElements(d) {
+  const g = c => c.map(([lon, lat]) => ({ lon, lat }));
+  return [
+    ...(d.r || []).map(([id, nodes, c, tags]) => ({ type: 'way', id, nodes, geometry: g(c), tags })),
+    ...(d.b || []).map(([id, c]) => ({ type: 'way', id, geometry: g(c) })),
+    ...(d.m || []).map(([id, rings]) => ({ type: 'relation', id, tags: { building: 'yes' },
+      members: rings.map(c => ({ type: 'way', role: 'outer', geometry: g(c) })) }))
+  ];
+}
+async function loadStaticTiles(keys, idx) {
+  await Promise.all(keys.map(async ([i, j]) => {
+    const k = `${i}_${j}`;
+    if (!idx.set.has(k)) { tiles.set(tileKey(i, j), []); return; }        // nothing there (water)
+    const r = await fetch(`${STATIC_DIR}${k}.json`);
+    if (!r.ok) throw new Error(`tile ${k} returned ${r.status}`);
+    tiles.set(tileKey(i, j), tileElements(await r.json()));
+  }));
+}
+
+// Make sure every tile touching box b is loaded: prebuilt tiles first, then one Overpass query for the rest.
 async function ensureTiles(b) {
+  const idx = await loadStaticIndex();
+  if (idx) {
+    const pre = tilesFor(b).filter(t => !tiles.has(tileKey(...t)) && staticCovers(idx, t));
+    if (pre.length) await loadStaticTiles(pre, idx);
+  }
   for (;;) {
     const missing = tilesFor(b).filter(([i, j]) => !tiles.has(tileKey(i, j)));
     if (!missing.length) return;
@@ -236,7 +281,8 @@ function buildRegion(elements, b) {
 }
 
 async function regionAround(b, msg) {
-  if (tilesFor(b).some(([i, j]) => !tiles.has(tileKey(i, j)))) setStatus(msg, 'busy');
+  const idx = await loadStaticIndex();
+  if (tilesFor(b).some(t => !tiles.has(tileKey(...t)) && !(idx && staticCovers(idx, t)))) setStatus(msg, 'busy');
   await ensureTiles(b);
   return regionFromTiles(b);
 }
@@ -475,7 +521,8 @@ function renderPanel() {
   $('#dirA').textContent = res.dirs[0].label;
   $('#dirB').textContent = res.dirs[1] ? res.dirs[1].label : '–';
   $('#dirB').disabled = res.dirs.length < 2;
-  setStatus(`${res.reg.nBuildings.toLocaleString()} footprints loaded around this street.`, 'ok');
+  const asOf = staticIndex && staticIndex.osmDate ? ` (OpenStreetMap, ${staticIndex.osmDate})` : '';
+  setStatus(`${res.reg.nBuildings.toLocaleString()} footprints loaded around this street${asOf}.`, 'ok');
 }
 
 function drawProfile(profile, klass) {

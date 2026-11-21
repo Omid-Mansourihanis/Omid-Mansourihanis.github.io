@@ -47,7 +47,7 @@ The page does not compute a composite score or a crash risk for a street. The pa
 
 ## How this differs from the paper
 
-- **Footprints and streets come from OpenStreetMap** through the Overpass API, at the moment of the click. The paper used NYC planimetric building footprints and the NYC speed-limit layer. Values for a given street can therefore differ from the paper's.
+- **Footprints and streets come from OpenStreetMap.** Inside Manhattan they are read from prebuilt tiles in `data/tiles/`, made from the Geofabrik New York extract by `scripts/build_tiles.py` (workflow *Build Manhattan tiles*; run it again from the Actions tab to refresh the data). Outside that box the page falls back to the Overpass API at the moment of the click. The paper used NYC planimetric building footprints and the NYC speed-limit layer. Values for a given street can therefore differ from the paper's.
 - The paper excluded motorways, link roads, bridges, tunnels, unnamed segments, segments shorter than 80 ft, and segments with no facing building within 300 ft on one side. The page will not snap to motorways, link roads, bridges or tunnels, and it shows a warning for the other cases instead of hiding them.
 - The geometry is planar, as in the paper. Building height, trees, parked cars and terrain do not block rays. The 3D buildings on the map come from the OpenFreeMap basemap and are for display only.
 

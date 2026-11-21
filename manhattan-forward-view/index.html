@@ -25,7 +25,7 @@
   </header>
 
   <div class="body">
-    <p id="status" class="status" role="status">Click a street on the map. Building footprints load from OpenStreetMap the first time you visit an area (in the background while you pan); after that, clicks nearby are instant.</p>
+    <p id="status" class="status" role="status">Click a street on the map. Building footprints and streets come from a prebuilt OpenStreetMap extract of Manhattan stored with this page.</p>
 
     <section id="empty">
       <p>Each click finds the street segment between two intersections, places five points between 30% and 70% of its length and casts 73 rays, 2.5° apart, across the half plane ahead of the driver. The <b>forward opening θ(R)</b> is the angle covered by rays that travel beyond the look-ahead distance <i>R</i> before meeting a building.</p>
@@ -89,7 +89,7 @@
 
     <footer>
       Method: Mansourihanis, O. (2026). <i>How much of the street ahead can a driver see? Forward views from open building footprints in Manhattan and their association with injury crashes.</i> Manuscript, not yet peer reviewed.<br>
-      Data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>. Basemap: <a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a>. Queries: Overpass API.
+      Data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>. Basemap: <a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a>. Footprints: prebuilt from the Geofabrik extract (Overpass API outside Manhattan).
     </footer>
   </div>
 </aside>

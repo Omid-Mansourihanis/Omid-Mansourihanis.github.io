@@ -1,0 +1,75 @@
+# Prebuilds the OpenStreetMap building footprints and drivable streets of Manhattan for
+# /manhattan-forward-view/, so clicks never wait on the public Overpass servers.
+# Source: Geofabrik New York extract, or BBBike New York City as a fallback (OpenStreetMap contributors, ODbL).
+# Run it again from the Actions tab ("Build Manhattan tiles") to refresh the OSM data.
+name: Build Manhattan tiles
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/mfv-static]
+    paths:
+      - 'manhattan-forward-view/scripts/**'
+      - '.github/workflows/build-manhattan-tiles.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-manhattan-tiles-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install
+        run: |
+          sudo apt-get update -q && sudo apt-get install -y -q osmium-tool
+          pip install osmium
+
+      - name: Download the OpenStreetMap New York extract and cut Manhattan
+        run: |
+          # Find the New York extract in Geofabrik's index; fall back to BBBike's New York City extract.
+          URL=$(curl -fsSL --retry 3 https://download.geofabrik.de/index-v1-nogeom.json | python -c "
+          import json, sys
+          d = json.load(sys.stdin)
+          for f in d['features']:
+              p = f['properties']
+              if p.get('id') == 'us/new-york' or (p.get('name') == 'New York' and 'us' in (p.get('parent') or '')):
+                  print(p['urls']['pbf']); break
+          " || true)
+          echo "extract: ${URL:-none from Geofabrik index}"
+          if [ -z "$URL" ] || ! curl -fsSL --retry 3 -o "$RUNNER_TEMP/ny.osm.pbf" "$URL"; then
+            URL=https://download.bbbike.org/osm/bbbike/NewYork/NewYork.osm.pbf
+            echo "falling back to $URL"
+            curl -fsSL --retry 3 -A "Mozilla/5.0 (github.com/Omid-Mansourihanis)" -o "$RUNNER_TEMP/ny.osm.pbf" "$URL"
+          fi
+          osmium extract --strategy complete_ways -b -74.035,40.69,-73.895,40.89 "$RUNNER_TEMP/ny.osm.pbf" -o "$RUNNER_TEMP/manhattan.osm.pbf"
+          TS=$(osmium fileinfo -g header.option.osmosis_replication_timestamp "$RUNNER_TEMP/ny.osm.pbf" 2>/dev/null || true)
+          [ -n "$TS" ] || TS=$(osmium fileinfo -e -g data.timestamp.last "$RUNNER_TEMP/ny.osm.pbf" 2>/dev/null || true)
+          echo "OSM_DATE=${TS%%T*}" >> "$GITHUB_ENV"
+          ls -la "$RUNNER_TEMP"
+
+      - name: Build tiles
+        run: |
+          python manhattan-forward-view/scripts/build_tiles.py "$RUNNER_TEMP/manhattan.osm.pbf" \
+            --out manhattan-forward-view/data/tiles --date "$OSM_DATE" 2>&1 | tee "$RUNNER_TEMP/build.log"
+          test "${PIPESTATUS[0]}" -eq 0
+          du -sh manhattan-forward-view/data/tiles
+
+      - name: Commit the tiles
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add manhattan-forward-view/data/tiles
+          if git diff --cached --quiet; then echo "no changes"; exit 0; fi
+          git commit -m "Build Manhattan tiles from OpenStreetMap ($OSM_DATE)" -m "$(cat "$RUNNER_TEMP/build.log")"
+          git push
