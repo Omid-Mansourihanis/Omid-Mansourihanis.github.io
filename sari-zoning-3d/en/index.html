@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sari Building Rules in 3D: Detailed Plan, Alternative A (2019) · Omid Mansourihanis</title>
+  <meta name="description" content="Interactive 3D viewer of the proposed building rules for the detailed plan of Sari, Iran (Alternative A, 2019). Pick a zone, sub-zone, lot-size class, street width and lot position to see coverage, floors, FAR, setbacks and the buildable envelope." />
+  <meta name="author" content="Omid Mansourihanis" />
+  <link rel="canonical" href="https://omid-mansourihanis.github.io/sari-zoning-3d/en/" />
+  <link rel="alternate" hreflang="fa" href="https://omid-mansourihanis.github.io/sari-zoning-3d/" />
+  <link rel="alternate" hreflang="en" href="https://omid-mansourihanis.github.io/sari-zoning-3d/en/" />
+  <meta property="og:title" content="Sari Building Rules in 3D (Alternative A, 2019)" />
+  <meta property="og:description" content="See what a lot in Sari, Iran could hold under the proposed detailed-plan rules, in 3D. Rules designed by Omid Mansourihanis for Sari Municipality." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='3' y='4' width='10' height='12' fill='%23f4c542' stroke='%231f2328'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../css/style.css?v=20261121" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "../vendor/three.module.js",
+        "three/addons/": "../vendor/addons/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="app">
+    <aside id="panel" aria-label="Rule selection">
+      <header class="panel-head">
+        <h1>Sari Building Rules in 3D</h1>
+        <p class="sub">Detailed plan of Sari, Iran · proposed rules, Alternative A (2019)</p>
+        <p class="sub links"><a href="/">&larr; Omid Mansourihanis</a> · <a href="../" lang="fa" dir="rtl" hreflang="fa">نسخهٔ فارسی</a></p>
+        <button id="togglePanel" class="ghost small" aria-expanded="true" title="Collapse or expand the panel">☰</button>
+      </header>
+
+      <div class="panel-body">
+        <details class="step about" open>
+          <summary>What is this?</summary>
+          <p>In 2019, while I was the urban-planning expert and head of the spatial database at Sari Municipality,
+            I designed, compiled and proposed a rule table for the city's new detailed plan. For every zone and sub-zone
+            it sets how much of a lot may be built on, how many floors, the floor-area ratio and the setbacks, and these
+            change with the lot's area, the width of the street in front of it and which side of the street it is on.</p>
+          <p>This tool turns that table into a schematic 3D model. Choose your lot in five steps and the panel shows
+            the rules that apply, while the 3D view shows the building they allow. The numbers come straight from the
+            table (Alternative A); they are a <strong>proposal, not adopted rules</strong>, and they do not replace a
+            permit enquiry at the municipality.</p>
+        </details>
+
+        <section class="step" id="step-zone">
+          <h2><span class="num">1</span> Zone</h2>
+          <div class="chips" id="zoneChips"></div>
+          <p class="hint">The detailed plan divides the city into land-use zones. <b>R</b> zones are residential;
+            <b>M</b> zones mix housing with shops, offices and services.</p>
+        </section>
+
+        <section class="step" id="step-subzone">
+          <h2><span class="num">2</span> Sub-zone</h2>
+          <select id="subzoneSelect" aria-label="Sub-zone"></select>
+          <p class="hint" id="subzoneName"></p>
+          <p class="hint">R1, R2 and R3 are low, medium and high residential density. In mixed codes such as
+            <b>M3R2</b>, the first part is the activity level (M1 neighbourhood, M2 district, M3 regional and M4 city
+            services, with housing; M5 city activity without housing) and the second is the density class (R1–R3),
+            which sets the building rules. <b>M6</b> is the high-rise mixed zone.</p>
+        </section>
+
+        <section class="step" id="step-area">
+          <h2><span class="num">3</span> Lot-size class</h2>
+          <div class="chips" id="areaChips"></div>
+          <p class="hint" id="subdivisionNote"></p>
+          <p class="hint">Rules step with the lot area. These classes are the lot-size brackets of the table (the
+            minimum-subdivision column). Larger lots usually get more floors but a lower coverage, so the building is
+            taller and leaves more open ground. You can set the exact area in step 6.</p>
+        </section>
+
+        <section class="step" id="step-road">
+          <h2><span class="num">4</span> Street width</h2>
+          <div class="chips" id="roadChips"></div>
+          <p class="hint">The width of the street the lot faces. Wider streets allow more floors and a higher FAR. The table has no rules for streets narrower than 8&nbsp;m or between
+            8 and 10&nbsp;m (for example 9&nbsp;m), so those widths are not offered.</p>
+        </section>
+
+        <section class="step" id="step-orient">
+          <h2><span class="num">5</span> Lot position relative to the street</h2>
+          <p class="hint" style="margin:-4px 0 8px">Click the side of your lot where the street is.</p>
+          <div class="compass" id="orientPad">
+            <button data-o="south" class="o-n">Southern lot<br><small>street on the north</small></button>
+            <button data-o="west" class="o-e">Western lot<br><small>street on the east</small></button>
+            <span class="o-c">Lot<br><small>↑ north</small></span>
+            <button data-o="east" class="o-w">Eastern lot<br><small>street on the west</small></button>
+            <button data-o="north" class="o-s">Northern lot<br><small>street on the south</small></button>
+          </div>
+          <p class="hint">In Iranian practice a <b>northern lot</b> lies on the north side of its street, so the street
+            runs along its southern edge. Setbacks differ by side: the street side and the rear get their own distances,
+            and in M zones there is no setback from the street side. By default the tool places the building against
+            the north edge of the lot (northern placement, common in Iran), so the yard faces south.</p>
+        </section>
+
+        <details class="step" id="step-exact" open>
+          <summary><span class="num">6</span> Exact dimensions (optional)</summary>
+          <label class="range">
+            <span>Exact lot area: <b id="areaVal"></b> m²</span>
+            <input type="range" id="areaRange" step="1" />
+          </label>
+          <label class="range">
+            <span>Frontage (side facing the street): <b id="frontVal"></b> m · depth: <b id="depthVal"></b> m</span>
+            <input type="range" id="frontRange" step="0.1" />
+          </label>
+          <label class="range">
+            <span>Actual street width (drawing only): <b id="roadVal"></b> m</span>
+            <input type="range" id="roadRange" step="0.5" />
+          </label>
+          <label class="inline">
+            <span>Floor-to-floor height (m)</span>
+            <input type="number" id="floorH" min="2.6" max="6" step="0.1" value="3.2" />
+          </label>
+          <label class="inline">
+            <span>Where the building sits on the lot</span>
+            <select id="anchorSelect">
+              <option value="auto">Automatic (against the north edge; on eastern and western lots, at the rear)</option>
+              <option value="rear">Against the rear setback</option>
+              <option value="street">Against the street frontage</option>
+            </select>
+          </label>
+          <p class="hint">The rules depend only on the class you picked, but the drawing and the floor-area figures use
+            the exact area. The lot is drawn as a rectangle, twice as deep as it is wide unless you change the frontage.</p>
+        </details>
+
+        <section class="step" id="step-view">
+          <h2>Show</h2>
+          <div class="toggles">
+            <label><input type="checkbox" id="tgEnvelope" checked /> Buildable envelope</label>
+            <label><input type="checkbox" id="tgSetback" checked /> Setbacks</label>
+            <label><input type="checkbox" id="tgNeighbors" checked /> Neighbouring lots</label>
+            <label><input type="checkbox" id="tgLabels" checked /> Labels</label>
+          </div>
+        </section>
+
+        <section class="results" id="results" aria-live="polite"></section>
+
+        <div class="actions">
+          <button id="btnShare">Copy link to this lot</button>
+          <button id="btnShot" class="ghost">Download image</button>
+          <button id="btnFit" class="ghost">Reset view</button>
+        </div>
+
+        <details class="step glossary">
+          <summary>How to read the rules</summary>
+          <dl>
+            <dt>Lot coverage</dt>
+            <dd>The share of the lot area the building's footprint may cover. 60% on a 200&nbsp;m² lot means a
+              footprint of up to 120&nbsp;m²; the rest stays open.</dd>
+            <dt>Floors</dt>
+            <dd>The maximum number of floors. Half floors (such as 2.5) come from the table, where floors = FAR ÷
+              coverage; the half is drawn as a lighter part of the top level.</dd>
+            <dt>FAR (floor-area ratio, <span lang="fa" dir="rtl">تراکم ساختمانی</span>)</dt>
+            <dd>Total floor area allowed, as a share of the lot area. 150% on a 200&nbsp;m² lot allows 300&nbsp;m² of
+              floor space. In the table, FAR = floors × coverage; the tool uses that exact product (for example 316.25%
+              where the table prints 316%).</dd>
+            <dt>Setback</dt>
+            <dd>The minimum distance between the building and a lot edge, shown as red strips. "None" means the
+              building may reach that edge.</dd>
+            <dt>Buildable envelope</dt>
+            <dd>The blue box: the volume left after the setbacks, up to the allowed height. The building must fit inside it.</dd>
+            <dt>Minimum subdivision (<span lang="fa" dir="rtl">حداقل نصاب تفکیک</span>)</dt>
+            <dd>The smallest lot that may be created when land is newly divided. Smaller lots from earlier
+              subdivisions still exist, and the table gives them rules through its lot-size classes.</dd>
+            <dt>Podium and tower (M6)</dt>
+            <dd>In the high-rise zone the table gives two parts: a podium of up to 3 floors with 60% coverage, and a main
+              building (tower) of 12 or 14 floors with 35% coverage and larger setbacks.</dd>
+            <dt>Change from the previous street class</dt>
+            <dd>How much FAR, floors and coverage rise when the same lot faces the next wider street class, matching the
+              difference columns of the table.</dd>
+          </dl>
+        </details>
+
+        <details class="step glossary">
+          <summary>Assumptions in the drawing</summary>
+          <ul>
+            <li>The lot is a rectangle; by default its depth is twice its frontage.</li>
+            <li>Each floor is 3.2&nbsp;m high (adjustable), so heights are approximate.</li>
+            <li>The building fills the full width between the side setbacks and is placed against the north edge
+              (eastern and western lots: against the rear), unless you change it in step 6.</li>
+            <li>If the setbacks leave less room than the allowed coverage, the tool says so and draws what fits.</li>
+            <li>In M6 the tower is drawn on top of the podium, with its own setbacks.</li>
+          </ul>
+        </details>
+
+        <footer class="credits">
+          <p>Source: <em>Proposed rules for land use and construction in zones, sub-zones and lots, detailed plan of
+            Sari, Alternative A</em> (2019), designed, compiled and proposed by <b>Omid Mansourihanis</b>, urban-planning
+            expert and head of the spatial database, Sari Municipality. All 50 rows of the table were checked against
+            the original.</p>
+          <p>These rules are <b>proposed</b>, not adopted, and do not replace the approved detailed-plan rules or a
+            permit enquiry. The drawing is schematic.</p>
+        </footer>
+      </div>
+    </aside>
+
+    <main id="viewport" aria-label="3D view">
+      <div id="legend">
+        <span><i style="background:#9fd39a"></i> open ground</span>
+        <span><i style="background:#e85d5d"></i> setback</span>
+        <span><i style="background:#5b8def"></i> buildable envelope</span>
+        <span><i style="background:#444"></i> street</span>
+      </div>
+      <div id="toast" role="status"></div>
+    </main>
+  </div>
+
+  <script type="module" src="../js/main.js?v=20261121"></script>
+</body>
+</html>

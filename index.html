@@ -1,0 +1,2430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Academic and professional portfolio of Omid Mansourihanis, a computational urban scientist and PhD candidate specializing in geospatial machine learning, urban analytics, spatial justice, and sustainable development.">
+  <meta name="author" content="Omid Mansourihanis">
+  <meta property="og:title" content="Omid Mansourihanis | Computational Urban Scientist">
+  <meta property="og:description" content="Geospatial machine learning, urban analytics, spatial justice, transportation, and environmental equity.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://omid-mansourihanis.github.io/">
+  <meta property="og:image" content="https://omid-mansourihanis.github.io/assets/images/profile-photo.jpg">
+  <link rel="canonical" href="https://omid-mansourihanis.github.io/">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23000000' stroke='white' stroke-width='3'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='800' fill='white' text-anchor='middle'%3EOM%3C/text%3E%3C/svg%3E">
+  <title>Omid Mansourihanis | Computational Urban Scientist</title>
+
+  <style>
+    :root {
+      --navy: #0c2438;
+      --navy-2: #143d59;
+      --teal: #147d84;
+      --teal-soft: #dff4f2;
+      --gold: #d7a83d;
+      --ink: #243447;
+      --muted: #657789;
+      --surface: #ffffff;
+      --surface-2: #f5f8fb;
+      --border: #dfe7ee;
+      --shadow: 0 18px 45px rgba(12, 36, 56, 0.09);
+      --radius: 18px;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--surface-2);
+      font-family: "Times New Roman", Times, "Liberation Serif", Tinos, serif;
+      line-height: 1.72;
+    }
+
+    a {
+      color: var(--teal);
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+    }
+
+    .skip-link:focus {
+      left: 16px;
+      top: 16px;
+      z-index: 9999;
+      background: white;
+      padding: 10px 14px;
+      border-radius: 8px;
+    }
+
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: var(--max);
+      margin: auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      color: var(--navy);
+      text-decoration: none;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 4px 18px;
+    }
+
+    .nav-links a {
+      color: #385067;
+      text-decoration: none;
+      font-size: .92rem;
+      font-weight: 650;
+    }
+
+    .nav-links a:hover {
+      color: var(--teal);
+    }
+
+    .hero {
+      color: white;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(45, 189, 181, .26), transparent 28%),
+        radial-gradient(circle at 15% 90%, rgba(215, 168, 61, .18), transparent 30%),
+        linear-gradient(135deg, #081a2a 0%, #103b56 58%, #116a70 100%);
+    }
+
+    .hero-inner {
+      max-width: var(--max);
+      margin: auto;
+      padding: 104px 24px 90px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(250px, .55fr);
+      gap: 64px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #a9eeea;
+      font-size: .82rem;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(3rem, 7vw, 6.2rem);
+      line-height: .96;
+      letter-spacing: -.055em;
+    }
+
+    .hero h2 {
+      margin: 24px 0 0;
+      max-width: 760px;
+      color: #dceef4;
+      font-size: clamp(1.15rem, 2.3vw, 1.55rem);
+      font-weight: 520;
+      line-height: 1.5;
+    }
+
+    .hero-copy {
+      max-width: 820px;
+      margin: 22px 0 0;
+      color: #d5e5ec;
+      font-size: 1.04rem;
+    }
+
+    .actions {
+      margin-top: 32px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 11px 18px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 800;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button.primary {
+      background: white;
+      color: var(--navy-2);
+      box-shadow: 0 10px 28px rgba(0,0,0,.14);
+    }
+
+    .button.secondary {
+      color: white;
+      border: 1px solid rgba(255,255,255,.48);
+      background: rgba(255,255,255,.08);
+    }
+
+    .monogram {
+      width: min(260px, 70vw);
+      aspect-ratio: 1;
+      margin-inline: auto;
+      border-radius: 32% 68% 58% 42% / 44% 42% 58% 56%;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: clamp(4rem, 9vw, 6rem);
+      font-weight: 900;
+      letter-spacing: -.08em;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.04)),
+        rgba(4, 28, 45, .34);
+      border: 1px solid rgba(255,255,255,.24);
+      box-shadow: 0 30px 60px rgba(0,0,0,.22);
+      transform: rotate(-4deg);
+    }
+
+    .stats-wrap {
+      max-width: var(--max);
+      margin: -28px auto 0;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-radius: var(--radius);
+      background: white;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .stat {
+      padding: 24px 18px;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat:last-child {
+      border-right: 0;
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--navy-2);
+      font-size: 1.55rem;
+      line-height: 1.2;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: .86rem;
+    }
+
+    main {
+      max-width: var(--max);
+      margin: auto;
+      padding: 42px 24px 100px;
+    }
+
+    section {
+      padding: 78px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    section:last-child {
+      border-bottom: 0;
+    }
+
+    .section-kicker {
+      margin: 0 0 8px;
+      color: var(--teal);
+      font-size: .78rem;
+      font-weight: 850;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      margin: 0;
+      color: var(--navy);
+      font-size: clamp(2rem, 4vw, 3.25rem);
+      line-height: 1.08;
+      letter-spacing: -.035em;
+    }
+
+    .section-lead {
+      max-width: 850px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 1.06rem;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 44px;
+      margin-top: 34px;
+    }
+
+    .about-copy p:first-child {
+      margin-top: 0;
+      font-size: 1.14rem;
+    }
+
+    .focus-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .focus-list li {
+      padding: 13px 15px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      box-shadow: 0 8px 20px rgba(12,36,56,.04);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+      margin-top: 34px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 26px;
+      box-shadow: 0 12px 30px rgba(12,36,56,.05);
+    }
+
+    .card h3 {
+      margin: 8px 0 10px;
+      color: var(--navy-2);
+      font-size: 1.18rem;
+      line-height: 1.35;
+    }
+
+    .card p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .label {
+      color: var(--teal);
+      font-size: .76rem;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .tags {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .tag {
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: #0e666b;
+      font-size: .78rem;
+      font-weight: 700;
+    }
+
+    .card .data-rel {
+      margin-top: 12px;
+      font-size: .9rem;
+    }
+
+    .animation {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+      gap: 30px;
+      align-items: start;
+      margin-top: 34px;
+      padding: 22px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px rgba(12,36,56,.05);
+    }
+
+    .animation video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 10px;
+      background: var(--navy);
+    }
+
+    .animation-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-items: center;
+    }
+
+    .no-ai {
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: var(--navy-2);
+      color: white;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+
+    .animation h3 {
+      margin: 14px 0 10px;
+      color: var(--navy-2);
+      font-size: 1.3rem;
+      line-height: 1.3;
+    }
+
+    .animation p,
+    .animation-steps {
+      color: var(--muted);
+    }
+
+    .animation-steps {
+      margin: 14px 0 0;
+      padding-left: 20px;
+      font-size: .93rem;
+    }
+
+    .animation-steps li + li {
+      margin-top: 6px;
+    }
+
+    .animation-link {
+      margin: 16px 0 0;
+      font-size: .9rem;
+      font-weight: 750;
+    }
+
+    .animation-link a {
+      text-decoration: none;
+    }
+
+    .animation-pair {
+      grid-template-columns: 1fr;
+    }
+
+    .animation-pair .animation-body p {
+      max-width: 860px;
+    }
+
+    .video-pair {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .video-version {
+      margin: 0;
+    }
+
+    .video-version video {
+      display: block;
+      width: 100%;
+      border-radius: 10px;
+      background: var(--navy);
+    }
+
+    .video-version figcaption {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: .9rem;
+      line-height: 1.5;
+    }
+
+    .video-version figcaption strong {
+      color: var(--navy-2);
+    }
+
+    @media (max-width: 760px) {
+      .video-pair {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .animation-link-sub {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .param-list {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: 8px 16px;
+      margin: 16px 0 0;
+      font-size: .9rem;
+    }
+
+    .param-list dt {
+      color: var(--navy-2);
+      font-weight: 800;
+    }
+
+    .param-list dd {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .video-stack {
+      display: grid;
+      gap: 20px;
+    }
+
+    .animation-note {
+      margin: 14px 0 0;
+      padding-left: 12px;
+      border-left: 3px solid var(--teal);
+      font-size: .9rem;
+    }
+
+    .animation + .animation {
+      margin-top: 26px;
+    }
+
+    .animation-gallery {
+      grid-column: 1 / -1;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+    }
+
+    .animation-gallery h4 {
+      margin: 0 0 6px;
+      color: var(--navy-2);
+      font-size: 1.05rem;
+    }
+
+    .animation-gallery > p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .93rem;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .gallery-grid figure {
+      margin: 0;
+    }
+
+    .gallery-grid img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+
+    .gallery-grid a:hover img,
+    .gallery-grid a:focus-visible img {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(12,36,56,.14);
+    }
+
+    .gallery-grid figcaption {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: .84rem;
+      line-height: 1.45;
+    }
+
+    .gallery-grid figcaption strong {
+      color: var(--navy-2);
+    }
+
+    .lightbox {
+      width: min(1200px, 94vw);
+      max-height: 94vh;
+      padding: 0;
+      border: 0;
+      border-radius: 12px;
+      background: white;
+    }
+
+    .lightbox::backdrop {
+      background: rgba(8, 22, 34, .82);
+    }
+
+    .lightbox img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: calc(94vh - 70px);
+      object-fit: contain;
+    }
+
+    .lightbox-bar {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      color: var(--navy-2);
+      font-size: .9rem;
+      font-weight: 700;
+    }
+
+    .lightbox-bar button {
+      flex: none;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: white;
+      color: var(--navy-2);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    @media (max-width: 900px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .animation {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card .data-link {
+      margin-top: 14px;
+      font-size: .9rem;
+      font-weight: 750;
+    }
+
+    .card .data-link a {
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+
+    .pub-toolbar {
+      margin: 34px 0 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .filter-btn {
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: white;
+      color: #425c72;
+      padding: 9px 13px;
+      border-radius: 999px;
+      font: inherit;
+      font-size: .88rem;
+      font-weight: 750;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: var(--navy-2);
+      color: white;
+      border-color: var(--navy-2);
+    }
+
+    .pub-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .publication {
+      padding: 20px 22px;
+      background: white;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--teal);
+      border-radius: 12px;
+      box-shadow: 0 8px 22px rgba(12,36,56,.04);
+    }
+
+    .publication.hidden {
+      display: none;
+    }
+
+    .publication h3 {
+      margin: 0 0 8px;
+      color: var(--navy-2);
+      font-size: 1rem;
+      line-height: 1.48;
+    }
+
+    .publication p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    .publication a {
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    .status {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: .69rem;
+      font-weight: 850;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      vertical-align: 1px;
+    }
+
+    .status.published {
+      color: #145c43;
+      background: #dff5ea;
+    }
+
+    .status.review {
+      color: #77530b;
+      background: #fff1c9;
+    }
+
+    .status.preprint {
+      color: #2f4f6f;
+      background: #e3ecf5;
+    }
+
+    .timeline {
+      margin-top: 34px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 28px;
+      padding: 26px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .timeline-date {
+      color: var(--teal);
+      font-size: .88rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .timeline-item h3 {
+      margin: 0;
+      color: var(--navy-2);
+      font-size: 1.14rem;
+    }
+
+    .timeline-item h4 {
+      margin: 3px 0 10px;
+      color: var(--muted);
+      font-size: .95rem;
+      font-weight: 650;
+    }
+
+    .timeline-item p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .education-grid,
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 20px;
+      margin-top: 34px;
+    }
+
+    .education-card,
+    .skill-card {
+      padding: 24px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .education-card h3,
+    .skill-card h3 {
+      margin: 0 0 8px;
+      color: var(--navy-2);
+      font-size: 1.08rem;
+    }
+
+    .education-card p,
+    .skill-card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .resource-band {
+      margin-top: 34px;
+      padding: 30px;
+      color: white;
+      background: linear-gradient(135deg, var(--navy-2), var(--teal));
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .resource-band h3 {
+      margin: 0 0 5px;
+      font-size: 1.35rem;
+    }
+
+    .resource-band p {
+      margin: 0;
+      color: #d9eff2;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 26px;
+      margin-top: 34px;
+    }
+
+    .contact-card {
+      padding: 28px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .contact-card h3 {
+      margin-top: 0;
+      color: var(--navy-2);
+    }
+
+    .contact-card ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    footer {
+      padding: 38px 24px;
+      text-align: center;
+      color: #c9d8e2;
+      background: var(--navy);
+    }
+
+    footer a {
+      color: white;
+    }
+
+    @media (max-width: 900px) {
+      .hero-inner,
+      .about-grid,
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-inner {
+        padding-top: 76px;
+      }
+
+      .monogram {
+        width: 190px;
+      }
+
+      .grid,
+      .education-grid,
+      .skills-grid {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stat:nth-child(2) {
+        border-right: 0;
+      }
+
+      .stat:nth-child(-n+2) {
+        border-bottom: 1px solid var(--border);
+      }
+    }
+
+    @media (max-width: 660px) {
+      .nav-inner {
+        display: block;
+      }
+
+      .nav-links {
+        justify-content: flex-start;
+        margin-top: 10px;
+        gap: 8px 14px;
+      }
+
+      .hero-inner {
+        padding: 64px 20px 70px;
+        gap: 40px;
+      }
+
+      main,
+      .stats-wrap {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      section {
+        padding: 60px 0;
+      }
+
+      .grid,
+      .education-grid,
+      .skills-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .resource-band {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+    .recognition {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 30px;
+      align-items: start;
+      margin-top: 30px;
+    }
+
+    .recognition .lead-in {
+      margin-top: 0;
+      color: var(--muted);
+    }
+
+    .fellowships {
+      margin: 0 0 22px;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .fellowships li {
+      padding: 14px 16px;
+      background: white;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--teal);
+      border-radius: 10px;
+      color: var(--navy-2);
+    }
+
+    .fellowships li span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .press-card {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 16px;
+      align-items: center;
+      padding: 12px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none;
+      box-shadow: 0 12px 30px rgba(12,36,56,.05);
+      transition: box-shadow .15s ease, transform .15s ease;
+    }
+
+    .press-card:hover,
+    .press-card:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(12,36,56,.12);
+    }
+
+    .press-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .press-text {
+      display: grid;
+      gap: 4px;
+    }
+
+    .press-source {
+      color: var(--teal);
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .press-title {
+      color: var(--navy-2);
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .press-cta {
+      color: var(--muted);
+      font-size: .88rem;
+      font-weight: 700;
+    }
+
+    .press-card-social {
+      margin-top: 18px;
+    }
+
+    .social-label {
+      margin: 22px 0 10px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .social-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .social-links a {
+      padding: 7px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: white;
+      color: var(--navy-2);
+      font-size: .88rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .social-links a:hover,
+    .social-links a:focus-visible {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    .recognition-photos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 0;
+    }
+
+    .recognition-photos img {
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+    }
+
+    @media (max-width: 900px) {
+      .recognition {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .press-card {
+        grid-template-columns: 1fr;
+      }
+      .recognition-photos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+
+    /* Typography: Times New Roman for headings and text, Calibri for interface labels */
+    :root {
+      --font-serif: "Times New Roman", Times, "Liberation Serif", Tinos, serif;
+      --font-ui: Calibri, Carlito, "Segoe UI", Candara, Arial, sans-serif;
+    }
+
+    body,
+    h1, h2, h3, h4,
+    .section-title,
+    .lightbox-title {
+      font-family: var(--font-serif);
+    }
+
+    h1 {
+      letter-spacing: -.02em;
+    }
+
+    .site-nav,
+    .nav-links a,
+    .brand,
+    .button,
+    .filter-btn,
+    .eyebrow,
+    .section-kicker,
+    .label,
+    .tag,
+    .status,
+    .no-ai,
+    .stat span,
+    .press-source,
+    .press-cta,
+    .social-links a,
+    .lightbox-bar button,
+    .param-list dt,
+    .skip-link,
+    video {
+      font-family: var(--font-ui);
+    }
+
+    .hero-photo {
+      margin: 0;
+      justify-self: end;
+      width: min(100%, 340px);
+    }
+
+    .hero-photo img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      border-radius: 22px;
+      border: 4px solid rgba(255, 255, 255, .18);
+      box-shadow: 0 24px 60px rgba(4, 16, 28, .45);
+    }
+
+    @media (max-width: 900px) {
+      .hero-photo {
+        justify-self: start;
+        width: min(100%, 280px);
+      }
+    }
+
+    .pf-tiles {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .pf-tile {
+      display: block;
+      overflow: hidden;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      text-decoration: none;
+      box-shadow: 0 12px 30px rgba(12,36,56,.05);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+
+    .pf-tile:hover,
+    .pf-tile:focus-visible {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 34px rgba(12,36,56,.13);
+    }
+
+    .pf-tile img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      object-position: center;
+      background: white;
+    }
+
+    .pf-tile span {
+      display: block;
+      padding: 12px 14px;
+      color: var(--navy-2);
+      font-weight: 700;
+    }
+
+    .pf-cta {
+      margin: 26px 0 0;
+    }
+
+    .button.pf-button {
+      background: var(--navy-2);
+      color: white;
+    }
+
+    @media (max-width: 900px) {
+      .pf-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 520px) {
+      .pf-tiles { grid-template-columns: 1fr; }
+    }
+
+    .explore { padding-top: 28px; padding-bottom: 8px; }
+    .explore-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .explore-card { display: block; text-decoration: none; color: inherit; }
+    .explore-card h3 { margin: 6px 0 6px; }
+    .explore-card p { margin: 0; }
+    @media (max-width: 820px) { .explore-grid { grid-template-columns: 1fr; } }
+    #tools { scroll-margin-top: 90px; }
+    .tools-heading { scroll-margin-top: 90px; }
+
+    .tools-heading {
+      margin: 44px 0 0;
+      color: var(--navy-2);
+      font-size: 1.45rem;
+    }
+
+    .tools-grid {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      margin-top: 18px;
+    }
+
+    @media (max-width: 760px) {
+      .tools-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+  <link rel="stylesheet" href="assets/css/terminal.css">
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <nav class="site-nav" aria-label="Primary navigation">
+    <div class="nav-inner">
+      <a class="brand" href="#top">Omid Mansourihanis</a>
+      <div class="nav-links">
+        <a href="#animations">Visualizations</a>
+        <a href="#tools">Interactive</a>
+        <a href="#data">Data</a>
+        <a href="#about">About</a>
+        <a href="#research">Research</a>
+        <a href="#publications">Publications</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#presentations">Presentations</a>
+        <a href="#experience">Experience</a>
+        <a href="#education">Education</a>
+        <a href="#recognition">Recognition</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="hero-inner">
+      <div>
+        <p class="eyebrow">Computational Urban Scientist</p>
+        <h1>Omid<br>Mansourihanis</h1>
+        <h2>PhD Candidate in Geosciences · Geospatial Machine Learning · Urban Analytics · Spatial Justice</h2>
+        <p class="hero-copy">
+          I integrate geospatial machine learning, urban planning, network science, and multi-source spatial data
+          to develop evidence-based tools for more equitable, accessible, resilient, and sustainable cities.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="#animations">Explore Visualizations</a>
+          <a class="button secondary" href="#tools">Interactive Tools</a>
+          <a class="button secondary" href="#publications">Publications</a>
+          <a class="button secondary" href="assets/documents/Omid-Mansourihanis-CV.pdf" target="_blank" rel="noopener">Open Academic CV</a>
+        </div>
+      </div>
+      <figure class="hero-photo">
+        <img src="assets/images/profile-photo.jpg" width="720" height="960"
+             alt="Omid Mansourihanis at his workstation in the Center for Geospatial Technology, Texas Tech University">
+      </figure>
+    </div>
+  </header>
+
+  <div class="stats-wrap" aria-label="Professional highlights">
+    <div class="stats">
+      <div class="stat"><strong>9+ Years</strong><span>Urban GIS and spatial analytics</span></div>
+      <div class="stat"><strong>16</strong><span>Peer-reviewed journal papers</span></div>
+      <div class="stat"><strong>4</strong><span>Manuscripts in review or preprint</span></div>
+      <div class="stat"><strong>3</strong><span>Esri User Conference map presentations</span></div>
+    </div>
+  </div>
+
+  <main id="main">
+    <section id="explore" class="explore">
+      <div class="grid explore-grid">
+        <a class="card explore-card" href="#animations">
+          <span class="label">7 video walkthroughs</span>
+          <h3>Visualizations and projects &rarr;</h3>
+          <p>3D GIS models, airspace and high-rise studies, and map-based explainers of real planning work.</p>
+        </a>
+        <a class="card explore-card" href="#tools">
+          <span class="label">2 interactive tools</span>
+          <h3>Interactive tools &rarr;</h3>
+          <p>A 3D viewer of building rules and a household-level epidemic simulation, in the browser.</p>
+        </a>
+        <a class="card explore-card" href="#data">
+          <span class="label">7 open datasets</span>
+          <h3>Data and code &rarr;</h3>
+          <p>Reproducibility packages on Mendeley Data under CC BY 4.0, with notebooks and code.</p>
+        </a>
+      </div>
+    </section>
+
+    <section id="animations">
+      <p class="section-kicker">Animated walkthroughs</p>
+      <h2 class="section-title">Selected Visualizations and Projects</h2>
+      <p class="section-lead">
+        Video walkthroughs of selected projects and spatial analyses, from 3D GIS models to map-based explainers
+        of real planning work. The label on each card says how it was made.
+      </p>
+
+      <article class="animation">
+        <div class="animation-media">
+          <video controls preload="metadata" playsinline
+                 poster="assets/images/land-use-compatibility-3d-poster.jpg?v=2"
+                 aria-describedby="anim-luc-desc">
+            <source src="assets/videos/land-use-compatibility-3d-animation.mp4" type="video/mp4">
+            Your browser cannot play this video.
+            <a href="assets/videos/land-use-compatibility-3d-animation.mp4">Download the MP4</a> instead.
+          </video>
+        </div>
+
+        <div class="animation-body">
+          <div class="animation-meta">
+            <span class="no-ai">Made without AI</span>
+            <span class="tag">2021</span>
+            <span class="tag">ArcGIS ArcScene</span>
+            <span class="tag">4 min 10 s</span>
+          </div>
+          <h3>Land-use compatibility assessment in 3D</h3>
+          <p id="anim-luc-desc">
+            A step-by-step 3D walkthrough of a cell-based model that scores how compatible every pair of land uses is,
+            using neighborhood focal analysis in a GIS. I modeled, analyzed, and animated every scene myself in
+            ArcGIS ArcScene in 2021. No AI tools were used at any stage.
+          </p>
+          <ol class="animation-steps">
+            <li>A hypothetical district is built from cubes, one per land use, on the ground and on upper floors of one- to four-story buildings.</li>
+            <li>Each cube's center point is linked to its neighbors, so every pair of land uses can be evaluated one by one.</li>
+            <li>For a selected central land use, all connections within its radius of influence are scored. Closer pairs carry more weight.</li>
+            <li>A compatibility matrix rates each pair on five levels, from fully compatible through neutral to fully incompatible.</li>
+            <li>The process repeats for every urban cell, with a radius that can range from one neighborhood to the whole city, producing a 3D compatibility map.</li>
+          </ol>
+          <p class="animation-link">
+            Related publications:
+            <a href="https://doi.org/10.3390/land12112083" target="_blank" rel="noopener"><em>Land</em> (2023)</a> ·
+            <a href="https://doi.org/10.1016/j.cities.2026.107734" target="_blank" rel="noopener"><em>Cities</em> (2026)</a>
+          </p>
+        </div>
+      </article>
+
+      <article class="animation">
+        <div class="animation-media">
+          <video controls preload="metadata" playsinline style="aspect-ratio: 960 / 726"
+                 poster="assets/images/airport-airspace-oeaaa-poster.jpg?v=2"
+                 aria-describedby="anim-oeaaa-desc">
+            <source src="assets/videos/airport-airspace-oeaaa-animation.mp4" type="video/mp4">
+            Your browser cannot play this video.
+            <a href="assets/videos/airport-airspace-oeaaa-animation.mp4">Download the MP4</a> instead.
+          </video>
+        </div>
+
+        <div class="animation-body">
+          <div class="animation-meta">
+            <span class="no-ai">Made without AI</span>
+            <span class="tag">2021</span>
+            <span class="tag">ArcGIS ArcScene</span>
+            <span class="tag">OE/AAA</span>
+            <span class="tag">1 min 11 s</span>
+          </div>
+          <h3>Aviation obstruction and airspace analysis: Nowshahr Airport</h3>
+          <p id="anim-oeaaa-desc">
+            An Obstruction Evaluation / Airport Airspace Analysis (OE/AAA) that models the protected airspace around
+            Nowshahr Airport in 3D, to set height limits for tall buildings in neighboring Chalus and to account for
+            flight paths. I modeled and animated every surface myself in ArcGIS ArcScene in 2021, and produced the maps
+            below in GIS the same way. No AI tools were used.
+          </p>
+          <ol class="animation-steps">
+            <li>The runway, with an obstacle-free zone at each end and 1:7 transitional surfaces along its sides.</li>
+            <li>A 1:50 precision approach surface, with 1:40 approach and 1:7 turnaround surfaces extending out over the coast.</li>
+            <li>An inner horizontal surface 4 km around the runway, where buildings must stay below 45 m.</li>
+            <li>A 500 m conical surface rising at 1:20, then a control zone out to 15 km, where the limit is 150 m.</li>
+          </ol>
+          <p class="animation-link">
+            Part of the Comprehensive Feasibility Study for High-Rise Development in Chalus City, a multi-criteria GIS
+            study of 298+ urban blocks prepared for Chalus Municipality with Faam-Zirsakht Consulting Engineers.
+          </p>
+        </div>
+
+        <div class="animation-gallery">
+          <h4>Study maps</h4>
+          <p>The airspace limits were combined with land price, street network, service access, and shadow criteria
+            to rate each block's capacity for high-rise development. Select a map to enlarge it.</p>
+          <div class="gallery-grid">
+            <figure>
+              <a href="assets/images/chalus/chalus-01-aviation-clearance-zone.jpg" class="lightbox-link" target="_blank" rel="noopener">
+                <img src="assets/images/chalus/chalus-01-aviation-clearance-zone-thumb.jpg" alt="Map: Nowshahr Airport aviation clearance zone, Chalus high-rise feasibility study" loading="lazy" width="720" height="509">
+              </a>
+              <figcaption><strong>Nowshahr Airport aviation clearance zone.</strong> All obstacle limitation surfaces at 1:200,000: approach and turnaround areas, the 4 km inner horizontal surface, the 1:20 conical surface, and the 15 km control zone.</figcaption>
+            </figure>
+            <figure>
+              <a href="assets/images/chalus/chalus-02-flight-boundaries-chalus.jpg" class="lightbox-link" target="_blank" rel="noopener">
+                <img src="assets/images/chalus/chalus-02-flight-boundaries-chalus-thumb.jpg" alt="Map: Flight boundaries over Chalus City, Chalus high-rise feasibility study" loading="lazy" width="720" height="509">
+              </a>
+              <figcaption><strong>Flight boundaries over Chalus City.</strong> Surface slopes (1:7, 1:20, 1:40, 1:50) and radii drawn over the city, showing where each height limit applies.</figcaption>
+            </figure>
+            <figure>
+              <a href="assets/images/chalus/chalus-03-flight-boundaries-blocks.jpg" class="lightbox-link" target="_blank" rel="noopener">
+                <img src="assets/images/chalus/chalus-03-flight-boundaries-blocks-thumb.jpg" alt="Map: Flight boundaries and proposed development blocks, Chalus high-rise feasibility study" loading="lazy" width="720" height="509">
+              </a>
+              <figcaption><strong>Flight boundaries and proposed development blocks.</strong> Each proposed block overlaid on the airspace surfaces, so its height ceiling can be read directly.</figcaption>
+            </figure>
+            <figure>
+              <a href="assets/images/chalus/chalus-04-land-price.jpg" class="lightbox-link" target="_blank" rel="noopener">
+                <img src="assets/images/chalus/chalus-04-land-price-thumb.jpg" alt="Map: Land price, Chalus high-rise feasibility study" loading="lazy" width="720" height="509">
+              </a>
+              <figcaption><strong>Land price.</strong> Blocks reclassified by land value into five classes of economic efficiency for high-rise development.</figcaption>
+            </figure>
+            <figure>
+              <a href="assets/images/chalus/chalus-05-street-connectivity.jpg" class="lightbox-link" target="_blank" rel="noopener">
+                <img src="assets/images/chalus/chalus-05-street-connectivity-thumb.jpg" alt="Map: Street network connectivity, Chalus high-rise feasibility study" loading="lazy" width="720" height="509">
+              </a>
+              <figcaption><strong>Street network connectivity.</strong> Blocks rated against street-network connectivity standards, from undesirable to optimal.</figcaption>
+            </figure>
+            <figure>
+              <a href="assets/images/chalus/chalus-06-street-performance.jpg" class="lightbox-link" target="_blank" rel="noopener">
+                <img src="assets/images/chalus/chalus-06-street-performance-thumb.jpg" alt="Map: Street network functional performance, Chalus high-rise feasibility study" loading="lazy" width="720" height="509">
+              </a>
+              <figcaption><strong>Street network functional performance.</strong> Blocks rated by network performance, with the major trip and population attraction centers marked.</figcaption>
+            </figure>
+            <figure>
+              <a href="assets/images/chalus/chalus-07-welfare-access.jpg" class="lightbox-link" target="_blank" rel="noopener">
+                <img src="assets/images/chalus/chalus-07-welfare-access-thumb.jpg" alt="Map: Access to public welfare services, Chalus high-rise feasibility study" loading="lazy" width="720" height="509">
+              </a>
+              <figcaption><strong>Access to public welfare services.</strong> Block-level accessibility to public services, in five classes from poor to good.</figcaption>
+            </figure>
+            <figure>
+              <a href="assets/images/chalus/chalus-08-shadow-impact.jpg" class="lightbox-link" target="_blank" rel="noopener">
+                <img src="assets/images/chalus/chalus-08-shadow-impact-thumb.jpg" alt="Map: High-rise shadow impact, Chalus high-rise feasibility study" loading="lazy" width="720" height="509">
+              </a>
+              <figcaption><strong>High-rise shadow impact.</strong> Blocks rated by how much shadow tall buildings would cast on their surroundings.</figcaption>
+            </figure>
+            <figure>
+              <a href="assets/images/chalus/chalus-09-final-overlay.jpg" class="lightbox-link" target="_blank" rel="noopener">
+                <img src="assets/images/chalus/chalus-09-final-overlay-thumb.jpg" alt="Map: Final criteria overlay, Chalus high-rise feasibility study" loading="lazy" width="720" height="509">
+              </a>
+              <figcaption><strong>Final criteria overlay.</strong> All criteria combined into block-level high-rise development capacity, from minimum to maximum potential.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="animation">
+        <div class="animation-media">
+          <video controls preload="metadata" playsinline style="aspect-ratio: 16 / 9"
+                 poster="assets/images/chalus-highrise-feasibility-poster.jpg"
+                 aria-describedby="anim-chalus-desc">
+            <source src="assets/videos/chalus-highrise-feasibility.mp4" type="video/mp4">
+            Your browser cannot play this video.
+            <a href="assets/videos/chalus-highrise-feasibility.mp4">Download the MP4</a> instead.
+          </video>
+        </div>
+
+        <div class="animation-body">
+          <div class="animation-meta">
+            <span class="tag">ArcGIS (ArcMap)</span>
+            <span class="tag">Multi-criteria analysis</span>
+            <span class="tag">3D shadow modelling</span>
+            <span class="tag">3 min</span>
+          </div>
+          <h3>High-rise development feasibility in Chalus</h3>
+          <p id="anim-chalus-desc">
+            A GIS-based multi-criteria assessment of where high-rise and infill development can fit inside the legal
+            boundary of Chalus, a coastal city of about 65,000 people between the Caspian Sea and the Alborz Mountains.
+            National and provincial rules were reviewed, then six groups of criteria were evaluated and combined into a
+            block-level capacity map. Prepared for Chalus Municipality with Faam-Zirsakht Consulting Engineers; I worked
+            in the core team as GIS and urban-planning analyst and produced most of the spatial analyses and maps.
+          </p>
+          <ol class="animation-steps">
+            <li><strong>Regulations:</strong> national high-rise rules, the Mazandaran spatial plan and the
+              Nowshahr&ndash;Chalus regional plan.</li>
+            <li><strong>Social environment:</strong> 2016 census indicators per statistical block (literacy, unemployment,
+              urban poverty, vacant land, crowding, school access), each compared with a benchmark.</li>
+            <li><strong>Economics:</strong> unit cost per m&sup2; modelled against height (+10% construction cost per
+              added floor), giving the optimal number of floors <em>n*</em> = &radic;(10&middot;LP / (BCR&middot;BP<sub>1</sub>)).</li>
+            <li><strong>Land use and services:</strong> parcel-level land use and network-based service areas for fire,
+              sport, cultural, health and education facilities.</li>
+            <li><strong>Movement and form:</strong> road hierarchy and average maximum speed, a figure&ndash;ground map
+              and plot orientation from each plot's longest axis.</li>
+            <li><strong>Shadows:</strong> plots raised from +1 to +25 floors (3.2&nbsp;m each), shadows modelled in 3D,
+              flattened to footprints and scored by frequency and area.</li>
+            <li><strong>Environment and safeguarding:</strong> terrain, geology, wind zones, the Alborz Protected Area,
+              Nowshahr Airport's obstacle limitation surfaces, and heritage, utility and hazard buffers.</li>
+            <li><strong>Synthesis:</strong> standardised, hierarchically weighted overlay aggregated to proposed blocks
+              in five capacity classes, from minimum to maximum.</li>
+          </ol>
+        </div>
+      </article>
+
+      <article class="animation animation-pair">
+        <div class="animation-body">
+          <div class="animation-meta">
+            <span class="no-ai">Made without AI</span>
+            <span class="tag">2021</span>
+            <span class="tag">ArcGIS ArcScene</span>
+            <span class="tag">2 versions</span>
+            <span class="tag">44M+ spatiotemporal records</span>
+          </div>
+          <h3>Traffic flow simulation of Sari, Iran</h3>
+          <p id="anim-sari-desc">
+            A 3D simulation of vehicles moving through the street network of Sari, built from more than 44 million
+            spatiotemporal records that were generated and processed for the model. Each vehicle is a 3D symbol moving
+            along its route over time. I built and animated it
+            myself in ArcGIS ArcScene in 2021. No AI tools were used.
+          </p>
+        </div>
+
+        <div class="video-pair">
+          <figure class="video-version">
+            <video controls preload="metadata" playsinline style="aspect-ratio: 960 / 704"
+                   poster="assets/images/sari-traffic-flow-v1-poster.jpg?v=2" aria-label="City traffic flow">
+              <source src="assets/videos/sari-traffic-flow-simulation-v1.mp4" type="video/mp4">
+              Your browser cannot play this video.
+              <a href="assets/videos/sari-traffic-flow-simulation-v1.mp4">Download the MP4</a> instead.
+            </video>
+            <figcaption><strong>Version 1: City traffic flow.</strong> Vehicles across the whole city on a dark basemap, shown in different colors, from a city-wide view down to street level.</figcaption>
+          </figure>
+          <figure class="video-version">
+            <video controls preload="metadata" playsinline style="aspect-ratio: 960 / 704"
+                   poster="assets/images/sari-public-transport-v2-poster.jpg?v=2" aria-label="Public transportation">
+              <source src="assets/videos/sari-public-transport-simulation-v2.mp4" type="video/mp4">
+              Your browser cannot play this video.
+              <a href="assets/videos/sari-public-transport-simulation-v2.mp4">Download the MP4</a> instead.
+            </video>
+            <figcaption><strong>Version 2: Public transportation.</strong> Buses (larger cubes) and taxis (smaller cubes) moving along their routes on a light basemap.</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <article class="animation">
+        <div class="animation-media video-stack">
+          <figure class="video-version">
+            <video controls preload="metadata" playsinline style="aspect-ratio: 16 / 9"
+                   poster="assets/images/covid19-nowruz-sari-poster.jpg?v=2"
+                   aria-describedby="anim-covid-desc" aria-label="Original 2020 simulation">
+              <source src="assets/videos/covid19-nowruz-sari-simulation.mp4" type="video/mp4">
+              Your browser cannot play this video.
+              <a href="assets/videos/covid19-nowruz-sari-simulation.mp4">Download the MP4</a> instead.
+            </video>
+            <figcaption><strong>Original study, 2020 (4 min).</strong> The model as I first built and presented it:
+              the reasoning, the family-visit rules, and the city-wide simulation from 21 March.</figcaption>
+          </figure>
+          <figure class="video-version">
+            <video controls preload="metadata" playsinline style="aspect-ratio: 16 / 9"
+                   poster="assets/images/covid19-nowruz-sari-2026-poster.jpg?v=2"
+                   aria-label="2026 reconstruction, animated explainer">
+              <source src="assets/videos/covid19-nowruz-sari-2026-reconstruction.mp4" type="video/mp4">
+              Your browser cannot play this video.
+              <a href="assets/videos/covid19-nowruz-sari-2026-reconstruction.mp4">Download the MP4</a> instead.
+            </video>
+            <figcaption><strong>Reconstruction, 2026 (1 min 37 s, no sound).</strong> A rebuilt animated explainer that
+              follows one chain of infection from family to parents&rsquo; home to in-laws, then the whole city day by day.
+              In this run, 82% of households were infected within three weeks and 95% by day 60. When half the families
+              skipped the visits, 49% were still reached.</figcaption>
+          </figure>
+        </div>
+
+        <div class="animation-body">
+          <div class="animation-meta">
+            <span class="tag">2020</span>
+            <span class="tag">Rebuilt 2026</span>
+            <span class="tag">Spatial simulation</span>
+            <span class="tag">360,000 residents</span>
+          </div>
+          <h3>One visit is enough: COVID-19 and Nowruz visiting in Sari</h3>
+          <p id="anim-covid-desc">
+            In March 2020, Nowruz began just as COVID-19 was spreading in Iran, and many families kept the custom of
+            visiting their parents. This household-level simulation of a city the size of Sari asks what happens if every
+            family stays home <em>except</em> to visit its parents, and shows how far the virus travels through that one exception.
+          </p>
+          <ol class="animation-steps">
+            <li>360,000 residents are placed on a 600 &times; 600 grid, one cell per person.</li>
+            <li>Neighbouring cells are grouped at random into 60,000 households. One in four, 15,000 in all, play the role of parents&rsquo; homes.</li>
+            <li>Each family is linked to its own parents&rsquo; home, the nearest one by Thiessen polygons, and to its in-laws elsewhere in the city.</li>
+            <li>About 1,000 people are infected on 21 March, following the Ministry of Health estimate for Sari, and each infects their own household first.</li>
+            <li>Families visit only their parents or in-laws, never at the same time, and the virus passes only inside homes.</li>
+          </ol>
+          <p class="animation-note">
+            Even with every visit kept separate, a parents&rsquo; home picks up the virus from one family and passes it to the next.
+            Because each family belongs to two such homes, these clusters chain together. In the original 2020 model, the virus
+            reached every household in about three weeks. This illustrates a mechanism. It is not a forecast and is not calibrated to reported cases.
+          </p>
+          <p class="animation-link">
+            <a href="simulations/covid-nowruz-sari/">Run the interactive simulation yourself &rarr;</a>
+            <span class="animation-link-sub">Play it day by day, zoom into a neighbourhood, and test what happens when some families skip the visit.</span>
+          </p>
+        </div>
+      </article>
+
+      <article class="animation">
+        <div class="animation-media">
+          <video controls preload="metadata" playsinline style="aspect-ratio: 960 / 526"
+                 poster="assets/images/walkability-poster.jpg?v=2"
+                 aria-describedby="anim-walk-desc">
+            <source src="assets/videos/walkability-optimal-routes.mp4" type="video/mp4">
+            Your browser cannot play this video.
+            <a href="assets/videos/walkability-optimal-routes.mp4">Download the MP4</a> instead.
+          </video>
+        </div>
+
+        <div class="animation-body">
+          <div class="animation-meta">
+            <span class="no-ai">Made without AI</span>
+            <span class="tag">ArcGIS ArcScene</span>
+            <span class="tag">MCDM</span>
+            <span class="tag">Network analysis</span>
+            <span class="tag">2 min 39 s</span>
+          </div>
+          <h3>Optimal walking routes for elderly health</h3>
+          <p id="anim-walk-desc">
+            A parametric GIS model that finds the most comfortable walking routes, not just the shortest, with priority for
+            elderly and disabled pedestrians. It was tested on a hypothetical city of ten zones (A&ndash;J) and transfers to
+            any city with the input data. I modeled and animated it myself in ArcGIS ArcScene. No AI tools were used.
+          </p>
+          <dl class="param-list">
+            <dt>Criteria</dt>
+            <dd>15: path width, sunlight and shade, night lighting, temperature, noise, odor, slope, runoff drainage,
+              pavement quality, view, parks, enclosure, transit stops, retail, land-use compatibility</dd>
+            <dt>Scale</dt>
+            <dd>Each criterion reclassified on the street network from 1 to 5</dd>
+            <dt>Weighting</dt>
+            <dd>Pairwise comparison (AHP/ANP), combined in an MCDM overlay</dd>
+            <dt>Routing</dt>
+            <dd>Network analysis with the Dijkstra algorithm</dd>
+            <dt>Result</dt>
+            <dd>Optimal walking routes differed from the shortest routes by about 40&ndash;50%</dd>
+          </dl>
+        </div>
+      </article>
+
+      <article class="animation">
+        <div class="animation-media">
+          <video controls preload="metadata" playsinline style="aspect-ratio: 960 / 656"
+                 poster="assets/images/crowd-poster.jpg?v=2"
+                 aria-describedby="anim-crowd-desc">
+            <source src="assets/videos/crowd-construction-waste-tehran.mp4" type="video/mp4">
+            Your browser cannot play this video.
+            <a href="assets/videos/crowd-construction-waste-tehran.mp4">Download the MP4</a> instead.
+          </video>
+        </div>
+
+        <div class="animation-body">
+          <div class="animation-meta">
+            <span class="no-ai">Made without AI</span>
+            <span class="tag">ArcGIS ArcScene</span>
+            <span class="tag">GIS optimization</span>
+            <span class="tag">3 min 3 s</span>
+          </div>
+          <h3>CROWD: reusing construction waste in Tehran</h3>
+          <p id="anim-crowd-desc">
+            Tehran demolishes old buildings and issues new building permits every day. This GIS model links the two:
+            waste from demolished dilapidated buildings is separated and stored in nearby warehouses, then sent to the sites
+            where new construction permits were issued. I modeled and animated it myself in ArcGIS ArcScene. No AI tools were used.
+          </p>
+          <dl class="param-list">
+            <dt>City</dt>
+            <dd>Tehran: 730+ km&sup2;, 8.6+ million people, 1.5 million buildings</dd>
+            <dt>Dilapidated</dt>
+            <dd>About 300,000 buildings, concentrated in the south and southeast, with some in the north near the heights</dd>
+            <dt>Horizon</dt>
+            <dd>20 years in four 5-year plan periods, with four priority classes from very critical to less critical</dd>
+            <dt>Demolition</dt>
+            <dd>75,000 buildings in the first 5 years, about 40 a day</dd>
+            <dt>New permits</dt>
+            <dd>About 90 a day, or 2.25 for every building demolished</dd>
+            <dt>Network</dt>
+            <dd>12 warehouses for temporary separation and storage (for example, one month), with flows optimized in GIS</dd>
+          </dl>
+        </div>
+      </article>
+
+      <article class="animation">
+        <div class="animation-media">
+          <video controls preload="metadata" playsinline style="aspect-ratio: 16 / 9"
+                 poster="assets/images/sari-zoning-story-poster.jpg"
+                 aria-describedby="anim-zoning-desc">
+            <source src="assets/videos/sari-zoning-story.mp4" type="video/mp4">
+            Your browser cannot play this video.
+            <a href="assets/videos/sari-zoning-story.mp4">Download the MP4</a> instead.
+          </video>
+        </div>
+
+        <div class="animation-body">
+          <div class="animation-meta">
+            <span class="no-ai">No AI imagery</span>
+            <span class="tag">Python &middot; cairo</span>
+            <span class="tag">Zoning &amp; FAR</span>
+            <span class="tag">1 min 50 s</span>
+          </div>
+          <h3>One line in a plan: the Sari zoning story</h3>
+          <p id="anim-zoning-desc">
+            A real project from my seven years at Sari Municipality. When Sari (about 300,000 people) adopted a new
+            detailed plan, some owners gained the right to build more. I found which residential parcels gained building
+            capacity, which led the city to offer reduced permit fees to owners who applied early. Every frame is drawn
+            with Python from my own zoning data: no stock footage, no AI-generated imagery and no web map tiles.
+          </p>
+          <ol class="animation-steps">
+            <li><strong>Data recovery.</strong> The base layers (zoning, cadastral parcels, buildings, existing and
+              proposed street widths) existed only as CAD drawings that past edits had shifted. I georeferenced each one
+              into a single GIS base; the city's cadastral GIS covers more than 185,000 residential units.</li>
+            <li><strong>Overlay and spatial joins</strong> gave every parcel its zone, buildings, street widths and the
+              matching rule set from the plan's proposed alternatives (A to D).</li>
+            <li><strong>Rules per parcel.</strong> Python scripts extracted the coverage, floor, FAR and setback rules
+              for each lot and modeled them lot by lot.</li>
+            <li><strong>Finding the gap.</strong> Where the new limit exceeded what was built, the difference was unused
+              capacity. Its value was estimated, and early applicants were offered reduced fees.</li>
+          </ol>
+          <p class="animation-note">
+            The new zoning map (1,874 polygons) is real and was designed and produced by me. Parcels, buildings and
+            streets are schematic and labeled as illustrations on screen; the code shown is a simplified sketch of the
+            workflow; no money figures or owner counts are shown.
+          </p>
+          <p class="animation-link"><a href="sari-zoning-3d/en/">Explore the proposed rules (Alternative A) in 3D &rarr;</a></p>
+        </div>
+      </article>
+    </section>
+
+    <section id="tools">
+      <p class="section-kicker">Try it in the browser</p>
+      <h2 class="section-title">Interactive tools</h2>
+      <p class="section-lead">Interactive models and viewers built from my planning work and research. They run in the browser with nothing to install.</p>
+
+      <div class="grid tools-grid">
+        <article class="card tool-card">
+          <span class="label">3D Planning Tool · Sari, Iran</span>
+          <h3>Sari Building Rules in 3D</h3>
+          <p>An interactive 3D viewer of the building rules I designed and proposed in 2019 for Sari's detailed plan
+            (Alternative A). Pick a zone, sub-zone, lot-size class, street width and the lot's side of the street to see the
+            allowed coverage, floors, floor-area ratio, setbacks and buildable envelope on a schematic lot. Available in
+            English, with a guide to reading the rules, and in Persian.</p>
+          <div class="tags"><span class="tag">Three.js</span><span class="tag">Zoning</span><span class="tag">FAR</span><span class="tag">Setbacks</span></div>
+          <p class="data-link"><a href="sari-zoning-3d/en/">Open in English &rarr;</a> · <a href="sari-zoning-3d/" lang="fa" dir="rtl" hreflang="fa">نسخهٔ فارسی</a> · <a href="https://github.com/Omid-Mansourihanis/Omid-Mansourihanis.github.io/tree/main/sari-zoning-3d" target="_blank" rel="noopener">Code</a></p>
+        </article>
+
+        <article class="card tool-card">
+          <span class="label">Spatial Simulation · Sari</span>
+          <h3>One visit is enough: COVID-19 and Nowruz</h3>
+          <p>An interactive household-level simulation of 360,000 residents. Play it day by day, zoom into a neighbourhood to see
+            family links, and test what happens when some families skip the Nowruz visit.</p>
+          <div class="tags"><span class="tag">Household-level</span><span class="tag">Thiessen polygons</span><span class="tag">Scenarios</span></div>
+          <p class="data-link"><a href="simulations/covid-nowruz-sari/">Run the simulation &rarr;</a></p>
+        </article>
+      </div>
+    </section>
+
+    <section id="data">
+      <p class="section-kicker">Open Science</p>
+      <h2 class="section-title">Data and code</h2>
+      <p class="section-lead">
+        Datasets and reproducibility packages published on Mendeley Data under a CC BY 4.0 license.
+        Each link resolves to the latest version.
+      </p>
+
+      <div class="grid">
+        <article class="card">
+          <span class="label">Transportation</span>
+          <h3>Block-level traffic Level of Service and urban form predictors for four U.S. cities</h3>
+          <p>Congestion index and three-class Level of Service for the 2024 weekday morning peak across 131,507 census blocks in Chicago, Houston, Los Angeles, and New York City, with 46 predictors, per-city files, a data dictionary, a reproduction notebook, and checksums. Proprietary probe data are excluded.</p>
+          <p class="data-rel">Supports <em>What predicts urban traffic congestion?</em> (in revision)</p>
+          <div class="tags"><span class="tag">131,507 blocks</span><span class="tag">Reproduction notebook</span></div>
+          <p class="data-link"><a href="https://doi.org/10.17632/4ghf42bs96" target="_blank" rel="noopener">Mendeley Data · doi:10.17632/4ghf42bs96</a></p>
+        </article>
+
+        <article class="card">
+          <span class="label">Transportation</span>
+          <h3>Causal feature importance dataset for urban traffic Level of Service</h3>
+          <p>Earlier analysis matrix for the same four-city congestion study: 134,530 census blocks with 46 upstream predictors in six categories and congestion outcomes, built from probe, Census/ACS, city open data, OpenStreetMap, EPA, and state DOT sources. Includes model analysis code.</p>
+          <div class="tags"><span class="tag">134,530 blocks</span><span class="tag">Model code</span></div>
+          <p class="data-link"><a href="https://doi.org/10.17632/tbdn8yhs83" target="_blank" rel="noopener">Mendeley Data · doi:10.17632/tbdn8yhs83</a></p>
+        </article>
+
+        <article class="card">
+          <span class="label">Housing</span>
+          <h3>GeoAI-driven housing affordability: predicting rent burden across New York City</h3>
+          <p>Replication package for a block-level rent-burden analysis using 2020 ACS five-year estimates: 37,816 blocks with 394 cleaned attributes, Random Forest and XGBoost predictions, LISA clusters, K-means affordability typologies, model artifacts, and maps.</p>
+          <div class="tags"><span class="tag">37,816 blocks</span><span class="tag">XGBoost</span><span class="tag">LISA</span></div>
+          <p class="data-link"><a href="https://doi.org/10.17632/hspnm9pycj" target="_blank" rel="noopener">Mendeley Data · doi:10.17632/hspnm9pycj</a></p>
+        </article>
+
+        <article class="card">
+          <span class="label">Transit Equity</span>
+          <h3>Cincinnati Metro transit network vulnerability analysis</h3>
+          <p>Graph-theoretic vulnerability analysis of the SORTA weekday bus network built from GTFS: 3,532 stops and 4,048 directed edges, PCA-based vulnerability scores from four centrality metrics, four disruption scenarios, Census equity overlays, shapefiles, and a Colab notebook.</p>
+          <div class="tags"><span class="tag">GTFS</span><span class="tag">Network analysis</span><span class="tag">Colab</span></div>
+          <p class="data-link"><a href="https://doi.org/10.17632/knxmkcsg9m" target="_blank" rel="noopener">Mendeley Data · doi:10.17632/knxmkcsg9m</a></p>
+        </article>
+
+        <article class="card">
+          <span class="label">Urban Networks</span>
+          <h3>Graph-theoretic urban planning: Fairfax and Alexandria, Virginia</h3>
+          <p>Multi-layer network comparison of transport, points of interest, and green infrastructure: cleaned walk and drive networks, minimum spanning trees, Chinese Postman routes, POI layers, node tables, figures, and a reproducibility manifest.</p>
+          <div class="tags"><span class="tag">Shapefiles</span><span class="tag">Graph algorithms</span></div>
+          <p class="data-link"><a href="https://doi.org/10.17632/dprvtz5c4p" target="_blank" rel="noopener">Mendeley Data · doi:10.17632/dprvtz5c4p</a></p>
+        </article>
+
+        <article class="card">
+          <span class="label">Routing Algorithms</span>
+          <h3>The geometric directed Chinese Postman Problem</h3>
+          <p>Code and data for a directed Chinese Postman Problem with angle-dependent turn costs: a two-stage algorithm, integer-programming reference solvers, synthetic instance generators, baselines, and an OpenStreetMap pipeline. Results regenerate on a free CPU runtime in about 10–25 minutes.</p>
+          <div class="tags"><span class="tag">Python</span><span class="tag">Integer programming</span><span class="tag">OSM</span></div>
+          <p class="data-link"><a href="https://doi.org/10.17632/vsdt2wpspw" target="_blank" rel="noopener">Mendeley Data · doi:10.17632/vsdt2wpspw</a></p>
+        </article>
+
+        <article class="card">
+          <span class="label">Routing Algorithms</span>
+          <h3>The geometric directed Chinese Postman Problem under angle-monotone turn costs</h3>
+          <p>Reproducibility package for a two-stage approximation algorithm: Python source, tests including more than 500 perturbation tests, synthetic instance generators, raw logs, an OpenStreetMap pipeline, and a single script that reproduces the results.</p>
+          <div class="tags"><span class="tag">Python</span><span class="tag">Approximation</span><span class="tag">Tests</span></div>
+          <p class="data-link"><a href="https://doi.org/10.17632/z9vv2zywyr" target="_blank" rel="noopener">Mendeley Data · doi:10.17632/z9vv2zywyr</a></p>
+        </article>
+      </div>
+
+    </section>
+
+    <section id="about">
+      <p class="section-kicker">Profile</p>
+      <h2 class="section-title">Research built for real urban decisions</h2>
+      <p class="section-lead">
+        My work connects advanced spatial computation with planning practice, emphasizing interpretable methods,
+        reproducible workflows, and equity-centered policy insights.
+      </p>
+
+      <div class="about-grid">
+        <div class="about-copy">
+          <p>
+            I am a computational urban researcher and PhD candidate in Geosciences at Texas Tech University.
+            My research examines how urban form, infrastructure, environmental exposure, mobility, and social
+            vulnerability interact across neighborhoods and metropolitan systems.
+          </p>
+          <p>
+            I have professional experience spanning municipal GIS, transportation planning, infrastructure
+            management, urban policy, spatial databases, emergency response, and geospatial education.
+            This combination allows me to translate analytical findings into practical planning and management tools.
+          </p>
+          <p>
+            My current work emphasizes geospatial machine learning, causal analysis, network modeling,
+            environmental justice, land-use compatibility, transportation equity, and complex urban systems.
+          </p>
+        </div>
+
+        <ul class="focus-list" aria-label="Research focus areas">
+          <li>Geospatial machine learning and spatial explainability</li>
+          <li>Complex urban systems and network science</li>
+          <li>Transportation, accessibility, and mobility equity</li>
+          <li>Environmental justice and cumulative burden</li>
+          <li>Urban sensing, remote sensing, and policy informatics</li>
+          <li>Geospatial big data and reproducible research</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="research">
+      <p class="section-kicker">Selected Work</p>
+      <h2 class="section-title">Research and technical project areas</h2>
+      <p class="section-lead">
+        Selected themes drawn from my academic research, municipal practice, and geospatial application development.
+      </p>
+
+      <div class="grid">
+        <article class="card">
+          <span class="label">In Revision</span>
+          <h3>What Predicts Urban Traffic Congestion?</h3>
+          <p>
+            An interpretable machine-learning analysis of structural and behavioral correlates of congestion
+            across census blocks in four major U.S. cities, with tract-grouped validation and cross-city transfer tests.
+          </p>
+          <div class="tags"><span class="tag">Causal ML</span><span class="tag">Urban Mobility</span><span class="tag">GeoPandas</span></div>
+        </article>
+
+        <article class="card">
+          <span class="label">Published · Cities 2026</span>
+          <h3>Machine Learning for Land-Use Compatibility</h3>
+          <p>
+            Empirical and interpretable methods for evaluating neighborhood-scale land-use compatibility beyond
+            traditional Euclidean zoning assumptions.
+          </p>
+          <div class="tags"><span class="tag">GIScience</span><span class="tag">XGBoost</span><span class="tag">Urban Planning</span></div>
+        </article>
+
+        <article class="card">
+          <span class="label">Environmental Equity</span>
+          <h3>Environmental Justice and Risk Distribution</h3>
+          <p>
+            Spatial analysis of hurricane risk, social vulnerability, geographic exposure, environmental burden,
+            and emergency relief disparities.
+          </p>
+          <div class="tags"><span class="tag">Environmental Justice</span><span class="tag">Risk</span><span class="tag">Spatial Equity</span></div>
+        </article>
+
+        <article class="card">
+          <span class="label">Applied GIS</span>
+          <h3>Emergency Response and Accessibility</h3>
+          <p>
+            Accessibility analysis, response-time assessment, real-time dashboards, and mobile incident-management
+            workflows supporting emergency operations and public safety.
+          </p>
+          <div class="tags"><span class="tag">Network Analysis</span><span class="tag">Dashboards</span><span class="tag">Field GIS</span></div>
+        </article>
+
+        <article class="card">
+          <span class="label">Urban Data Systems</span>
+          <h3>Spatial Databases and Smart-City Infrastructure</h3>
+          <p>
+            Design and management of cadastral, transportation, fiber-optic, municipal asset, parking,
+            permitting, and public-service geodatabases.
+          </p>
+          <div class="tags"><span class="tag">PostGIS</span><span class="tag">Geodatabase</span><span class="tag">Smart Cities</span></div>
+        </article>
+
+        <article class="card">
+          <span class="label">Urban Environment</span>
+          <h3>Remote Sensing and Environmental Monitoring</h3>
+          <p>
+            Web-based applications and spatial models using NDVI, NAIP imagery, nighttime lights,
+            tourism-related emissions, green infrastructure, and climate-sensitive urban indicators.
+          </p>
+          <div class="tags"><span class="tag">Remote Sensing</span><span class="tag">GEE</span><span class="tag">Urban Sustainability</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="publications">
+      <p class="section-kicker">Scholarship</p>
+      <h2 class="section-title">Publications</h2>
+      <p class="section-lead">
+        Peer-reviewed journal articles, newest first, followed by manuscripts in review and preprints. Use the filters to focus the list.
+      </p>
+
+      <div class="pub-toolbar" role="group" aria-label="Publication filters">
+        <button type="button" class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" class="filter-btn" data-filter="published" aria-pressed="false">Published</button>
+        <button type="button" class="filter-btn" data-filter="review" aria-pressed="false">In Review &amp; Preprints</button>
+      </div>
+
+      <div class="pub-list">
+        <article class="publication" data-type="published">
+          <h3>Toward evidence-based zoning: A machine learning framework for land use compatibility assessment <span class="status published">Published</span></h3>
+          <p><strong>Mansourihanis, O.</strong>, &amp; Wang, X. (2026). <em>Cities, 179</em>, 107734. <a href="https://doi.org/10.1016/j.cities.2026.107734" target="_blank" rel="noopener">DOI</a></p>
+        </article>
+
+        <article class="publication" data-type="published">
+          <h3>Integrating framework for urban rivers restoration: Incorporating Holon System Theory, dynamic planning, fragmented governance, and adaptive pathways <span class="status published">Published</span></h3>
+          <p>Kookhaei, T., Darabi, H., Azadi, H., &amp; <strong>Mansourihanis, O.</strong> (2026). <em>Cities, 174</em>, 106986. <a href="https://doi.org/10.1016/j.cities.2026.106986" target="_blank" rel="noopener">DOI</a></p>
+        </article>
+
+        <article class="publication" data-type="published">
+          <h3>Promoting sustainable urban tourism in historic Sari, Iran through GIS-based walkability planning <span class="status published">Published</span></h3>
+          <p><strong>Mansourihanis, O.</strong>, Soltani, A., &amp; RoohaniQadikolaei, M. (2026). <em>Scientific Reports, 16</em>(1), 5746. <a href="https://doi.org/10.1038/s41598-024-63807-0" target="_blank" rel="noopener">DOI</a></p>
+        </article>
+
+        <article class="publication" data-type="published">
+          <h3>Post-earthquake recovery: GIS-driven prioritization of urban transportation networks in Sari, Iran <span class="status published">Published</span></h3>
+          <p><strong>Mansourihanis, O.</strong>, Maghsoodi Tilaki, M. J., Tayarani, M., &amp; Zaroujtaghi, A. (2026). <em>International Journal of Transportation Science and Technology</em>. <a href="https://doi.org/10.1016/j.ijtst.2025.09.005" target="_blank" rel="noopener">DOI</a></p>
+        </article>
+
+        <article class="publication" data-type="published">
+          <h3>Equity in crisis response: A spatial analysis of emergency relief disparities <span class="status published">Published</span></h3>
+          <p><strong>Mansourihanis, O.</strong>, Wang, X., Tayarani, M., Maghsoodi Tilaki, M. J., Gao, H. O., &amp; Zaroujtaghi, A. (2025). <em>Cities, 165</em>, 106128. <a href="https://doi.org/10.1016/j.cities.2025.106128" target="_blank" rel="noopener">DOI</a></p>
+        </article>
+
+        <article class="publication" data-type="published">
+          <h3>A systematic review of GIS evolution in transportation planning: Towards AI integration <span class="status published">Published</span></h3>
+          <p>Zaroujtaghi, A., <strong>Mansourihanis, O.</strong>, Tayarani, M., Mansouri, F., Hemmati, M., &amp; Soltani, A. (2025). <em>Future Transportation, 5</em>(3), 97. <a href="https://doi.org/10.3390/futuretransp5030097" target="_blank" rel="noopener">DOI</a></p>
+        </article>
+
+        <article class="publication" data-type="published">
+          <h3>Challenging environmental justice assumptions: Geographic dominance over social vulnerability in Texas hurricane risk distribution <span class="status published">Published</span></h3>
+          <p><strong>Mansourihanis, O.</strong>, Seyedebrahimi, E., Zaroujtaghi, A., &amp; Zafari, T. (2025). <em>Journal of Geovisualization and Spatial Analysis, 9</em>, 39. <a href="https://doi.org/10.1007/s41651-025-00239-y" target="_blank" rel="noopener">DOI</a></p>
+        </article>
+
+        <article class="publication" data-type="published">
+          <h3>Evolution and prospects of Geographic Information Systems (GIS) applications in urban crime analysis: A review of literature <span class="status published">Published</span></h3>
+          <p><strong>Mansourihanis, O.</strong>, Maghsoodi Tilaki, M. J., Armitage, R., &amp; Zaroujtaghi, A. (2025). <em>Remote Sensing Applications: Society and Environment, 38</em>, 101583. <a href="https://doi.org/10.1016/j.rsase.2025.101583" target="_blank" rel="noopener">DOI</a></p>
+        </article>
+
+        <article class="publication" data-type="published">
+          <h3>Integrating geospatial intelligence and spatio-temporal modeling for monitoring tourism-related carbon emissions in the United States <span class="status published">Published</span></h3>
+          <p><strong>Mansourihanis, O.</strong>, Maghsoodi Tilaki, M. J., Kookhaei, T., Zaroujtaghi, A., Sheikhfarshi, S., &amp; Abdoli, N. (2025). <em>Management of Environmental Quality, 36</em>(1), 107–129. <a href="https://doi.org/10.1108/MEQ-04-2024-0156" target="_blank" rel="noopener">DOI</a></p>
+        </article>
+
+        <article class="publication" data-type="published">
+          <h3>Exploring the role of location-based games in managing tourist destinations under climate change challenges: A gap analysis review <span class="status published">Published</span></h3>
+          <p><strong>Mansourihanis, O.</strong>, Hemmati, M., Afshar, S. V., Eshaghi, S., &amp; Varinlioğlu, G. (2025). <em>Case Studies in the Environment, 9</em>(1), 2439123. <a href="https://doi.org/10.1525/cse.2025.2439123" target="_blank" rel="noopener">DOI</a></p>
+        </article>
+
+        <article class="publication" data-type="published">
+          <h3>From conventional approaches to circular systems: Evolution of waste management in mega-sporting events <span class="status published">Published</span></h3>
+          <p>Zafari, Z., Golzary, A., Rouhi, K., &amp; <strong>Mansourihanis, O.</strong> (2025). <em>Journal of the Air &amp; Waste Management Association, 75</em>(5), 368–386. <a href="https://doi.org/10.1080/10962247.2025.2462005" target="_blank" rel="noopener">DOI</a></p>
+        </article>
+
+        <article class="publication" data-type="published">
+          <h3>Inequalities in emergency service accessibility: Spatial analysis of urban infrastructure <span class="status published">Published</span></h3>
+          <p><strong>Mansourihanis, O.</strong>, Maghsoodi Tilaki, M. J., Zaroujtaghi, A., Tayarani, M., &amp; Sheikhfarshi, S. (2024). <em>Journal of Place Management and Development, 17</em>(4), 584–614. <a href="https://doi.org/10.1108/JPMD-04-2024-0031" target="_blank" rel="noopener">DOI</a></p>
+        </article>
+
+        <article class="publication" data-type="published">
+          <h3>Two decades of geospatial evolution: Tracing the analytical journey towards data-driven road crash prevention <span class="status published">Published</span></h3>
+          <p>Soltani, A., <strong>Mansourihanis, O.</strong>, RoohaniQadikolaei, M., &amp; Zaroujtaghi, A. (2024). <em>Applied Spatial Analysis and Policy, 17</em>(3), 1301–1334. <a href="https://doi.org/10.1007/s12061-024-09587-6" target="_blank" rel="noopener">DOI</a></p>
+        </article>
+
+        <article class="publication" data-type="published">
+          <h3>Addressing urban management challenges for sustainable development: Analyzing the impact of neighborhood deprivation on crime distribution in Chicago <span class="status published">Published</span></h3>
+          <p><strong>Mansourihanis, O.</strong>, Maghsoodi Tilaki, M. J., Sheikhfarshi, S., Mohseni, F., &amp; Seyedebrahimi, E. (2024). <em>Societies, 14</em>(8), 139. <a href="https://doi.org/10.3390/soc14080139" target="_blank" rel="noopener">DOI</a></p>
+        </article>
+
+        <article class="publication" data-type="published">
+          <h3>Unraveling the tourism-environment-equity nexus: A neighborhood-scale analysis of Texas urban centers <span class="status published">Published</span></h3>
+          <p><strong>Mansourihanis, O.</strong>, Zaroujtaghi, A., Hemmati, M., Maghsoodi Tilaki, M. J., &amp; Alipour, M. (2024). <em>Urban Science, 8</em>(3), 82. <a href="https://doi.org/10.3390/urbansci8030082" target="_blank" rel="noopener">DOI</a></p>
+        </article>
+
+        <article class="publication" data-type="published">
+          <h3>A computational geospatial approach to assessing land-use compatibility in urban planning <span class="status published">Published</span></h3>
+          <p><strong>Mansourihanis, O.</strong>, Maghsoodi Tilaki, M. J., Yousefian, S., &amp; Zaroujtaghi, A. (2023). <em>Land, 12</em>(11), 2083. <a href="https://doi.org/10.3390/land12112083" target="_blank" rel="noopener">DOI</a></p>
+        </article>
+
+        <article class="publication" data-type="review">
+          <h3>What predicts urban traffic congestion? An interpretable machine learning analysis of structural and behavioral correlates across four major U.S. cities <span class="status review">In Revision</span></h3>
+          <p><strong>Mansourihanis, O.</strong>, &amp; Wang, X. <a href="https://doi.org/10.17632/4ghf42bs96" target="_blank" rel="noopener">Dataset &amp; code</a></p>
+        </article>
+
+        <article class="publication" data-type="review">
+          <h3>Strategic complementarities and coordination failures in urban active transport: Game-theoretic evidence from 33,054 Chicago census blocks <span class="status review">Under Review</span></h3>
+          <p><strong>Mansourihanis, O.</strong>, &amp; Wang, X. <em>Travel Behaviour and Society</em>. <a href="https://doi.org/10.31235/osf.io/ye6hf_v1" target="_blank" rel="noopener">Preprint</a></p>
+        </article>
+
+        <article class="publication" data-type="review">
+          <h3>Cross-scale fractal coherence and surface urban heat island: A block-level analysis of hierarchical morphology in New York City <span class="status preprint">Preprint</span></h3>
+          <p><strong>Mansourihanis, O.</strong>, &amp; Wang, X. ESSOAr (2026). <a href="https://doi.org/10.22541/essoar.15004231/v1" target="_blank" rel="noopener">Preprint</a></p>
+        </article>
+
+        <article class="publication" data-type="review">
+          <h3>Cross-scale fractal coherence: Hierarchical multifractal analysis of urban form and environmental stress in four U.S. megacities <span class="status preprint">Preprint</span></h3>
+          <p><strong>Mansourihanis, O.</strong>, &amp; Wang, X. OSF (2026). <a href="https://doi.org/10.31235/osf.io/85zr7_v1" target="_blank" rel="noopener">Preprint</a></p>
+        </article>
+      </div>
+    </section>
+
+    <section id="portfolio">
+      <p class="section-kicker">Mapping and Research Portfolio</p>
+      <h2 class="section-title">Maps, models and practice</h2>
+      <p class="section-lead">
+        22 research projects and a decade of planning practice in seven themes: hazard exposure and environmental justice,
+        emergency access and resilience, inequality and GeoAI, remote sensing, urban form and heat, land use and zoning,
+        and municipal practice.
+      </p>
+      <div class="pf-tiles">
+          <a class="pf-tile" href="portfolio/#nyc">
+            <img src="portfolio/img/nyc-1-thumb.jpg" alt="Emergency access, NYC" loading="lazy">
+            <span>Emergency access, NYC</span>
+          </a>
+          <a class="pf-tile" href="portfolio/#fractal">
+            <img src="portfolio/img/fractal-1-thumb.jpg" alt="Fractal coherence, 4 megacities" loading="lazy">
+            <span>Fractal coherence, 4 megacities</span>
+          </a>
+          <a class="pf-tile" href="portfolio/#hurricane">
+            <img src="portfolio/img/hurricane-1-thumb.jpg" alt="Hurricane risk and EJ, Texas" loading="lazy">
+            <span>Hurricane risk and EJ, Texas</span>
+          </a>
+          <a class="pf-tile" href="portfolio/#walking">
+            <img src="portfolio/img/walking-1-thumb.jpg" alt="Walking equilibria, Chicago" loading="lazy">
+            <span>Walking equilibria, Chicago</span>
+          </a>
+          <a class="pf-tile" href="portfolio/#zoning">
+            <img src="portfolio/img/zoning-1-thumb.jpg" alt="Evidence-based zoning" loading="lazy">
+            <span>Evidence-based zoning</span>
+          </a>
+          <a class="pf-tile" href="portfolio/#earthquake">
+            <img src="portfolio/img/earthquake-1-thumb.jpg" alt="Post-earthquake network, Sari" loading="lazy">
+            <span>Post-earthquake network, Sari</span>
+          </a>
+      </div>
+      <p class="pf-cta"><a class="button primary pf-button" href="portfolio/">Open the full portfolio &rarr;</a></p>
+    </section>
+
+    <section id="presentations">
+      <p class="section-kicker">Research Communication</p>
+      <h2 class="section-title">Selected map presentations</h2>
+
+      <div class="grid">
+        <article class="card">
+          <span class="label">Esri UC 2025</span>
+          <h3>Integrating Geospatial Intelligence and Spatio-Temporal Modeling</h3>
+          <p>Bivariate mapping and temporal correlation for sustainable tourism policy.</p>
+          <p><a href="https://mapgallery.esri.com/submission-detail/39646" target="_blank" rel="noopener">View map-gallery entry</a></p>
+        </article>
+
+        <article class="card">
+          <span class="label">Esri UC 2024</span>
+          <h3>Promoting Sustainable Urban Tourism in Historic Sari</h3>
+          <p>GIS and AHP-based optimization of pedestrian routes in a historic urban core.</p>
+          <p><a href="https://www.esri.com/en-us/about/events/uc/agenda/virtual-map-gallery#/event/65b4098aec8645b4cedb266f/submission-detail/35664" target="_blank" rel="noopener">View map-gallery entry</a></p>
+        </article>
+
+        <article class="card">
+          <span class="label">Esri UC 2024</span>
+          <h3>Inequalities in Emergency Service Accessibility</h3>
+          <p>Spatial relationships among emergency response, crash severity, infrastructure, and urban safety.</p>
+          <p><a href="https://www.esri.com/en-us/about/events/uc/agenda/virtual-map-gallery#/event/65b4098aec8645b4cedb266f/submission-detail/35676" target="_blank" rel="noopener">View map-gallery entry</a></p>
+        </article>
+      </div>
+    </section>
+
+    <section id="experience">
+      <p class="section-kicker">Professional Path</p>
+      <h2 class="section-title">Academic and applied experience</h2>
+
+      <div class="timeline">
+        <article class="timeline-item">
+          <div class="timeline-date">2022–Present</div>
+          <div>
+            <h3>Geospatial Researcher</h3>
+            <h4>Center for Geospatial Technology · Texas Tech University</h4>
+            <p>
+              Research in nighttime lights, transportation safety, V2X and driving risk, building safety,
+              electric-vehicle policy, web geovisualization, urban crime, water systems, and cyberinfrastructure.
+            </p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <div class="timeline-date">2021–2022</div>
+          <div>
+            <h3>Advisor to the CEO</h3>
+            <h4>Transportation Network Management and Engineering Organization · Sari Municipality</h4>
+            <p>
+              Automated GIS workflows and supported traffic-monitoring placement, municipal bus routing,
+              intersection redesign, and transportation data integration.
+            </p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <div class="timeline-date">2015–2021</div>
+          <div>
+            <h3>GIS Specialist → Head GIS Analyst</h3>
+            <h4>Sari Municipality · Information Technology, Planning, and Transportation Departments</h4>
+            <p>
+              Led cadastral, land-use, infrastructure, accessibility, asset-management, smart-parking,
+              fiber-network, permitting, and urban-planning GIS initiatives.
+            </p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <div class="timeline-date">2011–2020</div>
+          <div>
+            <h3>Urban and Regional Planning Consultant</h3>
+            <h4>Municipal and consulting organizations in Iran</h4>
+            <p>
+              Delivered spatial planning, disaster-risk assessment, coastal-zone management, high-rise feasibility,
+              waste-routing, utilities, telecommunications, and environmental-monitoring analyses.
+            </p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <div class="timeline-date">2015–2022</div>
+          <div>
+            <h3>Instructor and Technical Trainer</h3>
+            <h4>GIRS Academy · Payame Noor University · Sari Municipality</h4>
+            <p>
+              Taught GIS, quantitative urban modeling, spatial planning, Python, geospatial big-data analysis,
+              spatial statistics, GeoPandas, ArcGIS, QGIS, and geodatabase management.
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="education">
+      <p class="section-kicker">Education</p>
+      <h2 class="section-title">Academic training</h2>
+
+      <div class="education-grid">
+        <article class="education-card">
+          <h3>PhD in Geosciences (GISciences)</h3>
+          <p>Texas Tech University · GPA 3.96</p>
+        </article>
+        <article class="education-card">
+          <h3>MS in Urban Management</h3>
+          <p>University of Tehran · GPA 3.70</p>
+        </article>
+        <article class="education-card">
+          <h3>BS in Urban Planning and Design</h3>
+          <p>University of Mazandaran · GPA 3.65</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="recognition">
+      <p class="section-kicker">Media Appearances and Recognition</p>
+      <h2 class="section-title">PhD fellowships</h2>
+
+      <div class="recognition">
+        <div class="recognition-body">
+          <p class="lead-in">
+            In 2024 I received two fellowships at Texas Tech University for my PhD research on sustainable and equitable
+            city development using geospatial analytics:
+          </p>
+          <ul class="fellowships">
+            <li><strong>Elo and Olga Urbanovsky Fellowship</strong> <span>2024&ndash;2027</span></li>
+            <li><strong>Covenant Health and Social Services Graduate Fellowship</strong></li>
+          </ul>
+
+          <a class="press-card" href="https://www.depts.ttu.edu/artsandsciences/CurrentStudents/news_briefs/TTU_Doctoral_Student_Earns_Fellowships_for_Urban_Planning_Research.php" target="_blank" rel="noopener">
+            <img src="assets/images/recognition/press-ttu-article.jpg" alt="Screenshot of the Texas Tech College of Arts &amp; Sciences news article" loading="lazy">
+            <span class="press-text">
+              <span class="press-source">Texas Tech University · College of Arts &amp; Sciences · July 2024</span>
+              <span class="press-title">TTU Doctoral Student Earns Fellowships for Urban Planning Research</span>
+              <span class="press-cta">Read the article &rarr;</span>
+            </span>
+          </a>
+
+          <p class="social-label">Featured on Texas Tech Arts &amp; Sciences social media</p>
+          <div class="social-links">
+            <a href="https://www.instagram.com/p/C87G9EQsQT0/" target="_blank" rel="noopener">Instagram</a>
+            <a href="https://www.facebook.com/TTUArtsSciences" target="_blank" rel="noopener">Facebook</a>
+            <a href="https://www.linkedin.com/feed/update/urn:li:activity:7213910544863440896" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://x.com/TTUArtsSciences/status/1808144857388429454" target="_blank" rel="noopener">X (Twitter)</a>
+          </div>
+
+          <a class="press-card press-card-social" href="https://www.instagram.com/p/C87G9EQsQT0/" target="_blank" rel="noopener">
+            <img src="assets/images/recognition/press-instagram.jpg" alt="Screenshot of the Texas Tech Arts &amp; Sciences Instagram post" loading="lazy">
+            <span class="press-text">
+              <span class="press-source">Instagram · @ttuartssciences · July 2024</span>
+              <span class="press-title">Featured post on the two fellowships</span>
+              <span class="press-cta">View the post &rarr;</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="recognition-photos gallery-grid">
+          <figure>
+            <a href="assets/images/recognition/portrait.jpg" class="lightbox-link" target="_blank" rel="noopener">
+              <img src="assets/images/recognition/portrait-thumb.jpg" alt="Omid Mansourihanis: Portrait at Texas Tech University" loading="lazy">
+            </a>
+            <figcaption><strong>Featured portrait.</strong></figcaption>
+          </figure>
+          <figure>
+            <a href="assets/images/recognition/geosciences.jpg" class="lightbox-link" target="_blank" rel="noopener">
+              <img src="assets/images/recognition/geosciences-thumb.jpg" alt="Omid Mansourihanis: In front of the Geosciences building, Texas Tech University" loading="lazy">
+            </a>
+            <figcaption><strong>Geosciences building.</strong></figcaption>
+          </figure>
+          <figure>
+            <a href="assets/images/recognition/ttu-seal.jpg" class="lightbox-link" target="_blank" rel="noopener">
+              <img src="assets/images/recognition/ttu-seal-thumb.jpg" alt="Omid Mansourihanis: At the Texas Tech University seal, Lubbock" loading="lazy">
+            </a>
+            <figcaption><strong>Texas Tech seal.</strong></figcaption>
+          </figure>
+          <figure>
+            <a href="assets/images/recognition/office.jpg" class="lightbox-link" target="_blank" rel="noopener">
+              <img src="assets/images/recognition/office-thumb.jpg" alt="Omid Mansourihanis: At the Center for Geospatial Technology" loading="lazy">
+            </a>
+            <figcaption><strong>Center for Geospatial Technology.</strong></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <p class="section-kicker">Capabilities</p>
+      <h2 class="section-title">Technical toolkit</h2>
+
+      <div class="skills-grid">
+        <article class="skill-card">
+          <h3>Geospatial Platforms</h3>
+          <p>ArcGIS Pro, ArcGIS Online, Enterprise, Dashboards, Experience Builder, StoryMaps, QGIS, Google Earth Engine</p>
+        </article>
+        <article class="skill-card">
+          <h3>Programming and Data Science</h3>
+          <p>Python, GeoPandas, Pandas, NumPy, scikit-learn, TensorFlow, Jupyter, SQL, R, JavaScript</p>
+        </article>
+        <article class="skill-card">
+          <h3>Spatial Data and Databases</h3>
+          <p>PostGIS, PostgreSQL, geodatabase design, spatial queries, data integration, quality assurance</p>
+        </article>
+        <article class="skill-card">
+          <h3>Analytics</h3>
+          <p>Spatial statistics, ensemble learning, causal analysis, network analysis, optimization, time-series analysis</p>
+        </article>
+        <article class="skill-card">
+          <h3>Visualization</h3>
+          <p>Matplotlib, Plotly, Tableau, Power BI, ArcScene, 3D geovisualization, web mapping</p>
+        </article>
+        <article class="skill-card">
+          <h3>Planning and Engagement</h3>
+          <p>Urban planning, environmental equity, accessibility, participatory GIS, Delphi methods, policy analysis</p>
+        </article>
+      </div>
+
+      <div class="resource-band">
+        <div>
+          <h3>Academic CV</h3>
+          <p>View the full record of publications, research, professional experience, projects, teaching, and service.</p>
+        </div>
+        <a class="button primary" href="assets/documents/Omid-Mansourihanis-CV.pdf" target="_blank" rel="noopener">View CV PDF</a>
+      </div>
+    </section>
+
+    <section id="contact">
+      <p class="section-kicker">Connect</p>
+      <h2 class="section-title">Collaboration and contact</h2>
+      <p class="section-lead">
+        I welcome research collaboration and professional conversations involving geospatial machine learning,
+        urban systems, transportation, environmental justice, spatial databases, and sustainable development.
+      </p>
+
+      <div class="contact-grid">
+        <article class="contact-card">
+          <h3>Academic Contact</h3>
+          <p><strong>Email:</strong> <a href="mailto:omansour@ttu.edu">omansour@ttu.edu</a></p>
+          <p><strong>Affiliation:</strong> Texas Tech University</p>
+          <p><strong>Location:</strong> Fairfax, Virginia, United States</p>
+        </article>
+
+        <article class="contact-card">
+          <h3>Online Profiles</h3>
+          <ul>
+            <li><a href="https://github.com/Omid-Mansourihanis" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="https://www.linkedin.com/in/omid-mansourihanis14ab784/" target="_blank" rel="noopener">LinkedIn</a></li>
+            <li><a href="https://scholar.google.com/citations?user=GrMkyjQAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a></li>
+            <li><a href="https://orcid.org/0009-0007-3009-2902" target="_blank" rel="noopener">ORCID</a></li>
+            <li><a href="https://www.researchgate.net/profile/Omid-Mansourihanis" target="_blank" rel="noopener">ResearchGate</a></li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    © <span id="year"></span> Omid Mansourihanis · Hosted with GitHub Pages
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const buttons = document.querySelectorAll(".filter-btn");
+    const publications = document.querySelectorAll(".publication");
+
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        buttons.forEach(item => {
+          item.classList.remove("active");
+          item.setAttribute("aria-pressed", "false");
+        });
+        button.classList.add("active");
+        button.setAttribute("aria-pressed", "true");
+        const filter = button.dataset.filter;
+
+        publications.forEach(publication => {
+          const match = filter === "all" || publication.dataset.type === filter;
+          publication.classList.toggle("hidden", !match);
+        });
+      });
+    });
+  </script>
+
+  <dialog class="lightbox" id="lightbox" aria-label="Enlarged map">
+    <img src="" alt="">
+    <div class="lightbox-bar">
+      <span class="lightbox-title"></span>
+      <button type="button" data-close>Close</button>
+    </div>
+  </dialog>
+
+  <script>
+    (() => {
+      const box = document.getElementById("lightbox");
+      if (!box || typeof box.showModal !== "function") return;
+      const img = box.querySelector("img");
+      const title = box.querySelector(".lightbox-title");
+      document.querySelectorAll(".lightbox-link").forEach(link => {
+        link.addEventListener("click", event => {
+          event.preventDefault();
+          const thumb = link.querySelector("img");
+          img.src = link.getAttribute("href");
+          img.alt = thumb ? thumb.alt : "";
+          const caption = link.closest("figure")?.querySelector("figcaption strong");
+          title.textContent = caption ? caption.textContent.replace(/\.$/, "") : "";
+          box.showModal();
+        });
+      });
+      box.querySelector("[data-close]").addEventListener("click", () => box.close());
+      box.addEventListener("click", event => { if (event.target === box) box.close(); });
+      box.addEventListener("close", () => { img.src = ""; });
+    })();
+  </script>
+</body>
+</html>
