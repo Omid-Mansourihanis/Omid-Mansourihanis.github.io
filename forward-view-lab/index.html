@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forward View Lab · Omid Mansourihanis</title>
+<meta name="description" content="An interactive 3D lab for the forward-view index: 73 rays, a look-ahead distance R and the opening θ(R), measured from building footprints on an illustrative street, in English and Persian.">
+<meta name="author" content="Omid Mansourihanis">
+<link rel="canonical" href="https://omid-mansourihanis.github.io/forward-view-lab/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 15 L1 4 A10 10 0 0 1 15 4 Z' fill='%23d8322b'/%3E%3C/svg%3E">
+<script type="importmap">{"imports":{"three":"../sari-zoning-3d/vendor/three.module.js","three/addons/":"../sari-zoning-3d/vendor/addons/"}}</script>
+<style>
+@font-face{font-family:Vazirmatn;src:url('../sari-zoning-3d/fonts/Vazirmatn-Variable.woff2') format('woff2');font-weight:100 900;font-display:swap}
+/* VOICE everyday learning: a lab bench, calm and exact
+   IDEA the illustrative district of the author's own video, but with the driver in the viewer's hand
+   PICTURE a live 3D block with 73 red rays and the opening drawn large beside it; below, a plan-view canyon bench
+   COLOUR warm concrete ground, light grey massing, signal red for open rays, ink for numbers
+   TYPE Times New Roman titles and Calibri text as on the main site; Vazirmatn for Persian
+   LAYOUT title row, then the scene full width with a numbers rail; controls under it; lab in two columns, stacked on phones */
+:root{color-scheme:light dark;--bg:light-dark(#f4f1ea,#15171a);--panel:light-dark(#ffffff,#1e2125);--ink:light-dark(#1d1c1a,#ecebe6);--ink2:light-dark(#5d5a54,#b3b0a8);--rule:light-dark(#dcd7cc,#33363b);--red:#d8322b;--red2:light-dark(#f6d9d6,#4a2522);--grey:light-dark(#9c978d,#7c7a74);--blue:light-dark(#1f5fae,#7fb1ee);--good:light-dark(#13784f,#5fd3a0)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 Vazirmatn,Calibri,Carlito,'Segoe UI',Arial,sans-serif;overflow-x:clip}
+body[dir=ltr]{font-family:Calibri,Carlito,'Segoe UI',Arial,Vazirmatn,sans-serif;font-size:17px}
+.back{font-size:14px;color:var(--ink2);text-decoration:none;display:inline-block;margin-bottom:10px}
+.back:hover{text-decoration:underline}
+.band{padding:clamp(20px,3.4vw,44px) max(4vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+h1,h2{font-family:'Times New Roman',Times,'Liberation Serif',Tinos,serif;font-weight:600;line-height:1.1;letter-spacing:-.01em;margin:0;text-wrap:balance}
+body[dir=rtl] h1,body[dir=rtl] h2{font-family:Vazirmatn,serif;font-weight:700;letter-spacing:0}
+h1{font-size:clamp(28px,4vw,44px)}
+h2{font-size:clamp(22px,2.8vw,32px)}
+.top{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:end;justify-content:space-between;margin-bottom:14px}
+.sub{color:var(--ink2);margin:.35em 0 0;max-width:62ch}
+.lang{display:flex;border:1px solid var(--rule);border-radius:999px;overflow:hidden;flex:none}
+.lang button{border:0;background:transparent;color:var(--ink2);font:inherit;font-size:14px;padding:8px 16px;min-height:40px;cursor:pointer}
+.lang button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:14px}
+@media(max-width:860px){.stage{grid-template-columns:minmax(0,1fr)}}
+.scene{position:relative;height:clamp(360px,56vw,560px);border-radius:10px;overflow:hidden;background:#e9e5dc;touch-action:none}
+.scene canvas{display:block;width:100%;height:100%}
+.tag{position:absolute;bottom:10px;inset-inline-start:10px;background:#ffffffd9;color:#5d5a54;font-size:13px;padding:3px 10px;border-radius:999px}
+.views{position:absolute;top:10px;inset-inline-start:10px;display:flex;gap:6px}
+.views button,.btn{border:1px solid var(--rule);background:var(--panel);color:var(--ink);font:inherit;font-size:14px;padding:8px 14px;min-height:44px;border-radius:8px;cursor:pointer}
+.views button{background:#fffffff0;color:#1d1c1a;border-color:#d7d2c7}
+.views button[aria-pressed=true],.btn[aria-pressed=true]{outline:2px solid var(--red);outline-offset:-2px}
+.btn:focus-visible,.lang button:focus-visible,.views button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.rail{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.big{font:700 clamp(44px,6vw,64px)/1 Calibri,Carlito,'Segoe UI',Arial,sans-serif;color:var(--red);font-variant-numeric:tabular-nums;direction:ltr;text-align:start}
+.lbl{color:var(--ink2);font-size:14px}
+.kv{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--rule);padding-top:8px;font-size:15px}
+.kv b{font-family:Calibri,Carlito,'Segoe UI',Arial,sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap;direction:ltr}
+.note{font-size:13px;color:var(--ink2);margin:0}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 22px;margin-top:14px;align-items:end}
+.ctl label{display:flex;justify-content:space-between;font-size:14px;color:var(--ink2);margin-bottom:2px}
+.ctl label output{font-family:Calibri,Carlito,'Segoe UI',Arial,sans-serif;color:var(--ink);font-weight:500;direction:ltr;white-space:nowrap}
+input[type=range]{width:100%;height:44px;accent-color:var(--red);margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.prof{margin-top:16px;background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:12px 14px}
+.fig{position:relative;height:170px}.fig>svg{position:absolute;inset:0;width:100%;height:100%;direction:ltr}
+.lab{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;margin-top:16px}
+@media(max-width:860px){.lab{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:14px 16px}
+.plan{height:clamp(320px,40vw,430px)}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(9em,1fr));gap:10px;margin:6px 0 10px}
+.res div{border-top:2px solid var(--rule);padding-top:6px}
+.res b{display:block;font:700 26px/1.1 Calibri,Carlito,'Segoe UI',Arial,sans-serif;font-variant-numeric:tabular-nums;direction:ltr;text-align:start}
+.res .r b{color:var(--red)}
+.badge{display:inline-block;font-size:13px;padding:2px 10px;border-radius:999px;background:var(--red2);color:var(--ink)}
+.badge.ok{background:color-mix(in srgb,var(--good) 22%,transparent)}
+svg text{font:13px Calibri,Carlito,'Segoe UI',Arial,sans-serif;fill:var(--ink2);paint-order:stroke;stroke:var(--panel);stroke-width:4px}
+footer{color:var(--ink2);font-size:14px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body dir="ltr">
+<section class="band"><div class="wrap">
+  <div class="top">
+    <div>
+      <a class="back" href="/" data-i="back"></a>
+      <h1 data-i="t1"></h1>
+      <p class="sub" data-i="s1"></p>
+    </div>
+    <div class="lang" role="group" aria-label="language"><button id="len" aria-pressed="true">English</button><button id="lfa" aria-pressed="false" lang="fa">فارسی</button></div>
+  </div>
+
+  <div class="stage">
+    <div class="scene" id="scene">
+      <div class="views"><button id="v3d" aria-pressed="true" data-i="v3d"></button><button id="vplan" aria-pressed="false" data-i="vplan"></button></div>
+      <span class="tag" data-i="illus"></span>
+    </div>
+    <aside class="rail" aria-live="polite">
+      <div class="lbl" data-i="theta"></div>
+      <div class="big" id="th">0°</div>
+      <div class="kv"><span data-i="open"></span><b id="nopen"></b></div>
+      <div class="kv"><span data-i="walls"></span><b id="wlr"></b></div>
+      <div class="kv"><span data-i="closed"></span><b id="thc"></b></div>
+      <div class="kv"><span data-i="speed"></span><b id="mph"></b></div>
+      <p class="note" data-i="railnote"></p>
+    </aside>
+  </div>
+
+  <div class="controls">
+    <div class="ctl"><label for="R"><span data-i="R"></span><output id="Ro"></output></label><input id="R" type="range" min="20" max="240" step="5" value="80"></div>
+    <div class="ctl"><label for="pos"><span data-i="pos"></span><output id="poso"></output></label><input id="pos" type="range" min="10" max="290" step="1" value="150"></div>
+    <div class="ctl"><div class="lbl" data-i="street"></div><div class="chips" id="streets"></div></div>
+    <div class="ctl"><button class="btn" id="drive" aria-pressed="false" data-i="drive"></button></div>
+  </div>
+
+  <div class="prof">
+    <div class="lbl" data-i="proft"></div>
+    <div class="fig" id="profile"><svg></svg></div>
+  </div>
+</div></section>
+
+<section class="band" style="border-top:1px solid var(--rule)"><div class="wrap">
+  <h2 data-i="t2"></h2>
+  <p class="sub" data-i="s2"></p>
+  <div class="lab">
+    <div class="card">
+      <div class="fig plan" id="plan"><svg></svg></div>
+    </div>
+    <div class="card">
+      <div class="res">
+        <div class="r"><span class="lbl" data-i="theta"></span><b id="lth"></b></div>
+        <div><span class="lbl" data-i="closed"></span><b id="lthc"></b></div>
+        <div><span class="lbl" data-i="resid"></span><b id="lres"></b></div>
+        <div><span class="lbl" data-i="gap"></span><b id="lgap"></b></div>
+      </div>
+      <p><span class="badge" id="clean"></span></p>
+      <div class="controls" style="margin-top:4px">
+        <div class="ctl"><label for="wl"><span data-i="wl"></span><output id="wlo"></output></label><input id="wl" type="range" min="5" max="150" step="1" value="22"></div>
+        <div class="ctl"><label for="wr"><span data-i="wr"></span><output id="wro"></output></label><input id="wr" type="range" min="5" max="150" step="1" value="22"></div>
+        <div class="ctl"><label for="lR"><span data-i="R"></span><output id="lRo"></output></label><input id="lR" type="range" min="20" max="240" step="5" value="80"></div>
+        <div class="ctl"><label for="gw"><span data-i="gw"></span><output id="gwo"></output></label><input id="gw" type="range" min="0" max="120" step="5" value="0"></div>
+      </div>
+      <div class="lbl" style="margin-top:10px" data-i="presets"></div>
+      <div class="chips" id="presets"></div>
+      <p class="note" style="margin-top:10px" data-i="labnote"></p>
+    </div>
+  </div>
+</div></section>
+
+<footer class="band"><div class="wrap" data-i="foot"></div></footer>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/OrbitControls.js';
+{
+/* ---------- text ---------- */
+const T = {
+ fa: {back:'→ امید منصوری‌حنیس', t1:'آزمایشگاه دید رو به جلو', s1:'راننده را روی خیابان جابه‌جا کنید، فاصله‌ی نگاه را عوض کنید، و ببینید ۷۳ پرتو چطور زاویه‌ی باز را می‌سازند. هر عدد همین حالا با منطق geometry.js حساب می‌شود.',
+  v3d:'سه‌بعدی', vplan:'پلان', illus:'محله‌ی نمادین', theta:'زاویه‌ی باز θ(R)', open:'پرتوهای باز', walls:'دیوار چپ / راست', closed:'فرمول بسته θc', speed:'سرعت متناظر (T = 2 s)',
+  railnote:'پرتو قرمز دست‌کم R فوت جلو می‌رود؛ پرتو خاکستری زودتر به ساختمان می‌خورد. θ = ۲.۵ درجه × تعداد پرتوهای قرمز (با سقف ۱۸۰).',
+  R:'فاصله‌ی نگاه R', pos:'جای راننده در بلوک', street:'خیابان', drive:'▶ رانندگی در بلوک', stop:'■ توقف',
+  proft:'θ(R) در طول بلوک، برای همین R. نقطه‌ی قرمز جای فعلی راننده است؛ خط‌چین‌ها ۳۰ و ۷۰ درصد طول بلوک‌اند، جایی که پنج نقطه‌ی نمونه گذاشته می‌شوند.',
+  t2:'میز کار دره: شمارش در برابر فرمول', s2:'دو دیوار موازی، یک خیابان فرعی اختیاری، و همه‌ی شاخص‌های فصل ۱ جزوه. نمونه‌ها همان مثال‌های جزوه‌اند.',
+  resid:'باقیمانده θ − θc', gap:'سهم شکاف جبهه', wl:'فاصله‌ی دیوار چپ', wr:'فاصله‌ی دیوار راست', gw:'پهنای خیابان فرعی (راست)', presets:'مثال‌های جزوه',
+  clean:'دره‌ی تمیز: |θ − θc| ≤ ۵°', notclean:'دره‌ی تمیز نیست: |θ − θc| > ۵°',
+  labnote:'فاصله‌ی دیوار مثل geometry.js از میانه‌ی پرتوهای ۷۰ تا ۹۰ درجه گرفته می‌شود؛ برای همین در دره‌ی ۴۴ فوتی ۲۲.۳۴ و θc برابر ۳۲.۴ است (جزوه، بخش ۱.۷).',
+  foot:'بخش‌های ۱ و ۲ · محله نمادین است، نه داده‌ی واقعی · محاسبه‌ها: ۷۳ پرتو، ۲.۵ درجه، حداکثر ۱۲۰۰ فوت، فاصله‌ی دیوار از میانه‌ی پرتوهای ۷۰ تا ۹۰ درجه، سقف ۱۸۰ درجه · امید منصوری‌حنیس',
+  st:{local:'محلی ۴۴ فوت', avenue:'اونیو ۱۰۴ فوت', side:'محلی با خیابان فرعی'},
+  pr:{a:'دره‌ی ۴۴ فوتی', b:'دره‌ی ۱۰۴ فوتی', c:'نامتقارن ۲۰ / ۱۰۰', d:'خیابان فرعی (مثال ۱.۵)'}},
+ en: {back:'← Omid Mansourihanis', t1:'Forward view lab', s1:'Move the driver along the street, change the look-ahead distance, and watch 73 rays build the opening. Every number is computed live with the logic of geometry.js.',
+  v3d:'3D', vplan:'Plan', illus:'Illustrative district', theta:'Opening θ(R)', open:'Open rays', walls:'Left / right wall', closed:'Closed form θc', speed:'Matching speed (T = 2 s)',
+  railnote:'A red ray travels at least R ft; a grey ray meets a building first. θ = 2.5° × the number of red rays (capped at 180).',
+  R:'Look-ahead R', pos:'Driver position in the block', street:'Street', drive:'▶ Drive the block', stop:'■ Stop',
+  proft:'θ(R) along the block at this R. The red dot is the driver; dashed lines mark 30% and 70% of the block, where the five sample points go.',
+  t2:'Canyon bench: counting versus the formula', s2:'Two parallel walls, an optional side street, and every measure from chapter 1 of the handout. The presets are the handout examples.',
+  resid:'Residual θ − θc', gap:'Frontage gap share', wl:'Left wall distance', wr:'Right wall distance', gw:'Side street width (right)', presets:'Handout examples',
+  clean:'Clean canyon: |θ − θc| ≤ 5°', notclean:'Not a clean canyon: |θ − θc| > 5°',
+  labnote:'As in geometry.js, wall distance is the median of the rays at 70 to 90 degrees, so the 44 ft canyon gives 22.34 ft and θc = 32.4 (handout, section 1.7).',
+  foot:'Sections 1 and 2 · illustrative district, not real data · 73 rays at 2.5°, max 1,200 ft, wall distance from the median of rays at 70–90°, capped at 180° · Omid Mansourihanis',
+  st:{local:'Local, 44 ft', avenue:'Avenue, 104 ft', side:'Local with side street'},
+  pr:{a:'44 ft canyon', b:'104 ft canyon', c:'Asymmetric 20 / 100', d:'Side street (example 1.5)'}}
+};
+let lang = 'fa';
+const fa = s => lang === 'fa' ? String(s).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]) : String(s);
+
+/* ---------- geometry (port of geometry.js) ---------- */
+const PHIS = Array.from({length: 73}, (_, k) => -90 + 2.5 * k), DEG = Math.PI / 180, MAXLEN = 1200;
+const rect = (x0, x1, y0, y1) => [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
+const edgesOf = polys => polys.flatMap(p => p.map((a, i) => [a[0], a[1], p[(i + 1) % p.length][0], p[(i + 1) % p.length][1]]));
+function castRay(E, ox, oy, dx, dy) {
+  let best = MAXLEN;
+  for (const e of E) {
+    const ex = e[2] - e[0], ey = e[3] - e[1], den = dx * ey - dy * ex;
+    if (Math.abs(den) < 1e-12) continue;
+    const ax = e[0] - ox, ay = e[1] - oy, t = (ax * ey - ay * ex) / den;
+    if (t < 0 || t >= best) continue;
+    const u = (ax * dy - ay * dx) / den;
+    if (u < 0 || u > 1) continue;
+    best = t;
+  }
+  return best;
+}
+const median = a => { const s = a.filter(Number.isFinite).sort((x, y) => x - y); const n = s.length; return n ? (n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2) : NaN; };
+function measure(E, x, y) {   /* travel is +y (north); phi > 0 is right */
+  const d = PHIS.map(p => castRay(E, x, y, Math.sin(p * DEG), Math.cos(p * DEG)));
+  const wl = Math.min(median(d.filter((_, k) => PHIS[k] <= -70)), 300), wr = Math.min(median(d.filter((_, k) => PHIS[k] >= 70)), 300);
+  let gn = 0, gd = 0;
+  PHIS.forEach((p, k) => { if (Math.abs(p) < 45) return; const w = p < 0 ? wl : wr, c = w / Math.sin(Math.abs(p) * DEG); gd++; if (d[k] > 1.5 * c && d[k] > c + 20) gn++; });
+  return {d, wl, wr, gap: gn / gd};
+}
+const opening = (d, R) => Math.min(180, 2.5 * d.filter(v => v >= R).length);
+const closedForm = (wl, wr, R) => (Math.asin(Math.min(1, wl / R)) + Math.asin(Math.min(1, wr / R))) / DEG;
+
+/* ---------- illustrative district ---------- */
+let seed = 7; const rnd = () => (seed = seed * 16807 % 2147483647) / 2147483647;
+const BLOCK = 300;
+function district(kind) {
+  seed = kind === 'avenue' ? 11 : 7;
+  const half = kind === 'avenue' ? 52 : 22, out = [];
+  for (const side of [-1, 1]) {
+    let y = 0;
+    while (y < BLOCK - 10) {
+      const w = 22 + Math.floor(rnd() * 30), y1 = Math.min(BLOCK, y + w);
+      const gapHere = kind === 'side' && side === 1 && y < 175 && y1 > 115;
+      const setback = rnd() < 0.15 ? 8 : 0;
+      if (!gapHere) out.push({x0: side < 0 ? -half - 90 : half + setback, x1: side < 0 ? -half - setback : half + 90, y0: y, y1: y1 - 1.5, h: 25 + Math.floor(rnd() * 45)});
+      y = y1;
+    }
+    /* buildings across the cross streets, so long rays have something to meet */
+    for (const yy of [-150, BLOCK + 60]) out.push({x0: side < 0 ? -half - 90 : half, x1: side < 0 ? -half : half + 90, y0: yy, y1: yy + 90, h: 40 + Math.floor(rnd() * 60)});
+  }
+  if (kind === 'side') out.push({x0: half + 90, x1: half + 190, y0: 115, y1: 175, h: 55});
+  return out;
+}
+const toPolys = B => B.map(b => rect(b.x0, b.x1, b.y0, b.y1));
+
+/* ---------- state ---------- */
+const S = {R: 80, pos: 150, kind: 'local', view: '3d', driving: false};
+let B = district(S.kind), E = edgesOf(toPolys(B)), M = null;
+
+/* ---------- three.js scene ---------- */
+const host = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({antialias: true});
+renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+renderer.shadowMap.enabled = true;
+host.prepend(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#e9e5dc');
+scene.fog = new THREE.Fog('#e9e5dc', 700, 1500);
+const cam = new THREE.PerspectiveCamera(42, 1, 1, 4000);
+const ctl = new OrbitControls(cam, renderer.domElement);
+ctl.enableDamping = true; ctl.maxPolarAngle = Math.PI * 0.49; ctl.minDistance = 80; ctl.maxDistance = 1100;
+scene.add(new THREE.HemisphereLight('#ffffff', '#b9b2a4', 1.9));
+const sun = new THREE.DirectionalLight('#fff6ea', 1.7); sun.position.set(-260, 420, 180); sun.castShadow = true;
+Object.assign(sun.shadow.camera, {left: -500, right: 500, top: 500, bottom: -500, far: 1400}); sun.shadow.mapSize.set(2048, 2048);
+scene.add(sun);
+const P = (x, y, h = 0) => new THREE.Vector3(x, h, -y);   /* plan (x east, y north) to three (y up) */
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(4000, 4000), new THREE.MeshLambertMaterial({color: '#e4dfd3'}));
+ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+const city = new THREE.Group(), raysG = new THREE.Group(); scene.add(city, raysG);
+const bMat = new THREE.MeshLambertMaterial({color: '#c4bfb5'}), roadMat = new THREE.MeshLambertMaterial({color: '#d6d1c6'});
+function buildCity() {
+  city.clear();
+  const half = S.kind === 'avenue' ? 52 : 22;
+  const road = new THREE.Mesh(new THREE.PlaneGeometry(half * 2 - 24, 1800), roadMat); road.rotation.x = -Math.PI / 2; road.position.set(0, 0.2, -150); road.receiveShadow = true; city.add(road);
+  for (const yy of [-30, BLOCK + 30]) { const cr = new THREE.Mesh(new THREE.PlaneGeometry(900, 36), roadMat); cr.rotation.x = -Math.PI / 2; cr.position.set(0, 0.25, -yy); city.add(cr); }
+  for (const b of B) {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(b.x1 - b.x0, b.h, b.y1 - b.y0), bMat);
+    m.position.copy(P((b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2, b.h / 2)); m.castShadow = m.receiveShadow = true; city.add(m);
+    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry), new THREE.LineBasicMaterial({color: '#b3ada1'}));
+    edges.position.copy(m.position); city.add(edges);
+  }
+  car = new THREE.Mesh(new THREE.BoxGeometry(6, 5, 14), new THREE.MeshLambertMaterial({color: '#d8322b'})); car.castShadow = true; city.add(car);
+}
+let car;
+const RED = new THREE.Color('#d8322b'), GREY = new THREE.Color('#8f8a80');
+function drawRays() {
+  raysG.clear();
+  const x = 0, y = S.pos, eye = 3.5, pos = [], col = [];
+  M.d.forEach((d, k) => {
+    const a = PHIS[k] * DEG, L = Math.min(d, 700), c = d >= S.R ? RED : GREY;
+    pos.push(x, eye, -y, x + L * Math.sin(a), eye, -(y + L * Math.cos(a))); col.push(c.r, c.g, c.b, c.r, c.g, c.b);
+  });
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  raysG.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({vertexColors: true})));
+  /* translucent fan of the open rays, cut at R */
+  const fan = [];
+  M.d.forEach((d, k) => { if (k === 72) return; if (d >= S.R && M.d[k + 1] >= S.R) { const a = PHIS[k] * DEG, b = PHIS[k + 1] * DEG; fan.push(x, 0.6, -y, x + S.R * Math.sin(a), 0.6, -(y + S.R * Math.cos(a)), x + S.R * Math.sin(b), 0.6, -(y + S.R * Math.cos(b))); } });
+  const fg = new THREE.BufferGeometry(); fg.setAttribute('position', new THREE.Float32BufferAttribute(fan, 3));
+  raysG.add(new THREE.Mesh(fg, new THREE.MeshBasicMaterial({color: '#d8322b', transparent: true, opacity: 0.28, side: THREE.DoubleSide, depthWrite: false})));
+  const arc = []; for (let i = 0; i <= 64; i++) { const a = (-90 + 180 * i / 64) * DEG; arc.push(new THREE.Vector3(x + S.R * Math.sin(a), 0.8, -(y + S.R * Math.cos(a)))); }
+  const ag = new THREE.BufferGeometry().setFromPoints(arc), al = new THREE.Line(ag, new THREE.LineDashedMaterial({color: '#1d1c1a', dashSize: 4, gapSize: 3})); al.computeLineDistances(); raysG.add(al);
+  car.position.copy(P(0, y - 9, 2.5));
+}
+function setView(v) {
+  S.view = v; document.getElementById('v3d').setAttribute('aria-pressed', v === '3d'); document.getElementById('vplan').setAttribute('aria-pressed', v === 'plan');
+  ctl.target.copy(P(0, S.pos + 90, 0));
+  if (v === 'plan') cam.position.copy(P(0, S.pos + 89, 620)); else cam.position.copy(P(-90, S.pos - 120, 430));
+  ctl.update();
+}
+function resize() { const w = host.clientWidth, h = host.clientHeight; renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); }
+const roScene = new ResizeObserver(resize); roScene.observe(host);
+(function loop() { ctl.update(); renderer.render(scene, cam); requestAnimationFrame(loop); })();
+
+/* ---------- block view numbers and profile ---------- */
+const $ = id => document.getElementById(id);
+function updateBlock() {
+  M = measure(E, 0, S.pos);
+  const th = opening(M.d, S.R), n = M.d.filter(v => v >= S.R).length;
+  $('th').textContent = fa(th.toFixed(1)) + '°';
+  $('nopen').textContent = fa(n + ' / 73');
+  $('wlr').textContent = fa(M.wl.toFixed(1) + ' / ' + M.wr.toFixed(1) + ' ft');
+  $('thc').textContent = fa(closedForm(M.wl, M.wr, S.R).toFixed(1)) + '°';
+  $('mph').textContent = fa((S.R / 2 * 3600 / 5280).toFixed(1) + ' mph');
+  $('Ro').textContent = fa(S.R + ' ft'); $('poso').textContent = fa(Math.round(S.pos) + ' ft');
+  drawRays(); drawProfile();
+}
+let profCache = {};
+function drawProfile() {
+  const svg = $('profile').querySelector('svg'), W = svg.clientWidth, H = svg.clientHeight; if (!W) return;
+  const key = S.kind + S.R; if (!profCache[key]) profCache[key] = Array.from({length: 141}, (_, i) => { const y = 10 + i * 2; return [y, opening(measure(E, 0, y).d, S.R)]; });
+  const pts = profCache[key], m = {l: 36, r: 12, t: 10, b: 24}, X = y => m.l + (y - 10) / 280 * (W - m.l - m.r), Y = v => m.t + (1 - v / 180) * (H - m.t - m.b);
+  const path = pts.map((p, i) => (i ? 'L' : 'M') + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1)).join('');
+  const cur = opening(M.d, S.R);
+  svg.innerHTML = [0, 90, 180].map(v => `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--rule)"/><text x="${m.l - 6}" y="${Y(v) + 4}" text-anchor="end">${fa(v)}°</text>`).join('')
+    + [0.3, 0.7].map(f => `<line x1="${X(f * BLOCK)}" x2="${X(f * BLOCK)}" y1="${m.t}" y2="${H - m.b}" stroke="var(--grey)" stroke-dasharray="4 4"/>`).join('')
+    + `<path d="${path}" fill="none" stroke="var(--ink)" stroke-width="2"/>`
+    + `<circle cx="${X(S.pos)}" cy="${Y(cur)}" r="6" fill="var(--red)"/>`
+    + `<text x="${m.l}" y="${H - 6}" text-anchor="start">${fa(0)} ft</text><text x="${W - m.r}" y="${H - 6}" text-anchor="end">${fa(BLOCK)} ft</text>`;
+}
+const roProf = new ResizeObserver(drawProfile); roProf.observe($('profile'));
+
+function setKind(k) { S.kind = k; B = district(k); E = edgesOf(toPolys(B)); profCache = {}; buildCity(); updateBlock(); renderChips(); }
+function renderChips() {
+  $('streets').innerHTML = Object.keys(T[lang].st).map(k => `<button class="btn" data-k="${k}" aria-pressed="${k === S.kind}">${T[lang].st[k]}</button>`).join('');
+  $('presets').innerHTML = Object.keys(T[lang].pr).map(k => `<button class="btn" data-p="${k}">${T[lang].pr[k]}</button>`).join('');
+}
+$('streets').addEventListener('click', e => { const k = e.target.closest('button')?.dataset.k; if (k) setKind(k); });
+$('R').addEventListener('input', e => { S.R = +e.target.value; updateBlock(); });
+$('pos').addEventListener('input', e => { S.pos = +e.target.value; updateBlock(); });
+$('v3d').addEventListener('click', () => setView('3d'));
+$('vplan').addEventListener('click', () => setView('plan'));
+let dir = 1, last = 0;
+function drive(t) {
+  if (!S.driving) return;
+  const dt = last ? Math.min(0.05, (t - last) / 1000) : 0; last = t;
+  S.pos += dir * 40 * dt; if (S.pos > 290) { S.pos = 290; dir = -1; } if (S.pos < 10) { S.pos = 10; dir = 1; }
+  $('pos').value = S.pos; updateBlock(); requestAnimationFrame(drive);
+}
+$('drive').addEventListener('click', () => {
+  S.driving = !S.driving; $('drive').setAttribute('aria-pressed', S.driving); $('drive').textContent = S.driving ? T[lang].stop : T[lang].drive;
+  if (S.driving && !matchMedia('(prefers-reduced-motion: reduce)').matches) { last = 0; requestAnimationFrame(drive); } else if (S.driving) { S.driving = false; $('drive').textContent = T[lang].drive; }
+});
+/* click on the road moves the driver */
+let down = null; const ray = new THREE.Raycaster();
+renderer.domElement.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY]; });
+renderer.domElement.addEventListener('pointerup', e => {
+  if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 5) return;
+  const r = renderer.domElement.getBoundingClientRect();
+  ray.setFromCamera({x: (e.clientX - r.left) / r.width * 2 - 1, y: -((e.clientY - r.top) / r.height) * 2 + 1}, cam);
+  const hit = ray.intersectObject(ground)[0]; if (!hit) return;
+  const half = S.kind === 'avenue' ? 52 : 22, y = -hit.point.z;
+  if (Math.abs(hit.point.x) < half && y >= 10 && y <= 290) { S.pos = y; $('pos').value = y; updateBlock(); }
+});
+
+/* ---------- canyon bench ---------- */
+const L = {wl: 22, wr: 22, R: 80, gw: 0};
+function labPolys() {
+  const ps = [rect(-L.wl - 200, -L.wl, -2000, 2000)];
+  if (L.gw > 0) { ps.push(rect(L.wr, L.wr + 200, -2000, 5), rect(L.wr, L.wr + 200, 5 + L.gw, 2000)); } else ps.push(rect(L.wr, L.wr + 200, -2000, 2000));
+  return ps;
+}
+function updateLab() {
+  const polys = labPolys(), m = measure(edgesOf(polys), 0, 0), th = opening(m.d, L.R), thc = closedForm(m.wl, m.wr, L.R), res = th - thc;
+  $('lth').textContent = fa(th.toFixed(1)) + '°'; $('lthc').textContent = fa(thc.toFixed(1)) + '°';
+  $('lres').textContent = fa((res >= 0 ? '+' : '') + res.toFixed(1)) + '°'; $('lgap').textContent = fa(m.gap.toFixed(2));
+  const ok = Math.abs(res) <= 5; $('clean').textContent = ok ? T[lang].clean : T[lang].notclean; $('clean').className = 'badge' + (ok ? ' ok' : '');
+  $('wlo').textContent = fa(L.wl + ' ft'); $('wro').textContent = fa(L.wr + ' ft'); $('lRo').textContent = fa(L.R + ' ft'); $('gwo').textContent = fa(L.gw + ' ft');
+  drawPlan(polys, m);
+}
+function drawPlan(polys, m) {
+  const svg = $('plan').querySelector('svg'), W = svg.clientWidth, H = svg.clientHeight; if (!W) return;
+  const span = Math.max(L.R * 1.25, 130), s = Math.min((W - 20) / (2 * span), (H - 30) / (span * 1.05)), cx = W / 2, cy = H - 18;
+  const X = x => cx + x * s, Y = y => cy - y * s, view = span * 1.6;
+  const shapes = polys.map(p => `<polygon points="${p.map(q => X(Math.max(-view, Math.min(view, q[0]))) + ',' + Y(Math.max(-40, Math.min(view, q[1])))).join(' ')}" fill="var(--rule)" stroke="var(--grey)"/>`).join('');
+  const rays = m.d.map((d, k) => { const a = PHIS[k] * DEG, Lr = Math.min(d, view); return `<line x1="${cx}" y1="${cy}" x2="${X(Lr * Math.sin(a))}" y2="${Y(Lr * Math.cos(a))}" stroke="${d >= L.R ? 'var(--red)' : 'var(--grey)'}" stroke-width="${d >= L.R ? 1.6 : 1}"/>`; }).join('');
+  const arc = `<path d="M ${X(-L.R)} ${cy} A ${L.R * s} ${L.R * s} 0 0 1 ${X(L.R)} ${cy}" fill="none" stroke="var(--ink)" stroke-dasharray="5 4"/>`;
+  svg.innerHTML = `<defs><clipPath id="cp"><rect x="0" y="0" width="${W}" height="${H - 8}"/></clipPath></defs><g clip-path="url(#cp)">${shapes}${rays}${arc}</g><circle cx="${cx}" cy="${cy}" r="5" fill="var(--ink)"/><text x="${X(L.R * 0.72) + 6}" y="${Y(L.R * 0.72) - 4}">R = ${fa(L.R)} ft</text>`;
+}
+const roPlan = new ResizeObserver(() => updateLab()); roPlan.observe($('plan'));
+for (const id of ['wl', 'wr', 'gw']) $(id).addEventListener('input', e => { L[id] = +e.target.value; updateLab(); });
+$('lR').addEventListener('input', e => { L.R = +e.target.value; updateLab(); });
+const PRESETS = {a: {wl: 22, wr: 22, R: 80, gw: 0}, b: {wl: 52, wr: 52, R: 80, gw: 0}, c: {wl: 20, wr: 100, R: 80, gw: 0}, d: {wl: 22, wr: 22, R: 80, gw: 60}};
+$('presets').addEventListener('click', e => { const p = PRESETS[e.target.closest('button')?.dataset.p]; if (!p) return; Object.assign(L, p); for (const k of ['wl', 'wr', 'gw']) $(k).value = L[k]; $('lR').value = L.R; updateLab(); });
+
+/* ---------- language ---------- */
+function setLang(l) {
+  lang = l; document.documentElement.lang = l; document.body.dir = l === 'fa' ? 'rtl' : 'ltr'; document.documentElement.dir = document.body.dir;
+  $('lfa').setAttribute('aria-pressed', l === 'fa'); $('len').setAttribute('aria-pressed', l === 'en');
+  document.querySelectorAll('[data-i]').forEach(n => { n.textContent = T[l][n.dataset.i]; });
+  $('drive').textContent = S.driving ? T[l].stop : T[l].drive;
+  renderChips(); updateBlock(); updateLab();
+}
+$('lfa').addEventListener('click', () => { setLang('fa'); history.replaceState(null, '', '#fa'); }); $('len').addEventListener('click', () => { setLang('en'); history.replaceState(null, '', location.pathname); });
+
+buildCity(); setView('3d'); setLang(location.hash === '#fa' ? 'fa' : 'en');
+}
+</script>
+</body>
+</html>
