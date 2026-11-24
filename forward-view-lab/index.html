@@ -69,6 +69,21 @@ input[type=range]{width:100%;height:44px;accent-color:var(--red);margin:0}
 .res .r b{color:var(--red)}
 .badge{display:inline-block;font-size:13px;padding:2px 10px;border-radius:999px;background:var(--red2);color:var(--ink)}
 .badge.ok{background:color-mix(in srgb,var(--good) 22%,transparent)}
+.steps{margin:10px 0;display:grid;gap:4px}
+.steps div{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--rule);padding-top:5px;font-size:15px}
+.steps b{font-family:Calibri,Carlito,'Segoe UI',Arial,sans-serif;font-variant-numeric:tabular-nums;direction:ltr;white-space:nowrap}
+.dials{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.dial{height:clamp(240px,30vw,320px)}
+@media(max-width:600px){.dials{grid-template-columns:minmax(0,1fr)}}
+.quiz{padding-inline-start:1.4em;display:grid;gap:14px;margin:12px 0 0}
+.quiz li{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:12px 14px}
+.quiz .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.quiz input{font:inherit;font-size:16px;width:9em;min-height:44px;padding:6px 10px;border:1px solid var(--grey);border-radius:8px;background:var(--bg);color:var(--ink);direction:ltr}
+.quiz .fb{margin:8px 0 0;font-size:15px}
+.quiz .fb.ok{color:var(--good)}.quiz .fb.no{color:var(--red)}
+.quiz .ans{margin:8px 0 0;font-size:15px;color:var(--ink2);border-inline-start:3px solid var(--rule);padding-inline-start:10px}
+svg .handle{cursor:grab}
+#cast svg{touch-action:none}
 svg text{font:13px Calibri,Carlito,'Segoe UI',Arial,sans-serif;fill:var(--ink2);paint-order:stroke;stroke:var(--panel);stroke-width:4px}
 footer{color:var(--ink2);font-size:14px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -142,6 +157,43 @@ footer{color:var(--ink2);font-size:14px}
   </div>
 </div></section>
 
+<section class="band" style="border-top:1px solid var(--rule)"><div class="wrap">
+  <h2 data-i="t3"></h2>
+  <p class="sub" data-i="s3"></p>
+  <div class="lab">
+    <div class="card"><div class="fig plan" id="cast"><svg></svg></div><p class="note" data-i="castdrag"></p></div>
+    <div class="card">
+      <div class="ctl"><label for="cphi"><span data-i="cphi"></span><output id="cphio"></output></label><input id="cphi" type="range" min="-90" max="90" step="2.5" value="30"></div>
+      <div class="steps" id="csteps"></div>
+      <p><span class="badge" id="cverdict"></span></p>
+      <div class="lbl" data-i="presets"></div>
+      <div class="chips" id="cpresets"></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="band" style="border-top:1px solid var(--rule)"><div class="wrap">
+  <h2 data-i="t4"></h2>
+  <p class="sub" data-i="s4"></p>
+  <div class="lab">
+    <div class="card"><div class="dials"><div class="fig dial" id="dcomp"><svg></svg></div><div class="fig dial" id="dmath"><svg></svg></div></div></div>
+    <div class="card">
+      <div class="ctl"><label for="brg"><span data-i="brg"></span><output id="brgo"></output></label><input id="brg" type="range" min="0" max="359.99" step="0.01" value="119.01"></div>
+      <div class="ctl"><label for="aphi"><span data-i="cphi"></span><output id="aphio"></output></label><input id="aphi" type="range" min="-90" max="90" step="2.5" value="0"></div>
+      <div class="steps" id="asteps"></div>
+      <div class="lbl" data-i="presets"></div>
+      <div class="chips" id="apresets"></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="band" style="border-top:1px solid var(--rule)"><div class="wrap">
+  <h2 data-i="t6"></h2>
+  <p class="sub" data-i="s6"></p>
+  <p class="lbl" id="qscore"></p>
+  <ol class="quiz" id="quiz"></ol>
+</div></section>
+
 <footer class="band"><div class="wrap" data-i="foot"></div></footer>
 
 <script type="module">
@@ -159,7 +211,7 @@ const T = {
   resid:'باقیمانده θ − θc', gap:'سهم شکاف جبهه', wl:'فاصله‌ی دیوار چپ', wr:'فاصله‌ی دیوار راست', gw:'پهنای خیابان فرعی (راست)', presets:'مثال‌های جزوه',
   clean:'دره‌ی تمیز: |θ − θc| ≤ ۵°', notclean:'دره‌ی تمیز نیست: |θ − θc| > ۵°',
   labnote:'فاصله‌ی دیوار مثل geometry.js از میانه‌ی پرتوهای ۷۰ تا ۹۰ درجه گرفته می‌شود؛ برای همین در دره‌ی ۴۴ فوتی ۲۲.۳۴ و θc برابر ۳۲.۴ است (جزوه، بخش ۱.۷).',
-  foot:'بخش‌های ۱ و ۲ · محله نمادین است، نه داده‌ی واقعی · محاسبه‌ها: ۷۳ پرتو، ۲.۵ درجه، حداکثر ۱۲۰۰ فوت، فاصله‌ی دیوار از میانه‌ی پرتوهای ۷۰ تا ۹۰ درجه، سقف ۱۸۰ درجه · امید منصوری‌حنیس',
+  foot:'محله‌ی سه‌بعدی، میز کار دره، برخورد پرتو، قرارداد زاویه و تمرین‌ها · محله نمادین است، نه داده‌ی واقعی · محاسبه‌ها: ۷۳ پرتو، ۲.۵ درجه، حداکثر ۱۲۰۰ فوت، فاصله‌ی دیوار از میانه‌ی پرتوهای ۷۰ تا ۹۰ درجه، سقف ۱۸۰ درجه · امید منصوری‌حنیس',
   st:{local:'محلی ۴۴ فوت', avenue:'اونیو ۱۰۴ فوت', side:'محلی با خیابان فرعی'},
   pr:{a:'دره‌ی ۴۴ فوتی', b:'دره‌ی ۱۰۴ فوتی', c:'نامتقارن ۲۰ / ۱۰۰', d:'خیابان فرعی (مثال ۱.۵)'}},
  en: {back:'← Omid Mansourihanis', t1:'Forward view lab', s1:'Move the driver along the street, change the look-ahead distance, and watch 73 rays build the opening. Every number is computed live with the logic of geometry.js.',
@@ -171,7 +223,7 @@ const T = {
   resid:'Residual θ − θc', gap:'Frontage gap share', wl:'Left wall distance', wr:'Right wall distance', gw:'Side street width (right)', presets:'Handout examples',
   clean:'Clean canyon: |θ − θc| ≤ 5°', notclean:'Not a clean canyon: |θ − θc| > 5°',
   labnote:'As in geometry.js, wall distance is the median of the rays at 70 to 90 degrees, so the 44 ft canyon gives 22.34 ft and θc = 32.4 (handout, section 1.7).',
-  foot:'Sections 1 and 2 · illustrative district, not real data · 73 rays at 2.5°, max 1,200 ft, wall distance from the median of rays at 70–90°, capped at 180° · Omid Mansourihanis',
+  foot:'3D block, canyon bench, ray and wall, angle conventions and exercises · illustrative district, not real data · 73 rays at 2.5°, max 1,200 ft, wall distance from the median of rays at 70–90°, capped at 180° · Omid Mansourihanis',
   st:{local:'Local, 44 ft', avenue:'Avenue, 104 ft', side:'Local with side street'},
   pr:{a:'44 ft canyon', b:'104 ft canyon', c:'Asymmetric 20 / 100', d:'Side street (example 1.5)'}}
 };
@@ -388,13 +440,157 @@ $('lR').addEventListener('input', e => { L.R = +e.target.value; updateLab(); });
 const PRESETS = {a: {wl: 22, wr: 22, R: 80, gw: 0}, b: {wl: 52, wr: 52, R: 80, gw: 0}, c: {wl: 20, wr: 100, R: 80, gw: 0}, d: {wl: 22, wr: 22, R: 80, gw: 60}};
 $('presets').addEventListener('click', e => { const p = PRESETS[e.target.closest('button')?.dataset.p]; if (!p) return; Object.assign(L, p); for (const k of ['wl', 'wr', 'gw']) $(k).value = L[k]; $('lR').value = L.R; updateLab(); });
 
+/* ---------- extra text: sections 3, 4, 6 ---------- */
+Object.assign(T.fa, {t3:'برخورد پرتو و ضلع', s3:'قلب castRay: نقطه‌های A و B را بکشید و زاویه‌ی پرتو را عوض کنید. هر قدم حل همان لحظه حساب می‌شود.',
+  castdrag:'نقطه‌های A و B را بکشید. خط‌چین امتداد ضلع است؛ برخورد فقط روی خود ضلع (0 ≤ u ≤ 1) و جلوی راننده (t ≥ 0) حساب می‌شود.',
+  cphi:'زاویه‌ی پرتو φ (مثبت = راست)', hit:'برخورد: پرتو در {t} فوت به ضلع می‌خورد', miss:'برخورد نیست: u بیرون از ۰ تا ۱ است (روی امتداد ضلع)', behind:'برخورد نیست: t منفی است (دیوار پشت سر است)', par:'موازی: den = 0، ضلع کنار گذاشته می‌شود',
+  t4:'دو قرارداد زاویه', s4:'یک جهت، دو عدد. geometry.js جهت را به قرارداد ریاضی می‌گیرد (صفر = شرق، پادساعتگرد) و Python و قطب‌نما به قرارداد قطب‌نما (صفر = شمال، ساعتگرد).',
+  brg:'جهت حرکت (قطب‌نما)', dcomp:'قطب‌نما', dmath:'ریاضی',
+  t6:'تمرین‌ها', s6:'جواب عددی را بنویسید و «بررسی» را بزنید. پاسخ کامل هر تمرین هم هست. این‌ها همان تمرین‌های جزوه‌اند.', check:'بررسی', show:'پاسخ', right:'درست است.', wrong:'هنوز نه. دوباره حساب کنید یا پاسخ را ببینید.', score:'درست: '});
+Object.assign(T.en, {t3:'Where a ray meets a wall', s3:'The heart of castRay: drag points A and B and change the ray angle. Every step of the solution updates live.',
+  castdrag:'Drag A and B. The dashed line extends the wall; a hit counts only on the wall itself (0 ≤ u ≤ 1) and ahead of the driver (t ≥ 0).',
+  cphi:'Ray angle φ (positive = right)', hit:'Hit: the ray meets the wall at {t} ft', miss:'No hit: u is outside 0 to 1 (on the extension of the wall)', behind:'No hit: t is negative (the wall is behind)', par:'Parallel: den = 0, the wall is skipped',
+  t4:'Two angle conventions', s4:'One direction, two numbers. geometry.js uses the math convention (0 = east, counter-clockwise); Python and a compass use bearings (0 = north, clockwise).',
+  brg:'Direction of travel (bearing)', dcomp:'Compass', dmath:'Math',
+  t6:'Exercises', s6:'Type a number and press Check. A full answer is there for every exercise. These are the exercises from the handout.', check:'Check', show:'Answer', right:'Correct.', wrong:'Not yet. Try again or open the answer.', score:'Correct: '});
+
+/* ---------- section 3: ray and segment ---------- */
+const C = {phi: 30, A: [20, -50], B: [20, 150]};
+const CPRE = {
+  e22: {phi: 30, A: [20, -50], B: [20, 150], fa: 'مثال ۲.۲: برخورد', en: 'Example 2.2: hit'},
+  e23: {phi: 30, A: [20, 50], B: [20, 150], fa: 'u < 0', en: 'u < 0'},
+  beh: {phi: 30, A: [-20, -150], B: [-20, 150], fa: 't < 0', en: 't < 0'},
+  par: {phi: 30, A: [10, 0], B: [60, 86.60254], fa: 'موازی', en: 'Parallel'},
+  ex2: {phi: 0, A: [-30, 50], B: [30, 50], fa: 'تمرین ۲.۲', en: 'Exercise 2.2'}};
+let castMap = null;
+function solve() {
+  const a = C.phi * DEG, dx = Math.sin(a), dy = Math.cos(a), ex = C.B[0] - C.A[0], ey = C.B[1] - C.A[1], ax = C.A[0], ay = C.A[1];
+  const den = dx * ey - dy * ex;
+  if (Math.abs(den) < 1e-3 * Math.hypot(ex, ey)) return {dx, dy, ex, ey, ax, ay, den: 0};
+  return {dx, dy, ex, ey, ax, ay, den, t: (ax * ey - ay * ex) / den, u: (ax * dy - ay * dx) / den};
+}
+const f2 = v => fa((Math.abs(v) < 0.005 ? 0 : v).toFixed(2));
+function updateCast() {
+  const r = solve(), t = T[lang];
+  $('cphio').textContent = fa(C.phi) + '°';
+  const rows = [['d = (sin φ, cos φ)', `(${f2(r.dx)}, ${f2(r.dy)})`], ['e = B − A', `(${f2(r.ex)}, ${f2(r.ey)})`], ['a = A − O', `(${f2(r.ax)}, ${f2(r.ay)})`],
+    ['den = dₓ·e_y − d_y·eₓ', f2(r.den)]];
+  if (r.den !== 0) rows.push(['t = (aₓ·e_y − a_y·eₓ) / den', f2(r.t)], ['u = (aₓ·d_y − a_y·dₓ) / den', f2(r.u)]);
+  $('csteps').innerHTML = rows.map(([k, v]) => `<div><span dir="ltr">${k}</span><b>${v}</b></div>`).join('');
+  let v, ok = false;
+  if (r.den === 0) v = t.par; else if (r.t < 0) v = t.behind; else if (r.u < 0 || r.u > 1) v = t.miss; else { v = t.hit.replace('{t}', fa(r.t.toFixed(1))); ok = true; }
+  $('cverdict').textContent = v; $('cverdict').className = 'badge' + (ok ? ' ok' : '');
+  $('cpresets').innerHTML = Object.entries(CPRE).map(([k, p]) => `<button class="btn" data-c="${k}">${p[lang]}</button>`).join('');
+  drawCast(r, ok);
+}
+function drawCast(r, ok) {
+  const svg = $('cast').querySelector('svg'), W = svg.clientWidth, H = svg.clientHeight; if (!W) return;
+  const x0 = -110, x1 = 130, y0 = -170, y1 = 190, s = Math.min(W / (x1 - x0), H / (y1 - y0));
+  const ox = (W - s * (x1 - x0)) / 2, oy = (H - s * (y1 - y0)) / 2, X = x => ox + (x - x0) * s, Y = y => oy + (y1 - y) * s;
+  castMap = {X, Y, inv: (px, py) => [x0 + (px - ox) / s, y1 - (py - oy) / s]};
+  const grid = [-100, -50, 0, 50, 100].map(v => `<line x1="${X(v)}" x2="${X(v)}" y1="${Y(y0)}" y2="${Y(y1)}" stroke="var(--rule)"/>`).join('') + [-150, -100, -50, 0, 50, 100, 150].map(v => `<line y1="${Y(v)}" y2="${Y(v)}" x1="${X(x0)}" x2="${X(x1)}" stroke="var(--rule)"/>`).join('');
+  const L = 260, ext = 3;
+  const [ax, ay] = C.A, [bx, by] = C.B;
+  let hit = '';
+  if (r.den !== 0) { const hx = r.t * r.dx, hy = r.t * r.dy; hit = `<circle cx="${X(hx)}" cy="${Y(hy)}" r="7" fill="${ok ? 'var(--good)' : 'none'}" stroke="${ok ? 'var(--good)' : 'var(--red)'}" stroke-width="2.5"/>`; }
+  svg.innerHTML = grid
+    + `<line x1="${X(ax - ext * (bx - ax))}" y1="${Y(ay - ext * (by - ay))}" x2="${X(bx + ext * (bx - ax))}" y2="${Y(by + ext * (by - ay))}" stroke="var(--grey)" stroke-dasharray="5 5"/>`
+    + `<line x1="${X(ax)}" y1="${Y(ay)}" x2="${X(bx)}" y2="${Y(by)}" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>`
+    + `<line x1="${X(0)}" y1="${Y(0)}" x2="${X(L * r.dx)}" y2="${Y(L * r.dy)}" stroke="var(--red)" stroke-width="2.5"/>`
+    + hit + `<circle cx="${X(0)}" cy="${Y(0)}" r="5" fill="var(--ink)"/><text x="${X(0) + 8}" y="${Y(0) + 16}">O</text>`
+    + [['A', ax, ay], ['B', bx, by]].map(([n, x, y]) => `<circle class="handle" data-h="${n}" cx="${X(x)}" cy="${Y(y)}" r="11" fill="var(--blue)" stroke="var(--panel)" stroke-width="3"/><text x="${X(x) > W - 110 ? X(x) - 14 : X(x) + 14}" y="${Y(y) - 10}" text-anchor="${X(x) > W - 110 ? 'end' : 'start'}">${n} (${fa(Math.round(x))}, ${fa(Math.round(y))})</text>`).join('');
+}
+let dragH = null;
+$('cast').addEventListener('pointerdown', e => { const h = e.target.closest?.('.handle'); if (h) { dragH = h.dataset.h; e.target.setPointerCapture?.(e.pointerId); e.preventDefault(); } });
+$('cast').addEventListener('pointermove', e => {
+  if (!dragH || !castMap) return;
+  const b = $('cast').querySelector('svg').getBoundingClientRect(), [x, y] = castMap.inv(e.clientX - b.left, e.clientY - b.top);
+  C[dragH] = [Math.max(-105, Math.min(125, Math.round(x))), Math.max(-165, Math.min(185, Math.round(y)))]; updateCast();
+});
+window.addEventListener('pointerup', () => { dragH = null; });
+$('cphi').addEventListener('input', e => { C.phi = +e.target.value; updateCast(); });
+$('cpresets').addEventListener('click', e => { const p = CPRE[e.target.closest('button')?.dataset.c]; if (!p) return; C.phi = p.phi; C.A = [...p.A]; C.B = [...p.B]; $('cphi').value = p.phi; updateCast(); });
+const roCast = new ResizeObserver(() => updateCast()); roCast.observe($('cast'));
+
+/* ---------- section 4: angle conventions ---------- */
+const AC = {b: 119.01, phi: 0};
+const norm180 = v => { let x = ((v + 180) % 360 + 360) % 360 - 180; return x === -180 ? 180 : x; };
+function dial(id, mode) {
+  const svg = $(id).querySelector('svg'), W = svg.clientWidth, H = svg.clientHeight; if (!W) return;
+  const cx = W / 2, cy = H / 2 + 14, R = Math.min(W, H) / 2 - 42, comp = mode === 'comp';
+  const P = (deg, rr) => [cx + rr * Math.sin(deg * DEG), cy - rr * Math.cos(deg * DEG)];   /* deg as bearing */
+  const travel = AC.b, ray = AC.b + AC.phi, zero = comp ? 0 : 90;
+  const val = comp ? AC.b : norm180(90 - AC.b);
+  /* arc from the zero direction to travel, in the convention's own sense */
+  const sweep = comp ? ((travel % 360) + 360) % 360 : norm180(90 - travel), n = 48, pts = [];
+  for (let i = 0; i <= n; i++) { const d = comp ? zero + sweep * i / n : zero - sweep * i / n; const [x, y] = P(d, R * 0.42); pts.push(`${x.toFixed(1)},${y.toFixed(1)}`); }
+  const arrow = (deg, col, w, rr) => { const [x, y] = P(deg, rr); return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/><circle cx="${x}" cy="${y}" r="${w + 2}" fill="${col}"/>`; };
+  svg.innerHTML = `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--rule)" stroke-width="2"/>`
+    + [['N', 0], ['E', 90], ['S', 180], ['W', 270]].map(([t, d]) => { const [x, y] = P(d, R + 16); return `<text x="${x}" y="${y + 5}" text-anchor="middle">${t}</text>`; }).join('')
+    + arrow(zero, 'var(--grey)', 2, R * 0.92) + `<polyline points="${pts.join(' ')}" fill="none" stroke="var(--blue)" stroke-width="2"/>`
+    + (AC.phi !== 0 ? arrow(ray, 'var(--red)', 2, R * 0.8) : '') + arrow(travel, 'var(--ink)', 4, R * 0.95)
+    + `<text x="${cx}" y="16" text-anchor="middle" direction="${lang === 'fa' ? 'rtl' : 'ltr'}" style="font-weight:700;fill:var(--ink)">${T[lang][comp ? 'dcomp' : 'dmath']}: <tspan direction="ltr" unicode-bidi="embed">${fa(val.toFixed(2))}°</tspan></text>`;
+}
+function updateConv() {
+  const b = AC.b, h = norm180(90 - b), phi = AC.phi, a1 = b + phi, a2 = h - phi;
+  $('brgo').textContent = fa(b.toFixed(2)) + '°'; $('aphio').textContent = fa(phi) + '°';
+  const rows = [['heading = 90° − bearing', fa(h.toFixed(2)) + '°'],
+    ['compass: (sin b, cos b)', `(${f2(Math.sin(b * DEG))}, ${f2(Math.cos(b * DEG))})`], ['math: (cos h, sin h)', `(${f2(Math.cos(h * DEG))}, ${f2(Math.sin(h * DEG))})`],
+    ['ray, Python: bearing + φ', fa(norm180(a1).toFixed(2)) + '°'], ['ray, geometry.js: heading − φ', fa(norm180(a2).toFixed(2)) + '°']];
+  $('asteps').innerHTML = rows.map(([k, v]) => `<div><span dir="ltr">${k}</span><b>${v}</b></div>`).join('');
+  $('apresets').innerHTML = [0, 90, 119.01, 299.01].map(v => `<button class="btn" data-b="${v}">${fa(v)}°</button>`).join('');
+  dial('dcomp', 'comp'); dial('dmath', 'math');
+}
+$('brg').addEventListener('input', e => { AC.b = +e.target.value; updateConv(); });
+$('aphi').addEventListener('input', e => { AC.phi = +e.target.value; updateConv(); });
+$('apresets').addEventListener('click', e => { const v = e.target.closest('button')?.dataset.b; if (v == null) return; AC.b = +v; $('brg').value = v; updateConv(); });
+const roDial = new ResizeObserver(() => updateConv()); roDial.observe($('dcomp'));
+
+/* ---------- section 6: exercises (answers computed with the functions above) ---------- */
+const canyon = (wl, wr, gw = 0) => { const ps = [rect(-wl - 200, -wl, -2000, 2000)]; if (gw) ps.push(rect(wr, wr + 200, -2000, 5), rect(wr, wr + 200, 5 + gw, 2000)); else ps.push(rect(wr, wr + 200, -2000, 2000)); return measure(edgesOf(ps), 0, 0); };
+const Q = [
+ {ans: 180 / 5 + 1, tol: 0, fa: 'اگر فاصله‌ی پرتوها ۵ درجه بود، چند پرتو داشتیم؟', en: 'If the rays were 5° apart, how many rays would there be?',
+  fa2: '۱۸۰ ÷ ۵ = ۳۶ فاصله، و با دو لبه ۳۷ پرتو.', en2: '180 / 5 = 36 intervals, so 37 rays including both edges.'},
+ {ans: opening(canyon(30, 30).d, 80), tol: 0.01, fa: 'دره‌ی تمیز با نماهای ۶۰ فوتی (هر دیوار ۳۰ فوت). θ(80) با شمارش چند درجه است؟', en: 'A clean canyon with faces 60 ft apart (30 ft each side). What is θ(80) by counting rays?',
+  fa2: 'مرز arcsin(30/80) = 22.02°. پرتوی 22.5° طول 78.4 دارد و بسته است؛ 17 پرتو (0 و ±2.5 تا ±20) بازند: 17 × 2.5 = 42.5°.', en2: 'The limit is arcsin(30/80) = 22.02°. The 22.5° ray is 78.4 ft long and closed; 17 rays (0 and ±2.5 to ±20) are open: 17 × 2.5 = 42.5°.'},
+ {ans: closedForm(30, 30, 80), tol: 0.06, fa: 'همان دره: θc(80) با فرمول بسته (با w = 30) چند درجه است؟ (یک رقم اعشار)', en: 'Same canyon: what is θc(80) from the closed form with w = 30? (one decimal)',
+  fa2: '2 × arcsin(30/80) = 2 × 22.02 = 44.0°.', en2: '2 × arcsin(30/80) = 2 × 22.02 = 44.0°.'},
+ {ans: closedForm(20, 100, 120), tol: 0.06, fa: 'دیوار چپ ۲۰ و راست ۱۰۰ فوت. θc(120) چند درجه است؟', en: 'Left wall 20 ft, right wall 100 ft. What is θc(120)?',
+  fa2: 'arcsin(20/120) + arcsin(100/120) = 9.59 + 56.44 = 66.0°. این بار دیوار راست از R نزدیک‌تر است، پس اشباع نیست.', en2: 'arcsin(20/120) + arcsin(100/120) = 9.59 + 56.44 = 66.0°. The right wall is now nearer than R, so that side no longer saturates.'},
+ {ans: 25 * 5280 / 3600 * 2, tol: 0.06, fa: 'با T = 2 ثانیه، R متناظر با ۲۵ مایل بر ساعت چند فوت است؟', en: 'With T = 2 s, what R in feet matches 25 mph?',
+  fa2: '25 × 5280 / 3600 = 36.7 فوت بر ثانیه؛ ضرب در 2: حدود 73.3 فوت.', en2: '25 × 5280 / 3600 = 36.7 ft/s; times 2: about 73.3 ft.'},
+ {ans: 50, tol: 0.01, fa: 'O = (0,0)، پرتو مستقیم رو به شمال d = (0,1)، ضلع از A = (−30, 50) تا B = (30, 50). t چند است؟ (در بخش «برخورد پرتو و ضلع» امتحان کنید)', en: 'O = (0,0), ray straight north d = (0,1), wall from A = (−30, 50) to B = (30, 50). What is t? (try it in the ray-and-wall bench)',
+  fa2: 'e = (60, 0)، a = (−30, 50)، den = 0·0 − 1·60 = −60، t = (0 − 50·60)/(−60) = 50، u = (−30·1 − 0)/(−60) = 0.5.', en2: 'e = (60, 0), a = (−30, 50), den = 0·0 − 1·60 = −60, t = (0 − 50·60)/(−60) = 50, u = (−30·1 − 0)/(−60) = 0.5.'},
+ {ans: 150.99, tol: 0.01, mod: 360, fa: 'جهت قطب‌نمای ۲۹۹.۰۱ درجه به قرارداد ریاضی چند درجه است؟', en: 'What is a bearing of 299.01° in the math convention?',
+  fa2: '90 − 299.01 = −209.01، که همان 150.99 درجه است.', en2: '90 − 299.01 = −209.01, which is the same direction as 150.99°.'},
+ {ans: 0.5 * 450, tol: 0.01, fa: 'یالی ۴۵۰ فوتی. نقطه‌ی نمونه‌ی سوم (وسط) چند فوت از ابتدای آن است؟', en: 'A 450 ft edge. How far from its start is the third (middle) sample point?',
+  fa2: 'نقطه‌ها در 30، 40، 50، 60 و 70 درصدند: 135، 180، 225، 270 و 315 فوت.', en2: 'The points are at 30, 40, 50, 60 and 70%: 135, 180, 225, 270 and 315 ft.'},
+ {ans: opening(canyon(22, 22, 60).d, 80), tol: 0.01, fa: 'دره‌ی ۴۴ فوتی با خیابان فرعی ۶۰ فوتی در راست (از ۵ تا ۶۵ فوت جلوتر). θ(80) چند درجه است؟ (روی میز کار دره امتحان کنید)', en: 'A 44 ft canyon with a 60 ft side street on the right (5 to 65 ft ahead). What is θ(80)? (try it on the canyon bench)',
+  fa2: '29 پرتو باز است: 0 و ±2.5 تا ±15، و در راست 37.5 تا 75 درجه از شکاف. 29 × 2.5 = 72.5°؛ θc = 32.4 و باقیمانده +40.1.', en2: '29 rays are open: 0 and ±2.5 to ±15, plus 37.5 to 75° on the right through the gap. 29 × 2.5 = 72.5°; θc = 32.4, residual +40.1.'}];
+const solved = new Set();
+function renderQuiz() {
+  const t = T[lang];
+  $('quiz').innerHTML = Q.map((q, i) => `<li><div>${q[lang]}</div><div class="row"><input id="q${i}" inputmode="decimal" aria-label="${t.check} ${i + 1}"><button class="btn" data-q="${i}" data-a="c">${t.check}</button><button class="btn" data-q="${i}" data-a="s">${t.show}</button></div><p class="fb" id="fb${i}" aria-live="polite"></p><p class="ans" id="an${i}" hidden>${q[lang + '2']}</p></li>`).join('');
+  $('qscore').textContent = t.score + fa(solved.size + ' / ' + Q.length);
+}
+$('quiz').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return; const i = +b.dataset.q, q = Q[i], t = T[lang];
+  if (b.dataset.a === 's') { $('an' + i).hidden = !$('an' + i).hidden; return; }
+  const raw = $('q' + i).value.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٫,]/g, '.').replace(/[−–]/g, '-').trim();
+  let v = parseFloat(raw), ok = Number.isFinite(v);
+  if (ok) { let diff = Math.abs(v - q.ans); if (q.mod) diff = Math.min(diff % q.mod, q.mod - diff % q.mod); ok = diff <= q.tol + 1e-9; }
+  const fb = $('fb' + i); fb.textContent = ok ? t.right : t.wrong; fb.className = 'fb ' + (ok ? 'ok' : 'no');
+  if (ok) solved.add(i); $('qscore').textContent = t.score + fa(solved.size + ' / ' + Q.length);
+});
+$('quiz').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('input')) e.target.nextElementSibling.click(); });
+
 /* ---------- language ---------- */
 function setLang(l) {
   lang = l; document.documentElement.lang = l; document.body.dir = l === 'fa' ? 'rtl' : 'ltr'; document.documentElement.dir = document.body.dir;
   $('lfa').setAttribute('aria-pressed', l === 'fa'); $('len').setAttribute('aria-pressed', l === 'en');
   document.querySelectorAll('[data-i]').forEach(n => { n.textContent = T[l][n.dataset.i]; });
   $('drive').textContent = S.driving ? T[l].stop : T[l].drive;
-  renderChips(); updateBlock(); updateLab();
+  renderChips(); updateBlock(); updateLab(); updateCast(); updateConv(); renderQuiz();
 }
 $('lfa').addEventListener('click', () => { setLang('fa'); history.replaceState(null, '', '#fa'); }); $('len').addEventListener('click', () => { setLang('en'); history.replaceState(null, '', location.pathname); });
 
