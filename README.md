@@ -13,6 +13,7 @@ The site presents my research in geospatial machine learning, urban analytics, s
 │   ├── index.html                          # Mapping and Research Portfolio (generated page)
 │   └── img/                                # Portfolio figures and thumbnails
 ├── sari-zoning-3d/                         # Sari Building Rules in 3D (English in en/, Persian at the root)
+├── forward-view-lab/index.html            # Forward View Lab: interactive 3D rays (English, Persian at #fa); uses the three.js copy in sari-zoning-3d/vendor
 ├── simulations/
 │   └── covid-nowruz-sari/index.html        # Interactive COVID-19 and Nowruz simulation (standalone page)
 └── assets/
